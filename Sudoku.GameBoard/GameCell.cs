@@ -1,7 +1,9 @@
 ﻿namespace Sudoku.GameBoard
 {
-  public class GameCell
+  public class GameCell : IGameCell 
   {
+    private static readonly string _EmptyValueAsString = " ";
+
     /// <summary>
     /// This value indicates if this GameCell Value is part of the original puzzle values
     /// </summary>
@@ -41,6 +43,12 @@
       _CellValue = initialCellValue;
       IsPuzzleValue = isPuzzleValue;
       ValidateInput();
+    }
+
+    public override string ToString()
+    {
+      var valueAsString = Convert.ToString(Value);
+      return valueAsString ?? _EmptyValueAsString;
     }
 
     private void ValidateInput()
