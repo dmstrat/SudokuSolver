@@ -1,12 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Sudoku.GameBoard
+﻿namespace Sudoku.GameBoard
 {
-  internal interface IGameBoard
+  public interface IGameBoard
   {
+    public IEnumerable<GameCell> GetBoardCells();
+    public GameCell GetCellByIndex(int cellIndex);
   }
 }

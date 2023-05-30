@@ -13,9 +13,7 @@ namespace Sudoku.GameBoard
 
     public override string ToString()
     {
-      var rowString = string.Empty;
       var rowSeparator = "----------------------------------------";
-      var outputString = string.Empty;
       var stringBuilder = new StringBuilder(); 
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
@@ -91,6 +89,16 @@ namespace Sudoku.GameBoard
     {
       var newString = GameCells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
       return newString;
+    }
+
+    public IEnumerable<GameCell> GetBoardCells()
+    {
+      return GameCells;
+    }
+
+    public GameCell GetCellByIndex(int cellIndex)
+    {
+      return GameCells[cellIndex];
     }
   }
 }
