@@ -14,55 +14,55 @@ namespace Sudoku.GameBoard.Tests
     [Test]
     public void GameBoardFactoryTest()
     {
-      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoardAllCellsFilled);
+      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled);
       Assert.NotNull(newBoard);
     }
 
     [Test]
     public void UsingFactoryGameBoardHasCorrectNumberOfGameCellsForSudoku()
     {
-      var newBoard= GameBoardFactory.Create(GameBoardInputs.GameBoardAllCellsFilled);
+      var newBoard= GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled);
       Assert.NotNull(newBoard);
       var actualString = newBoard.ToString();
       Assert.NotNull(actualString);
       Assert.AreEqual(NumberOfGameCellsInGameBoard, newBoard.GameCells.Count(), "Incorrect number of GameCells were created for new GameBoard.");
       var valuesAsString = newBoard.GetValuesAsString();
-      Assert.AreEqual(GameBoardInputs.GameBoardAllCellsFilled, valuesAsString, "GameBoard failed to build string correctly");
+      Assert.AreEqual(GameBoardInputs.GameBoard01AllCellsFilled, valuesAsString, "GameBoard failed to build string correctly");
     }
 
     [Test]
     public void UsingFactoryWithZerosGivesGameBoardEmptyOrNullValuesForThoseCells()
     {
-      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoardSomeEmptyCellsByZeros);
+      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsByZeros);
       Assert.NotNull(newBoard);
       var actualString = newBoard.ToString();
       Assert.NotNull(actualString);
       Assert.AreEqual(NumberOfGameCellsInGameBoard, newBoard.GameCells.Count(), "Incorrect number of GameCells were created for new GameBoard with empty cells.");
       var valuesAsString = newBoard.GetValuesAsString();
-      Assert.AreEqual(GameBoardInputs.GameBoardSomeEmptyCellsBySpaces, valuesAsString, "GameBoard failed to build string correctly");
+      Assert.AreEqual(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces, valuesAsString, "GameBoard failed to build string correctly");
     }
 
     [Test]
     public void UsingFactoryWithSpacesZerosGivesGameBoardEmptyOrNullValuesForThoseCells()
     {
-      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoardSomeEmptyCellsBySpaces);
+      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces);
       Assert.NotNull(newBoard);
       var actualString = newBoard.ToString();
       Assert.NotNull(actualString);
       Assert.AreEqual(NumberOfGameCellsInGameBoard, newBoard.GameCells.Count(), "Incorrect number of GameCells were created for new GameBoard with empty cells.");
       var valuesAsString = newBoard.GetValuesAsString();
-      Assert.AreEqual(GameBoardInputs.GameBoardSomeEmptyCellsBySpaces, valuesAsString, "GameBoard failed to build string correctly");
+      Assert.AreEqual(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces, valuesAsString, "GameBoard failed to build string correctly");
     }
 
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 1, GameBoardOutputs.GameBoard01Group01)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 2, GameBoardOutputs.GameBoard01Group02)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 3, GameBoardOutputs.GameBoard01Group03)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 4, GameBoardOutputs.GameBoard01Group04)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 5, GameBoardOutputs.GameBoard01Group05)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 6, GameBoardOutputs.GameBoard01Group06)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 7, GameBoardOutputs.GameBoard01Group07)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 8, GameBoardOutputs.GameBoard01Group08)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 9, GameBoardOutputs.GameBoard01Group09)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Group01)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 2, GameBoardOutputs.GameBoard01Group02)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 3, GameBoardOutputs.GameBoard01Group03)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 4, GameBoardOutputs.GameBoard01Group04)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 5, GameBoardOutputs.GameBoard01Group05)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 6, GameBoardOutputs.GameBoard01Group06)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 7, GameBoardOutputs.GameBoard01Group07)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 8, GameBoardOutputs.GameBoard01Group08)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 9, GameBoardOutputs.GameBoard01Group09)]
 
     public void GetGroupByNumberReturnsCorrectValues(string gameBoardAsString, int groupNumber, string groupValuesAsString)
     {
@@ -72,15 +72,15 @@ namespace Sudoku.GameBoard.Tests
       Assert.AreEqual(groupValuesAsString, groupString);
     }
 
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 1, GameBoardOutputs.GameBoard01Row01)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 2, GameBoardOutputs.GameBoard01Row02)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 3, GameBoardOutputs.GameBoard01Row03)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 4, GameBoardOutputs.GameBoard01Row04)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 5, GameBoardOutputs.GameBoard01Row05)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 6, GameBoardOutputs.GameBoard01Row06)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 7, GameBoardOutputs.GameBoard01Row07)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 8, GameBoardOutputs.GameBoard01Row08)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 9, GameBoardOutputs.GameBoard01Row09)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Row01)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 2, GameBoardOutputs.GameBoard01Row02)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 3, GameBoardOutputs.GameBoard01Row03)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 4, GameBoardOutputs.GameBoard01Row04)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 5, GameBoardOutputs.GameBoard01Row05)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 6, GameBoardOutputs.GameBoard01Row06)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 7, GameBoardOutputs.GameBoard01Row07)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 8, GameBoardOutputs.GameBoard01Row08)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 9, GameBoardOutputs.GameBoard01Row09)]
 
     public void GetRowByNumberReturnsCorrectValues(string gameBoardAsString, int rowNumber, string expectedRowValuesAsString)
     {
@@ -90,15 +90,15 @@ namespace Sudoku.GameBoard.Tests
       Assert.AreEqual(expectedRowValuesAsString, rowString);
     }
 
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 1, GameBoardOutputs.GameBoard01Column01)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 2, GameBoardOutputs.GameBoard01Column02)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 3, GameBoardOutputs.GameBoard01Column03)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 4, GameBoardOutputs.GameBoard01Column04)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 5, GameBoardOutputs.GameBoard01Column05)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 6, GameBoardOutputs.GameBoard01Column06)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 7, GameBoardOutputs.GameBoard01Column07)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 8, GameBoardOutputs.GameBoard01Column08)]
-    [TestCase(GameBoardInputs.GameBoardAllCellsFilled, 9, GameBoardOutputs.GameBoard01Column09)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Column01)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 2, GameBoardOutputs.GameBoard01Column02)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 3, GameBoardOutputs.GameBoard01Column03)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 4, GameBoardOutputs.GameBoard01Column04)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 5, GameBoardOutputs.GameBoard01Column05)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 6, GameBoardOutputs.GameBoard01Column06)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 7, GameBoardOutputs.GameBoard01Column07)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 8, GameBoardOutputs.GameBoard01Column08)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 9, GameBoardOutputs.GameBoard01Column09)]
 
     public void GetColumnByNumberReturnsCorrectValues(string gameBoardAsString, int columnNumber, string expectedColumnValuesAsString)
     {
