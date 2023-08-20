@@ -1,57 +1,116 @@
-﻿using System.Text;
+﻿using Sudoku.GameBoard.Helpers;
+using System.Text;
+using Sudoku.GameBoard.Validators;
 
 namespace Sudoku.GameBoard
 {
   public class GameBoard : IGameBoard
   {
-    public IList<GameCell> GameCells { get; }
+    public IList<GameCell> Cells { get; }
+
+    public IList<GameBoardGroup> Groups
+    {
+      get
+      {
+        var groups = new List<GameBoardGroup>();
+        for (int i = 1; i < 10; i++)
+        {
+          var newGroup = GetGroupById(i);
+          groups.Add(newGroup);
+        }
+        return groups;
+      }
+    }
+
+    public IList<GameBoardRow> Rows
+    {
+      get
+      {
+        var rows = new List<GameBoardRow>();
+        for (int i = 1; i < 10; i++)
+        {
+          var newRow = GetRowById(i);
+          rows.Add(newRow);
+        }
+        return rows;
+      }
+    }
+
+    public IList<GameBoardColumn> Columns
+    {
+      get
+      {
+        var columns = new List<GameBoardColumn>();
+        for (int i = 1; i < 10; i++)
+        {
+          var newColumn = GetColumnById(i);
+          columns.Add(newColumn);
+        }
+        return columns;
+      }
+    }
 
     public GameBoard(IList<GameCell> gameCells)
     {
-      GameCells = gameCells;
+      Cells = gameCells;
+    }
+
+    public IEnumerable<GameBoardGroup> GetGroups()
+    {
+      return Groups;
+    }
+
+    public IEnumerable<GameBoardRow> GetRows()
+    {
+      return Rows;
+    }
+
+    public IEnumerable<GameBoardColumn> GetColumns()
+    {
+      return Columns;
     }
 
     public override string ToString()
     {
       var rowSeparator = "----------------------------------------";
-      var stringBuilder = new StringBuilder(); 
+      var stringBuilder = new StringBuilder();
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0);
       stringBuilder.AppendLine();
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9);
       stringBuilder.AppendLine();
       stringBuilder.AppendLine(rowSeparator);
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9);
       stringBuilder.AppendLine();
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9+9+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9);
       stringBuilder.AppendLine();
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9+9+9+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9);
       stringBuilder.AppendLine();
-      stringBuilder.AppendLine(rowSeparator); 
+      stringBuilder.AppendLine(rowSeparator);
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9+9+9+9+9);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9+9+9+9+9+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9);
       stringBuilder.AppendLine();
       stringBuilder.Append(rowSeparator);
       stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, GameCells, 0+9+9+9+9+9+9+9+9);
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9);
       stringBuilder.AppendLine();
       stringBuilder.AppendLine(rowSeparator);
       stringBuilder.Append(rowSeparator);
@@ -76,7 +135,7 @@ namespace Sudoku.GameBoard
       stringBuilder.Append(gameCells[startOffset + 5].Value.ToString());
       stringBuilder.Append(" || ");
       stringBuilder.Append(gameCells[startOffset + 6].Value.ToString());
-      stringBuilder.Append(" | ");                       
+      stringBuilder.Append(" | ");
       stringBuilder.Append(gameCells[startOffset + 7].Value.ToString());
       stringBuilder.Append(" | ");
       stringBuilder.Append(gameCells[startOffset + 8].Value.ToString());
@@ -87,18 +146,50 @@ namespace Sudoku.GameBoard
 
     public string GetValuesAsString()
     {
-      var newString = GameCells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
+      var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
       return newString;
     }
 
-    public IEnumerable<GameCell> GetBoardCells()
+    public IEnumerable<GameCell> GetCells()
     {
-      return GameCells;
+      return Cells;
     }
 
     public GameCell GetCellByIndex(int cellIndex)
     {
-      return GameCells[cellIndex];
+      return Cells[cellIndex];
+    }
+
+    public void Validate()
+    {
+      GameBoardValidator.ValidateBoard(this);
+    }
+
+    public GameBoardGroup GetGroupById(int groupNumber)
+    {
+      GameBoardValidator.EnsureGroupNumberIsValid(groupNumber);
+      var indexList = GameBoardHelper.GetGroupIndexList(groupNumber);
+      var groupCells = indexList!.Select(GetCellByIndex).ToList();
+      var returnObject = new GameBoardGroup(groupCells);
+      return returnObject;
+    }
+
+    public GameBoardRow GetRowById(int rowNumber)
+    {
+      GameBoardValidator.EnsureRowNumberIsValid(rowNumber);
+      var indexList = GameBoardHelper.GetRowIndexList(rowNumber);
+      var rowCells = indexList!.Select(GetCellByIndex).ToList();
+      var returnObject = new GameBoardRow(rowCells);
+      return returnObject;
+    }
+
+    public GameBoardColumn GetColumnById(int columnNumber)
+    {
+      GameBoardValidator.EnsureColumnNumberIsValid(columnNumber);
+      var indexList = GameBoardHelper.GetColumnIndexList(columnNumber);
+      var columnCells = indexList!.Select(GetCellByIndex).ToList();
+      var returnObject = new GameBoardColumn(columnCells);
+      return returnObject;
     }
   }
 }

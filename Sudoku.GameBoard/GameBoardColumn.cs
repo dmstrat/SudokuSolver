@@ -2,16 +2,16 @@
 
 public class GameBoardColumn
 {
-  public IEnumerable<GameCell> GameCells { get; set; } = new List<GameCell>();
+  public IEnumerable<GameCell> Cells { get; set; }
 
   public GameBoardColumn(IEnumerable<GameCell> inputGameCells)
   {
-    GameCells = inputGameCells;
+    Cells = inputGameCells;
   }
 
   public string GetAsString()
   {
-    var newString = GameCells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
+    var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
     return newString;
   }
 }

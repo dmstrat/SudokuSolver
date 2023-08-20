@@ -2,7 +2,10 @@
 {
   public interface IGameBoard
   {
-    public IEnumerable<GameCell> GetBoardCells();
+    public IEnumerable<GameCell> GetCells();
+    public IEnumerable<GameBoardGroup> GetGroups();
+    public IEnumerable<GameBoardRow> GetRows();
+    public IEnumerable<GameBoardColumn> GetColumns();
     public GameCell GetCellByIndex(int cellIndex);
   }
 }
