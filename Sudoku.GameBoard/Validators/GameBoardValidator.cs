@@ -1,4 +1,5 @@
-﻿using Sudoku.GameBoard.Exceptions;
+﻿using Sudoku.GameBoard.Constants;
+using Sudoku.GameBoard.Exceptions;
 
 namespace Sudoku.GameBoard.Validators
 {
@@ -6,12 +7,23 @@ namespace Sudoku.GameBoard.Validators
   {
     // ReSharper disable once InconsistentNaming
     internal static readonly int[] ValidGameNumbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+    
 
     public static void ValidateBoard(IGameBoard board)
     {
+      ValidateGameCellCount(board);
       ValidateGroups(board);
       ValidateRows(board);
       ValidateColumns(board);
+    }
+
+    internal static void ValidateGameCellCount(IGameBoard board)
+    {
+      var incorrectCellCount = board.GetCells().Count() != GameGuides.ValidGameCellCount;
+      if (incorrectCellCount)
+      {
+        throw new IncorrectGameCellCountForBoard();
+      }
     }
 
     internal static void ValidateCells(IEnumerable<GameCell> listOfGameCells)
@@ -29,7 +41,7 @@ namespace Sudoku.GameBoard.Validators
     internal static void ValidateCorrectLengthOfGameCells(IEnumerable<GameCell> listOfNineGameCells, int numberOfGameCellsExpected)
     {
       var countOfProvidedCells = listOfNineGameCells.Count();
-      var invalidNumberOfGameCells = countOfProvidedCells is < 1 or > 9;
+      var invalidNumberOfGameCells = countOfProvidedCells != numberOfGameCellsExpected;
       if (invalidNumberOfGameCells)
       {
         throw new InvalidNumberOfGameCells();

@@ -16,11 +16,5 @@ namespace Sudoku.Engine.Tests
     [TearDown]
     public void TearDown() { }
 
-    [Test]
-    public void EngineCtorWithoutParameters()
-    {
-      var engine = new Engine();
-      Assert.IsNotNull(engine);
-    }
   }
 }

@@ -1,6 +1,7 @@
 ﻿using Sudoku.GameBoard.Helpers;
 using System.Text;
 using Sudoku.GameBoard.Validators;
+using Sudoku.GameBoard.Constants;
 
 namespace Sudoku.GameBoard
 {
@@ -148,6 +149,31 @@ namespace Sudoku.GameBoard
     {
       var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
       return newString;
+    }
+
+    public GameBoardGroup GetGroupByCellIndex(int cellIndex)
+    {
+      var groupIndex = CellIndexToGroupRowColumnValues.CellIndexes[cellIndex, GameGuides.GROUP_ARRAY_INDEX_VALUE];
+
+      var group = Groups[groupIndex];
+
+      return group;
+
+      
+    }
+
+    public GameBoardRow GetRowByCellIndex(int cellIndex)
+    {
+      var rowIndex = CellIndexToGroupRowColumnValues.CellIndexes[cellIndex, GameGuides.ROW_ARRAY_INDEX_VALUE];
+      var row = Rows[rowIndex];
+      return row;
+    }
+
+    public GameBoardColumn GetColumnByCellIndex(int cellIndex)
+    {
+      var columnIndex = CellIndexToGroupRowColumnValues.CellIndexes[cellIndex, GameGuides.COLUMN_ARRAY_INDEX_VALUE];
+      var column = Columns[columnIndex];
+      return column;
     }
 
     public IEnumerable<GameCell> GetCells()

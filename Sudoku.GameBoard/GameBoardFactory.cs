@@ -20,12 +20,12 @@ namespace Sudoku.GameBoard
         GameCell newCell;
         if (isEmptyCellValue)
         {
-          newCell = new GameCell(null, _IsNotPartOfPuzzle);
+          newCell = new GameCell(i, null, _IsNotPartOfPuzzle);
         }
         else
         {
           _ = int.TryParse(gameBoardWithPuzzleNumbers[i].ToString(), NumberStyles.Integer, null, out var nextNumber);
-          newCell = new GameCell(nextNumber, _IsPartOfPuzzle);
+          newCell = new GameCell(i,nextNumber, _IsPartOfPuzzle);
         }
         gameCells.Add(newCell);
       }
