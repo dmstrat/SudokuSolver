@@ -23,15 +23,16 @@ jobs:
               id: restore
               run: |
                 nuget restore SudokuSolve.sln
+              shell: cmd
 
             - name: Build Solution
               id: buildsolution
               run: |
-                msbuild.exe SudokuSolve.sln -t:BuildPayEngine -property:Configuration=Release
+                msbuild.exe SudokuSolve.sln -property:Configuration=Release
               shell: cmd
 
-            - name: Run Architectural Tests - Persona Clock Unit
-              id: architecturaltestspersonaclock
+            - name: Run Tests
+              id: testrun
               run: |
                 vstest.console.exe **\bin\$(Configuration)\**\Sudoku.GameBoard.Tests.dll /logger:trx
               shell: cmd
