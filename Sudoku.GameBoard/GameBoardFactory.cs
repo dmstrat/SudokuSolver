@@ -31,6 +31,7 @@ namespace Sudoku.GameBoard
       }
 
       var newBoard = new GameBoard(gameCells);
+      newBoard.Validate();
       return newBoard;
     }
   }
