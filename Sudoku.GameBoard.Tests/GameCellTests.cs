@@ -185,7 +185,7 @@
       Assert.DoesNotThrow(() => GameCellCtor(ctorValue, isPuzzlePiece));
     }
 
-    private GameCell GameCellCtorAndChangeValue(int? ctorValue, bool isPuzzlePiece, int? newValue)
+    private static GameCell GameCellCtorAndChangeValue(int? ctorValue, bool isPuzzlePiece, int? newValue)
     {
       var newCell = GameCellCtor(ctorValue, isPuzzlePiece);
       newCell.Value = newValue;
@@ -193,18 +193,21 @@
       return newCell;
     }
 
-    private GameCell GameCellCtor(int? ctorValue, bool isPuzzlePiece)
+    private static GameCell GameCellCtor(int? ctorValue, bool isPuzzlePiece)
     {
       var newCell = new GameCell(ctorValue, isPuzzlePiece);
-      Assert.NotNull(newCell, $"Ctor failed on values: {ctorValue} | {isPuzzlePiece}.");
+      Assert.That(newCell, Is.Not.Null, $"Ctor failed on values: {ctorValue} | {isPuzzlePiece}.");
       AssertProperties(newCell, ctorValue, isPuzzlePiece);
       return newCell;
     }
 
-    private void AssertProperties(GameCell cell, int? value, bool isPuzzlePiece)
+    private static void AssertProperties(GameCell cell, int? expectedValue, bool isPuzzlePiece)
     {
-      Assert.AreEqual(cell.Value, value, $"Cell Property 'Value' does not match: EXPECTED: {value} | ACTUAL: {cell.Value}.");
-      Assert.AreEqual(cell.IsPuzzleValue, isPuzzlePiece, $"Cell Property 'IsPuzzlePiece' does not match: EXPECTED: {isPuzzlePiece} | ACTUAL: {cell.IsPuzzleValue}");
+      Assert.Multiple(() =>
+      {
+        Assert.That(cell.Value, Is.EqualTo(expectedValue), $"Cell Property 'Value' does not match: EXPECTED: {expectedValue} | ACTUAL: {cell.Value}.");
+        Assert.That(cell.IsPuzzleValue, Is.EqualTo(isPuzzlePiece), $"Cell Property 'IsPuzzlePiece' does not match: EXPECTED: {isPuzzlePiece} | ACTUAL: {cell.IsPuzzleValue}");
+      });
     }
 
   }
