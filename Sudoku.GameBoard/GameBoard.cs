@@ -119,7 +119,7 @@ namespace Sudoku.GameBoard
       return newString;
     }
 
-    private StringBuilder GenerateRow(StringBuilder stringBuilder, IList<GameCell> gameCells, int startOffset)
+    private static StringBuilder GenerateRow(StringBuilder stringBuilder, IList<GameCell> gameCells, int startOffset)
     {
       stringBuilder.Append("| ");
       stringBuilder.Append(gameCells[startOffset].Value.ToString());

@@ -12,7 +12,7 @@
     /// <summary>
     /// A list of 'pencil marks' that indicate possible values for the solve.
     /// </summary>
-    public int?[] PossibleValues { get; set; }
+    public int?[]? PossibleValues { get; set; }
     
     /// <summary>
     /// The solve or puzzle value of the cell

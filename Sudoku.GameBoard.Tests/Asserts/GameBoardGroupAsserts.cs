@@ -5,7 +5,7 @@
     public static void AssertGameBoardGroup(string expectedGroupAsString, GameBoardGroup actualGroup)
     {
       var actualGroupAsString = actualGroup.GetValuesAsString();
-      Assert.AreEqual(expectedGroupAsString, actualGroupAsString);
+      Assert.That(actualGroupAsString, Is.EqualTo(expectedGroupAsString));
     }
   }
 }

@@ -1,3 +1,4 @@
+using System.Diagnostics.SymbolStore;
 using Sudoku.GameBoard.Exceptions;
 using Sudoku.GameBoard.Tests.Asserts;
 using Sudoku.GameBoard.Tests.GameBoards;
@@ -17,43 +18,53 @@ namespace Sudoku.GameBoard.Tests
     public void BoardFactoryTest()
     {
       var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled);
-      Assert.NotNull(newBoard);
+      Assert.That(newBoard, Is.Not.Null);
     }
 
     [Test]
     public void UsingFactoryGameBoardHasCorrectNumberOfGameCellsForSudoku()
     {
       var newBoard= GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled);
-      Assert.NotNull(newBoard);
+      Assert.That(newBoard, Is.Not.Null);
       var actualString = newBoard.ToString();
-      Assert.NotNull(actualString);
-      Assert.AreEqual(NumberOfGameCellsInGameBoard, newBoard.Cells.Count(), "Incorrect number of GameCells were created for new GameBoard.");
+      Assert.Multiple(() =>
+      {
+        Assert.That(actualString, Is.Not.Null);
+        Assert.That(newBoard.Cells, Has.Count.EqualTo(NumberOfGameCellsInGameBoard),
+          "Incorrect number of GameCells were created for new GameBoard.");
+      });
       var valuesAsString = newBoard.GetValuesAsString();
-      Assert.AreEqual(GameBoardInputs.GameBoard01AllCellsFilled, valuesAsString, "GameBoard failed to build string correctly");
+      Assert.That(valuesAsString, Is.EqualTo(GameBoardInputs.GameBoard01AllCellsFilled), "GameBoard failed to build string correctly");
     }
 
     [Test]
     public void UsingFactoryWithZerosGivesGameBoardEmptyOrNullValuesForThoseCells()
     {
       var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsByZeros);
-      Assert.NotNull(newBoard);
+      Assert.That(newBoard, Is.Not.Null);
       var actualString = newBoard.ToString();
-      Assert.NotNull(actualString);
-      Assert.AreEqual(NumberOfGameCellsInGameBoard, newBoard.Cells.Count(), "Incorrect number of GameCells were created for new GameBoard with empty cells.");
+      Assert.Multiple(() =>
+      {
+        Assert.That(actualString, Is.Not.Null);
+        Assert.That(newBoard.Cells, Has.Count.EqualTo(NumberOfGameCellsInGameBoard), "Incorrect number of GameCells were created for new GameBoard with empty cells.");
+      });
       var valuesAsString = newBoard.GetValuesAsString();
-      Assert.AreEqual(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces, valuesAsString, "GameBoard failed to build string correctly");
+      Assert.That(valuesAsString, Is.EqualTo(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces), "GameBoard failed to build string correctly");
     }
 
     [Test]
     public void UsingFactoryWithSpacesZerosGivesGameBoardEmptyOrNullValuesForThoseCells()
     {
       var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces);
-      Assert.NotNull(newBoard);
+      Assert.That(newBoard, Is.Not.Null);
       var actualString = newBoard.ToString();
-      Assert.NotNull(actualString);
-      Assert.AreEqual(NumberOfGameCellsInGameBoard, newBoard.Cells.Count(), "Incorrect number of GameCells were created for new GameBoard with empty cells.");
+      Assert.Multiple(() =>
+      {
+        Assert.That(actualString, Is.Not.Null);
+        Assert.That(newBoard.Cells, Has.Count.EqualTo(NumberOfGameCellsInGameBoard), "Incorrect number of GameCells were created for new GameBoard with empty cells.");
+      });
       var valuesAsString = newBoard.GetValuesAsString();
-      Assert.AreEqual(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces, valuesAsString, "GameBoard failed to build string correctly");
+      Assert.That(valuesAsString, Is.EqualTo(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces), "GameBoard failed to build string correctly");
     }
 
     [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Group01)]
@@ -71,7 +82,7 @@ namespace Sudoku.GameBoard.Tests
       var gameBoard = GameBoardFactory.Create(gameBoardAsString);
       var gameBoardGroup = GameBoardGroupFactory.Create(gameBoard, groupNumber);
       var groupString = gameBoardGroup.GetValuesAsString();
-      Assert.AreEqual(groupValuesAsString, groupString);
+      Assert.That(groupString, Is.EqualTo(groupValuesAsString));
     }
 
     [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Row01)]
@@ -89,7 +100,7 @@ namespace Sudoku.GameBoard.Tests
       var gameBoard = GameBoardFactory.Create(gameBoardAsString);
       var gameBoardRow = GameBoardRowFactory.Create(gameBoard, rowNumber);
       var rowString = gameBoardRow.GetAsString();
-      Assert.AreEqual(expectedRowValuesAsString, rowString);
+      Assert.That(rowString, Is.EqualTo(expectedRowValuesAsString));
     }
 
     [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Column01)]
@@ -107,7 +118,7 @@ namespace Sudoku.GameBoard.Tests
       var gameBoard = GameBoardFactory.Create(gameBoardAsString);
       var gameBoardColumn = GameBoardColumnFactory.Create(gameBoard, columnNumber);
       var columnString = gameBoardColumn.GetAsString();
-      Assert.AreEqual(expectedColumnValuesAsString, columnString);
+      Assert.That(columnString, Is.EqualTo(expectedColumnValuesAsString));
     }
 
     [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Group01)]
