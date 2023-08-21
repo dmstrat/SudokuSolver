@@ -205,8 +205,6 @@
       }
     }
 
-
-
     private static GameCell GameCellCtorAndChangeValue(int index, int? ctorValue, bool isPuzzlePiece, int? newValue)
     {
       var newCell = GameCellCtor(index, ctorValue, isPuzzlePiece);

@@ -1,3 +1,4 @@
+using System.Diagnostics.SymbolStore;
 using Sudoku.GameBoard.Exceptions;
 using Sudoku.GameBoard.Tests.Asserts;
 using Sudoku.GameBoard.Tests.GameBoards;
