@@ -1,6 +1,7 @@
 ﻿using Sudoku.GameBoard.Helpers;
 using System.Text;
 using Sudoku.GameBoard.Validators;
+using Sudoku.GameBoard.Constants;
 
 namespace Sudoku.GameBoard
 {
@@ -53,6 +54,25 @@ namespace Sudoku.GameBoard
     public GameBoard(IList<GameCell> gameCells)
     {
       Cells = gameCells;
+      RegisterCellEvents();
+    }
+
+    private void RegisterCellEvents()
+    {
+      foreach (var cell in Cells)
+      {
+        cell.CellValueUpdated += ClearPencilMarksFor;
+      }
+    }
+
+    private void ClearPencilMarksFor(IGameCell cell)
+    {
+      var group = GetGroupById(cell.GetGroupIndex()+1);
+      var row = GetRowById(cell.GetRowIndex()+1);
+      var column = GetColumnById(cell.GetColumnIndex()+1);
+      group.ClearPencilMark(cell.Value);
+      row.ClearPencilMark(cell.Value);
+      column.ClearPencilMark(cell.Value);
     }
 
     public IEnumerable<GameBoardGroup> GetGroups()
@@ -148,6 +168,22 @@ namespace Sudoku.GameBoard
     {
       var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
       return newString;
+    }
+    
+    public GameBoardGroup GetGroupBy(GameCell cell)
+    {
+      var group = Groups[cell.GroupIndex];
+      return group;
+    }
+    public GameBoardRow GetRowBy(GameCell cell)
+    {
+      var row = Rows[cell.RowIndex];
+      return row;
+    }
+    public GameBoardColumn GetColumnBy(GameCell cell)
+    {
+      var column = Columns[cell.ColumnIndex];
+      return column;
     }
 
     public IEnumerable<GameCell> GetCells()

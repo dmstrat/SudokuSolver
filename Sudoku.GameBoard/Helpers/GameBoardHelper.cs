@@ -4,6 +4,7 @@ namespace Sudoku.GameBoard.Helpers
 {
   internal static class GameBoardHelper
   {
+
     internal static IEnumerable<int> GetGroupIndexList(int groupNumber)
     {
       var indexList = groupNumber switch

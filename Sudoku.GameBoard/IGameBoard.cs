@@ -7,5 +7,9 @@
     public IEnumerable<GameBoardRow> GetRows();
     public IEnumerable<GameBoardColumn> GetColumns();
     public GameCell GetCellByIndex(int cellIndex);
+    public string GetValuesAsString();
+    public GameBoardGroup GetGroupBy(GameCell cell);
+    public GameBoardRow GetRowBy(GameCell cell);
+    public GameBoardColumn GetColumnBy(GameCell cell);
   }
 }
