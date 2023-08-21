@@ -11,18 +11,20 @@ namespace Sudoku.Engine.Tests
 
     }
 
-    [Test]
-    public void GivenBoard01SolveResultsCorrect()
+    [TestCase(GameBoard01.MissingOneNumberPerRowAndColumn_Input, GameBoard01.Solved_Output)]
+    [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
+    [TestCase(GameBoardMedium02.Game_Input, GameBoardMedium02.Game_Output)]
+    public void GivenBoard01SolveResultsCorrect(string gameBoardInput, string solvedGameOutput)
     {
-      //build gameboard
-      //instance engine 
-      var gameBoard = GameBoardFactory.Create(GameBoard01.MissingOneNumberPerRowAndColumn_Input);
+      //Build Game Board
+      //Instance Engine 
+      var gameBoard = GameBoardFactory.Create(gameBoardInput);
       var engine = new Engine(gameBoard);
-      //call solve 
+      //Solve 
       var result = engine.Solve();
-      //verify solve 
+      //Verify solve 
       var actualResults = result.GetValuesAsString();
-      Assert.That(actualResults, Is.EqualTo(GameBoard01.MissingOneNumberPerRowAndColumn_Output));
+      Assert.That(actualResults, Is.EqualTo(solvedGameOutput));
     }
   }
 }
