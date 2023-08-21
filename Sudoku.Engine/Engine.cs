@@ -1,6 +1,7 @@
-﻿using System.Data;
+﻿using Sudoku.Engine.Exceptions;
 using Sudoku.GameBoard;
-using Sudoku.GameBoard.Constants;
+using System.Data;
+using System.Diagnostics;
 
 namespace Sudoku.Engine
 {
@@ -24,6 +25,7 @@ namespace Sudoku.Engine
       ComputePencilMarks(); 
       while (notSolved && loopCount <= MaxLoopCount)
       {
+        SolveEachCellWithSinglePencilMark();
         TryToSolveRows();
         TryToSolveColumns();
         TryToSolveGroups();
@@ -60,7 +62,6 @@ namespace Sudoku.Engine
         var column = _GameBoard.GetColumnBy(cell);
         //determine possible pencil marks 
         //what are the missing numbers from group?
-        //var missingNumbersFromGroup = group.Cells.Select(x => x.Value ?? 0).ToList();
         var actualNumberListFromGroup = group.Cells.Select(x => x.Value ?? 0).Except(new List<int>(){0}).ToList();
         var missingNumbersListFromGroup = validGameNumbers.Except<int>(actualNumberListFromGroup);
         //missing numbers from column?
@@ -69,18 +70,34 @@ namespace Sudoku.Engine
         //missing numbers from row?
         var actualNumberListFromColumn = column.Cells.Select(x => x.Value ?? 0).Except(new List<int>() { 0 }).ToList();
         var missingNumbersListFromColumn = validGameNumbers.Except<int>(actualNumberListFromColumn);
-        //merge missing numbers list 
+        //merge missing numbers from all lists
         var allMissingNumbersJoinedTogether = missingNumbersListFromGroup
           .Concat(missingNumbersListFromRow.Concat(missingNumbersListFromColumn));//.Distinct();
-        //var allMissingNumbers = allMissingNumbersJoinedTogether.Except((new[] { 0 }).ToList());
+        //build list of numbers that are in every list
         var missingNumbers = allMissingNumbersJoinedTogether.GroupBy(val => val)
           .Where(group => group.Count() == numberOfListsJoined)
           .Select(groupValue => groupValue.Key).ToList();
-        //add missing numbers as pencil marks to cell 
 
+        Trace.WriteLine($"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", missingNumbers)}");//add missing numbers as pencil marks to cell 
         foreach (var missingNumber in missingNumbers)
         {
           cell.AddPencilMark(missingNumber);
+        }
+      }
+    }
+
+    private void SolveEachCellWithSinglePencilMark()
+    {
+      foreach (var cell in _GameBoard.GetCells())
+      {
+        //is cell already solved?
+        var cellIsSolved = cell.Value.HasValue;
+        if (cellIsSolved) continue;
+        //solve cell if there is only one pencil mark
+        var onlyOneChoice = cell.PencilMarks.Count() == 1;
+        if (onlyOneChoice)
+        {
+          cell.Value = cell.PencilMarks.First();
         }
       }
     }
@@ -97,24 +114,14 @@ namespace Sudoku.Engine
       }
     }
 
-    private bool RowIsNotSolved(GameBoardRow row)
+    private static bool RowIsNotSolved(GameBoardRow row)
     {
       var emptyCellsInRow = row.Cells.Any(x => x.Value is null);
       return emptyCellsInRow;
     }
 
-    private void TryToSolveRow(GameBoardRow row)
+    private static void TryToSolveRow(GameBoardRow row)
     {
-      //any cell with only one pencil mark? 
-      //yes, make that cell that value 
-      foreach (var cell in row.Cells)
-      {
-        var onlyOneChoice = cell.PencilMarks.Count() == 1;
-        if (onlyOneChoice)
-        {
-          cell.Value = cell.PencilMarks.First();
-        }
-      }
     }
 
     private void TryToSolveColumns() { }
@@ -126,7 +133,7 @@ namespace Sudoku.Engine
       var gameBoardNotProvided = !_GameBoard.GetCells().Any();
       if (gameBoardNotProvided)
       {
-
+        throw new NoGameBoardProvided("GameBoard NOT provided");
       }
     }
   }
