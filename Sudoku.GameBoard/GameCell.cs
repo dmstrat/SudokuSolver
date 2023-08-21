@@ -3,8 +3,13 @@ using Sudoku.GameBoard.Exceptions;
 
 namespace Sudoku.GameBoard
 {
-  public class GameCell : IGameCell 
+  // ReSharper disable once InconsistentNaming
+  public delegate void CellValueUpdated(IGameCell cell);
+
+  public class GameCell : IGameCell
   {
+    public event CellValueUpdated CellValueUpdated;
+
     private static readonly string _EmptyValueAsString = " ";
 
     public int Index { get; set; }
@@ -35,17 +40,28 @@ namespace Sudoku.GameBoard
         }
 
         _CellValue = value;
-
-        ClearGroupRowColumnOfPencilMark(value);
+        if (value != null)
+        {
+          CellValueUpdated(this);
+        }
       }
     }
 
-    private void ClearGroupRowColumnOfPencilMark(int? pencilMarkToRemove)
+    public IEnumerable<int> PencilMarks { get; set; } = Enumerable.Empty<int>();
+    public int GetGroupIndex()
     {
-
+      return GroupIndex;
     }
 
-    public IEnumerable<int> PencilMarks { get; set; } = Enumerable.Empty<int>();
+    public int GetRowIndex()
+    {
+      return RowIndex;
+    }
+
+    public int GetColumnIndex()
+    {
+      return ColumnIndex;
+    }
 
     private int? _CellValue = null;
 
@@ -63,6 +79,12 @@ namespace Sudoku.GameBoard
       IsPuzzleValue = isPuzzleValue;
       ValidateInput();
       Index = index;
+      CellValueUpdated += NoOpGameCellUpdateMethod;
+    }
+
+    private static void NoOpGameCellUpdateMethod(IGameCell cell)
+    {
+      //intentionally no-op method
     }
 
     private void GenerateGroupRowColumnIndexes(int index)
@@ -109,6 +131,12 @@ namespace Sudoku.GameBoard
       {
         throw new NoPencilMarksAllowedWhenValueAlreadyExists();
       }
+    }
+
+    public void ClearPencilMark(int cellValue)
+    {
+      var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int>() { cellValue });
+      PencilMarks = newPencilMarks;
     }
   }
 }

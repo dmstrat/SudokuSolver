@@ -8,8 +8,8 @@
     public IEnumerable<GameBoardColumn> GetColumns();
     public GameCell GetCellByIndex(int cellIndex);
     public string GetValuesAsString();
-    public GameBoardGroup GetGroupByCellIndex(int cellIndex);
-    public GameBoardRow GetRowByCellIndex(int cellIndex);
-    public GameBoardColumn GetColumnByCellIndex(int cellIndex);
+    public GameBoardGroup GetGroupBy(GameCell cell);
+    public GameBoardRow GetRowBy(GameCell cell);
+    public GameBoardColumn GetColumnBy(GameCell cell);
   }
 }

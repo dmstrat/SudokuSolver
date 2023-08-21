@@ -54,6 +54,25 @@ namespace Sudoku.GameBoard
     public GameBoard(IList<GameCell> gameCells)
     {
       Cells = gameCells;
+      RegisterCellEvents();
+    }
+
+    private void RegisterCellEvents()
+    {
+      foreach (var cell in Cells)
+      {
+        cell.CellValueUpdated += ClearPencilMarksFor;
+      }
+    }
+
+    private void ClearPencilMarksFor(IGameCell cell)
+    {
+      var group = GetGroupById(cell.GetGroupIndex()+1);
+      var row = GetRowById(cell.GetRowIndex()+1);
+      var column = GetColumnById(cell.GetColumnIndex()+1);
+      group.ClearPencilMark(cell.Value);
+      row.ClearPencilMark(cell.Value);
+      column.ClearPencilMark(cell.Value);
     }
 
     public IEnumerable<GameBoardGroup> GetGroups()
@@ -150,29 +169,20 @@ namespace Sudoku.GameBoard
       var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
       return newString;
     }
-
-    public GameBoardGroup GetGroupByCellIndex(int cellIndex)
+    
+    public GameBoardGroup GetGroupBy(GameCell cell)
     {
-      var groupIndex = CellIndexToGroupRowColumnValues.CellIndexes[cellIndex, GameGuides.GROUP_ARRAY_INDEX_VALUE];
-
-      var group = Groups[groupIndex];
-
+      var group = Groups[cell.GroupIndex];
       return group;
-
-      
     }
-
-    public GameBoardRow GetRowByCellIndex(int cellIndex)
+    public GameBoardRow GetRowBy(GameCell cell)
     {
-      var rowIndex = CellIndexToGroupRowColumnValues.CellIndexes[cellIndex, GameGuides.ROW_ARRAY_INDEX_VALUE];
-      var row = Rows[rowIndex];
+      var row = Rows[cell.RowIndex];
       return row;
     }
-
-    public GameBoardColumn GetColumnByCellIndex(int cellIndex)
+    public GameBoardColumn GetColumnBy(GameCell cell)
     {
-      var columnIndex = CellIndexToGroupRowColumnValues.CellIndexes[cellIndex, GameGuides.COLUMN_ARRAY_INDEX_VALUE];
-      var column = Columns[columnIndex];
+      var column = Columns[cell.ColumnIndex];
       return column;
     }
 
