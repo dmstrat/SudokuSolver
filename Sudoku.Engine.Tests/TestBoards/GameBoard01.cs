@@ -22,6 +22,15 @@
                                                   "678912345" +
                                                   "912345678";
 
+    public const string MissingOneValueFromOneGroup_Input = "      78 " +
+                                                            "      123" +
+                                                            "      456" +
+                                                            "234567   " +
+                                                            "567891   " +
+                                                            "891234   " +
+                                                            "345678   " +
+                                                            "678912   " +
+                                                            "912345   ";
 
     public const string Solved_Output = "123456789" +
                                         "456789123" +

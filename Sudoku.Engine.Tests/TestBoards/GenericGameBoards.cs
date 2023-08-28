@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Sudoku.GameBoard;
+﻿using Sudoku.GameBoard;
 using Sudoku.GameBoard.Constants;
 
 namespace Sudoku.Engine.Tests.TestBoards

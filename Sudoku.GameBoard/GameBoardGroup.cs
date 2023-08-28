@@ -9,6 +9,11 @@ public class GameBoardGroup : IGameBoardGroup
     Cells = inputGameCells;
   }
 
+  public IEnumerable<GameCell> GetCells()
+  {
+    return Cells;
+  }
+
   public string GetValuesAsString()
   {
     var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
@@ -24,10 +29,11 @@ public class GameBoardGroup : IGameBoardGroup
       cell.ClearPencilMark(cellValue!.Value);
     }
   }
-}
 
-public interface IGameBoardGroup
-{
-  public void ClearPencilMark(int? cellValue);
-
+  public GameBoardGroupColumn GetColumnCells(ColumnPosition columnPosition)
+  {
+    var cells = Cells.Where(x => x.ColumnPosition == columnPosition);
+    var groupColumn = new GameBoardGroupColumn(cells);
+    return groupColumn;
+  }
 }

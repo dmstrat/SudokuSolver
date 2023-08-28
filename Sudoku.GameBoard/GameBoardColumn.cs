@@ -24,6 +24,16 @@ public class GameBoardColumn : IGameBoardColumn
       cell.ClearPencilMark(cellValue!.Value);
     }
   }
+
+  public void ClearPencilMarksNotIn(GameBoardGroup group, int valueToClear)
+  {
+    var cellsNotInGroup = Cells.Where(x => x.GroupIndex != group.Cells.First().GroupIndex);
+
+    foreach (var cell in cellsNotInGroup)
+    {
+      cell.ClearPencilMark(valueToClear);
+    }
+  }
 }
 
 public interface IGameBoardColumn

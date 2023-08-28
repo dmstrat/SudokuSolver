@@ -1,7 +1,6 @@
 ﻿using Sudoku.GameBoard.Helpers;
-using System.Text;
 using Sudoku.GameBoard.Validators;
-using Sudoku.GameBoard.Constants;
+using System.Text;
 
 namespace Sudoku.GameBoard
 {

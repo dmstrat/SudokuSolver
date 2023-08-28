@@ -1,8 +1,9 @@
 ﻿using Sudoku.GameBoard.Constants;
+using Sudoku.GameBoard.Exceptions;
 
 namespace Sudoku.GameBoard.Helpers
 {
-  internal static class GameBoardHelper
+    internal static class GameBoardHelper
   {
 
     internal static IEnumerable<int> GetGroupIndexList(int groupNumber)
@@ -59,6 +60,53 @@ namespace Sudoku.GameBoard.Helpers
       return indexList;
     }
 
+    internal static ColumnPosition GetColumnPosition(int cellIndex)
+    {
+      var modulus = cellIndex % 9;
+      var columnPosition = modulus switch
+      {
+        0 => ColumnPosition.Left,
+        1 => ColumnPosition.Middle,
+        2 => ColumnPosition.Right,
+        3 => ColumnPosition.Left,
+        4 => ColumnPosition.Middle,
+        5 => ColumnPosition.Right,
+        6 => ColumnPosition.Left,
+        7 => ColumnPosition.Middle,
+        8 => ColumnPosition.Right,
+        _ => ThrowInvalidColumnIndexException()
+      };
+
+      return columnPosition;
+    }
+
+    private static ColumnPosition ThrowInvalidColumnIndexException()
+    {
+      throw new InternalException("Invalid colum index for some reason, this shouldn't get out in the wild.");
+    }
+
+    internal static RowPosition GetRowPosition(int cellIndex)
+    {
+      var isTopRow = GameBoardRowGroupPositionCellNumbers.Top.Contains(cellIndex);
+
+      if (isTopRow)
+      {
+        return RowPosition.Top;
+      }
+
+      var isMiddleRow = GameBoardRowGroupPositionCellNumbers.Middle.Contains(cellIndex);
+      if (isMiddleRow)
+      {
+        return RowPosition.Middle;
+      }
+
+      return RowPosition.Bottom;
+    }
+
+    private static RowPosition ThrowInvalidRowIndexException()
+    {
+      throw new InternalException("Invalid row index for some reason, this shouldn't get out in the wild.");
+    }
 
   }
 }

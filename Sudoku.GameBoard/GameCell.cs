@@ -3,8 +3,8 @@ using Sudoku.GameBoard.Exceptions;
 
 namespace Sudoku.GameBoard
 {
-  // ReSharper disable once InconsistentNaming
-  public delegate void CellValueUpdated(IGameCell cell);
+    // ReSharper disable once InconsistentNaming
+    public delegate void CellValueUpdated(IGameCell cell);
 
   public class GameCell : IGameCell
   {
@@ -48,6 +48,9 @@ namespace Sudoku.GameBoard
     }
 
     public IEnumerable<int> PencilMarks { get; set; } = Enumerable.Empty<int>();
+    public ColumnPosition ColumnPosition { get; set; }
+    public RowPosition RowPosition { get; set; }
+
     public int GetGroupIndex()
     {
       return GroupIndex;
@@ -97,7 +100,8 @@ namespace Sudoku.GameBoard
     public override string ToString()
     {
       var valueAsString = Convert.ToString(Value);
-      return valueAsString ?? _EmptyValueAsString;
+      var returnValue = valueAsString.Length == 0 ? _EmptyValueAsString : valueAsString;
+      return returnValue;
     }
 
     private void ValidateInput()
