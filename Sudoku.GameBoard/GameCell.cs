@@ -1,4 +1,6 @@
-﻿using Sudoku.GameBoard.Constants;
+﻿using System.Diagnostics;
+using System.Runtime.CompilerServices;
+using Sudoku.GameBoard.Constants;
 using Sudoku.GameBoard.Exceptions;
 
 namespace Sudoku.GameBoard
@@ -6,8 +8,18 @@ namespace Sudoku.GameBoard
     // ReSharper disable once InconsistentNaming
     public delegate void CellValueUpdated(IGameCell cell);
 
+  [DebuggerDisplay("{DebuggerDisplay,nq}")]
   public class GameCell : IGameCell
   {
+    private string DebuggerDisplay
+    {
+      get
+      {
+        var debuggerString = $"[{_CellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
+        return debuggerString;
+      }
+    }
+
     public event CellValueUpdated CellValueUpdated;
 
     private static readonly string _EmptyValueAsString = " ";
@@ -99,7 +111,7 @@ namespace Sudoku.GameBoard
 
     public override string ToString()
     {
-      var valueAsString = Convert.ToString(Value);
+      var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
       var returnValue = valueAsString.Length == 0 ? _EmptyValueAsString : valueAsString;
       return returnValue;
     }

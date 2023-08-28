@@ -25,9 +25,9 @@ public class GameBoardColumn : IGameBoardColumn
     }
   }
 
-  public void ClearPencilMarksNotIn(GameBoardGroup group, int valueToClear)
+  public void ClearPencilMarksNotIn(IGameBoardGroup group, int valueToClear)
   {
-    var cellsNotInGroup = Cells.Where(x => x.GroupIndex != group.Cells.First().GroupIndex);
+    var cellsNotInGroup = Cells.Where(x => x.GroupIndex != group.GetCells().First().GroupIndex);
 
     foreach (var cell in cellsNotInGroup)
     {

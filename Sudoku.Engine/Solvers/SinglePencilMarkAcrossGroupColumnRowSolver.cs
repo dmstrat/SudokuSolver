@@ -30,7 +30,7 @@ namespace Sudoku.Engine.Solvers
         var pencilMarksWithCountOfOne = groupedByPencilMarksWithCount.Where(x => x.Value == 1);
         foreach (var kvp in pencilMarksWithCountOfOne)
         {
-          SolveGroupWithValue(group.Cells, kvp.Key);
+          SolveGroupingWithValue(group.Cells, kvp.Key);
         }
       }
 
@@ -41,7 +41,7 @@ namespace Sudoku.Engine.Solvers
         var pencilMarksWithCountOfOne = groupedByPencilMarksWithCount.Where(x => x.Value == 1);
         foreach (var kvp in pencilMarksWithCountOfOne)
         {
-          SolveGroupWithValue(row.Cells, kvp.Key);
+          SolveGroupingWithValue(row.Cells, kvp.Key);
         }
       }
 
@@ -52,14 +52,14 @@ namespace Sudoku.Engine.Solvers
         var pencilMarksWithCountOfOne = groupedByPencilMarksWithCount.Where(x => x.Value == 1);
         foreach (var kvp in pencilMarksWithCountOfOne)
         {
-          SolveGroupWithValue(column.Cells, kvp.Key);
+          SolveGroupingWithValue(column.Cells, kvp.Key);
         }
       }
 
       return _GameBoard;
     }
 
-    private void SolveGroupWithValue(IEnumerable<GameCell> gameCells, int valueToSolveInGroup)
+    private void SolveGroupingWithValue(IEnumerable<GameCell> gameCells, int valueToSolveInGroup)
     {
       foreach (var cell in gameCells)
       {

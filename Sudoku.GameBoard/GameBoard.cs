@@ -140,24 +140,43 @@ namespace Sudoku.GameBoard
 
     private static StringBuilder GenerateRow(StringBuilder stringBuilder, IList<GameCell> gameCells, int startOffset)
     {
+      var cell1 = gameCells[startOffset].Value.ToString();
+      var cell1String = cell1 == "" ? " " : cell1;
+      var cell2 = gameCells[startOffset + 1].Value.ToString();
+      var cell2String = cell2 == "" ? " " : cell2;
+      var cell3 = gameCells[startOffset + 2].Value.ToString();
+      var cell3String = cell3 == "" ? " " : cell3;
+      var cell4 = gameCells[startOffset + 3].Value.ToString();
+      var cell4String = cell4 == "" ? " " : cell4;
+      var cell5 = gameCells[startOffset + 4].Value.ToString();
+      var cell5String = cell5 == "" ? " " : cell5;
+      var cell6 = gameCells[startOffset + 5].Value.ToString();
+      var cell6String = cell6 == "" ? " " : cell6;
+      var cell7 = gameCells[startOffset + 6].Value.ToString();
+      var cell7String = cell7 == "" ? " " : cell7;
+      var cell8 = gameCells[startOffset + 7].Value.ToString();
+      var cell8String = cell8 == "" ? " " : cell8;
+      var cell9 = gameCells[startOffset + 8].Value.ToString();
+      var cell9String = cell9 == "" ? " " : cell9;
+
       stringBuilder.Append("| ");
-      stringBuilder.Append(gameCells[startOffset].Value.ToString());
+      stringBuilder.Append(cell1String);
       stringBuilder.Append(" | ");
-      stringBuilder.Append(gameCells[startOffset + 1].Value.ToString());
+      stringBuilder.Append(cell2String);
       stringBuilder.Append(" | ");
-      stringBuilder.Append(gameCells[startOffset + 2].Value.ToString());
+      stringBuilder.Append(cell3String);
       stringBuilder.Append(" || ");
-      stringBuilder.Append(gameCells[startOffset + 3].Value.ToString());
+      stringBuilder.Append(cell4String);
       stringBuilder.Append(" | ");
-      stringBuilder.Append(gameCells[startOffset + 4].Value.ToString());
+      stringBuilder.Append(cell5String);
       stringBuilder.Append(" | ");
-      stringBuilder.Append(gameCells[startOffset + 5].Value.ToString());
+      stringBuilder.Append(cell6String);
       stringBuilder.Append(" || ");
-      stringBuilder.Append(gameCells[startOffset + 6].Value.ToString());
+      stringBuilder.Append(cell7String);
       stringBuilder.Append(" | ");
-      stringBuilder.Append(gameCells[startOffset + 7].Value.ToString());
+      stringBuilder.Append(cell8String);
       stringBuilder.Append(" | ");
-      stringBuilder.Append(gameCells[startOffset + 8].Value.ToString());
+      stringBuilder.Append(cell9String);
       stringBuilder.Append(" ||");
 
       return stringBuilder;

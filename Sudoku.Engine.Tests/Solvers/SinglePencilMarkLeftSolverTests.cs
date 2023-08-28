@@ -5,7 +5,7 @@ using Sudoku.GameBoard;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
-  internal class SinglePencilMarkAcrossGroupColumnRowSolverTests
+  internal class SinglePencilMarkLeftSolverTests
   {
     private ConsoleTraceListener _Listener;
 
@@ -30,7 +30,7 @@ namespace Sudoku.Engine.Tests.Solvers
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput);
       var engine = new Engine(gameBoard);
-      var solvers = new List<ISolver> { new SinglePencilMarkAcrossGroupColumnRowSolver() };
+      var solvers = new List<ISolver> { new SinglePencilMarkLeftSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 
       var result = engine.Solve();

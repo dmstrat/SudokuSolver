@@ -3,7 +3,7 @@ using System.Diagnostics;
 
 namespace Sudoku.Engine
 {
-    internal class PencilMarksGenerator : IPencilMarkGenerator
+    public class PencilMarksGenerator : IPencilMarkGenerator
     {
         private IGameBoard _GameBoard;
 
