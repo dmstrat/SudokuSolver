@@ -54,6 +54,7 @@ namespace Sudoku.Engine
           boardHadNoActivityCount++;
         }
         loopCount++;
+        _BoardHadActivity = false;
       }
       return _GameBoard;
     }
@@ -68,7 +69,7 @@ namespace Sudoku.Engine
       var solverList = new List<ISolver>();
       solverList.Add(new SinglePencilMarkLeftSolver());
       solverList.Add(new SinglePencilMarkAcrossGroupColumnRowSolver());
-      //solverList.Add(new StraightLineRemovesPencilMarksSolver());
+      solverList.Add(new StraightLineRemovesPencilMarksSolver());
       solverList.Add(new Pattern01Solver());
       return solverList;
     }

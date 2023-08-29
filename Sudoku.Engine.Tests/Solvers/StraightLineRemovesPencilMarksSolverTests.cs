@@ -27,6 +27,8 @@ namespace Sudoku.Engine.Tests.Solvers
     [TestCase(GameBoard01.MissingOneValueFromOneGroup_Input, GameBoard01.Solved_Output)]
     [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardForStraightLineTests.Game_Input, GameBoardForStraightLineTests.Game_Output)]
+    [TestCase(GameBoardForStraightLineRowsTests.Game_Input, GameBoardForStraightLineRowsTests.Game_Output)]
+    
     public void GivenBoard01SolveResultsCorrectHavingSingleStraightLineValueInGroupColumnRowSolver(string gameBoardInput, string solvedGameOutput)
     {
       //Build Game Board

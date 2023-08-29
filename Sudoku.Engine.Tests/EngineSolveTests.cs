@@ -26,6 +26,9 @@ namespace Sudoku.Engine.Tests
     [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardMedium01.Game_Input_Phase_2, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardMedium02.Game_Input, GameBoardMedium02.Game_Output)]
+    [TestCase(GameBoardModerate01.Game_Input, GameBoardModerate01.Game_Output)]
+    [TestCase(GameBoardHard01.Game_Input, GameBoardHard01.Game_Output)]
+    
     public void GivenBoardSolvesToExpectation(string gameBoardInput, string solvedGameOutput)
     {
       //Build Game Board

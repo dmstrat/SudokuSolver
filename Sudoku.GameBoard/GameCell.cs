@@ -96,7 +96,8 @@ namespace Sudoku.GameBoard
     {
       get
       {
-        var debuggerString = $"[{_Value ?? ' '}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
+        var cellValue = Value.HasValue ? Value.Value.ToString() : _EmptyValueAsString;
+        var debuggerString = $"[{cellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
         return debuggerString;
       }
     }
@@ -157,15 +158,19 @@ namespace Sudoku.GameBoard
 
     public void ClearPencilMark(int cellValue)
     {
+      Trace.WriteLine($"CELL [BEFORE]:{DebuggerDisplay}");
       var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int>() { cellValue });
       PencilMarks = newPencilMarks;
       CheckCell();
+      Trace.WriteLine($"CELL [AFTER]:{DebuggerDisplay}");
     }
 
     public void ClearPencilMarks()
     {
+      Trace.WriteLine($"CELL CLEARING [BEFORE]: {DebuggerDisplay}");
       PencilMarks = new List<int>();
       CheckCell();
+      Trace.WriteLine($"CELL CLEARING [AFTER]: {DebuggerDisplay}");
     }
 
     private static void NoOpGameCellUpdateMethod(IGameCell cell)

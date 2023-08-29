@@ -30,13 +30,24 @@ public class GameBoardColumn : IGameBoardColumn
   public void ClearPencilMarksNotIn(IGameBoardGroup group, int valueToClear)
   {
     var cellsNotInGroup = Cells.Where(x => x.GroupIndex != group.GetCells().First().GroupIndex);
-    ClearPencilMarksNotIn(group.GetCells(), new[]{valueToClear});
+    ClearPencilMarksIn(cellsNotInGroup, new[]{valueToClear});
   }
 
   public void ClearPencilMarksNotIn(GameBoardGroupColumn groupColumn)
   {
     var distinctPencilMarksInGroupColumn = groupColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
     ClearPencilMarksNotIn(groupColumn.Cells, distinctPencilMarksInGroupColumn);
+  }
+
+  private void ClearPencilMarksIn(IEnumerable<IGameCell> cells, IEnumerable<int> valuesToClear)
+  {
+    foreach (var cell in cells)
+    {
+      foreach (var valueToClear in valuesToClear)
+      {
+        cell.ClearPencilMark(valueToClear);
+      }
+    }
   }
 
   private void ClearPencilMarksNotIn(IEnumerable<IGameCell> cells, IEnumerable<int> valuesToClear)
