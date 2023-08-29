@@ -9,4 +9,5 @@ public interface IGameCell
   public int GetRowIndex();
   public int GetColumnIndex();
   public void ClearPencilMark(int cellValue);
+  void ClearPencilMarks();
 }

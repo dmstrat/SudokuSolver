@@ -10,15 +10,22 @@ namespace Sudoku.Engine.Solvers
     {
       _GameBoard = gameBoard;
       var cellsToSolve = _GameBoard.GetCells().Where(x => !x.Value.HasValue);
-      foreach (var cell in cellsToSolve)
+      bool didWork;
+      do
       {
-        //solve cell if there is only one pencil mark
-        var onlyOneChoice = cell.PencilMarks.Count() == 1;
-        if (onlyOneChoice)
+        didWork = false;
+        foreach (var cell in cellsToSolve)
         {
-          cell.Value = cell.PencilMarks.First();
+          //solve cell if there is only one pencil mark
+          var onlyOneChoice = cell.PencilMarks.Count() == 1;
+          if (onlyOneChoice)
+          {
+            cell.Value = cell.PencilMarks.First();
+            didWork = true;
+          }
         }
-      }
+      } while (didWork);
+
       return _GameBoard;
     }
   }

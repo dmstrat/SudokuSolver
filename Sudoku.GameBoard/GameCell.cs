@@ -54,6 +54,7 @@ namespace Sudoku.GameBoard
         _CellValue = value;
         if (value != null)
         {
+          ClearPencilMarks();
           CellValueUpdated(this);
         }
       }
@@ -153,6 +154,22 @@ namespace Sudoku.GameBoard
     {
       var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int>() { cellValue });
       PencilMarks = newPencilMarks;
+      CheckCell();
+    }
+
+    public void ClearPencilMarks()
+    {
+      PencilMarks = new List<int>();
+      CheckCell();
+    }
+
+    private void CheckCell()
+    {
+      var hasNoValueOrPencilMarks = !PencilMarks.Any() & !Value.HasValue;
+      if (hasNoValueOrPencilMarks)
+      {
+        throw new GameInvalidValuesInBoard("Can not have empty PencilMarks AND no Value for cell");
+      }
     }
   }
 }

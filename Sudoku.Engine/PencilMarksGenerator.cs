@@ -47,7 +47,7 @@ namespace Sudoku.Engine
                   .Concat(missingNumbersListFromRow.Concat(missingNumbersListFromColumn));//.Distinct();
                                                                                           //build list of numbers that are in every list
                 var missingNumbers = allMissingNumbersJoinedTogether.GroupBy(val => val)
-                  .Where(group => group.Count() == numberOfListsJoined)
+                  .Where(numGroup => numGroup.Count() == numberOfListsJoined)
                   .Select(groupValue => groupValue.Key).ToList();
 
                 Trace.WriteLine($"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", missingNumbers)}");//add missing numbers as pencil marks to cell 

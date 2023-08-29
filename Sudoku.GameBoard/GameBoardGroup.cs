@@ -13,6 +13,12 @@ public class GameBoardGroup : IGameBoardGroup
     }
   }
 
+  public int GetIndex()
+  {
+    return Index;
+  }
+
+
   public GameBoardGroup(IEnumerable<GameCell> inputGameCells)
   {
     Cells = inputGameCells;
@@ -29,6 +35,18 @@ public class GameBoardGroup : IGameBoardGroup
     return newString;
   }
 
+  public void ClearPencilMarksNotIn(GameBoardGroupColumn groupColumn)
+  {
+    var distinctPencilMarksInGroupColumn = groupColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
+    ClearPencilMarksNotIn(groupColumn.Cells, distinctPencilMarksInGroupColumn);
+  }
+
+  public void ClearPencilMarksNotIn(GameBoardGroupRow groupRow)
+  {
+    var distinctPencilMarksInGroupColumn = groupRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
+    ClearPencilMarksNotIn(groupRow.Cells, distinctPencilMarksInGroupColumn);
+  }
+
   public void ClearPencilMark(int? cellValue)
   {
     var noWorkToDo = !cellValue.HasValue;
@@ -37,6 +55,20 @@ public class GameBoardGroup : IGameBoardGroup
     {
       cell.ClearPencilMark(cellValue!.Value);
     }
+  }
+
+  private void ClearPencilMarksNotIn(IEnumerable<GameCell> cells, IEnumerable<int> valuesToClear)
+  {
+    var cellsNotProvided = Cells.Except(cells);
+
+    foreach (var number in valuesToClear)
+    {
+      foreach (var cell in cellsNotProvided)
+      {
+        cell.ClearPencilMark(number);
+      }
+    }
+
   }
 
   public GameBoardGroupColumn GetColumnCells(ColumnPosition columnPosition)

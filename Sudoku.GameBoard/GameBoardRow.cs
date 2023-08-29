@@ -1,4 +1,6 @@
-﻿namespace Sudoku.GameBoard;
+﻿using Sudoku.GameBoard;
+
+namespace Sudoku.GameBoard;
 
 public class GameBoardRow : IGameBoardRow
 {
@@ -24,9 +26,23 @@ public class GameBoardRow : IGameBoardRow
       cell.ClearPencilMark(cellValue!.Value);
     }
   }
-}
 
-public interface IGameBoardRow
-{
-  public void ClearPencilMark(int? cellValue);
+  public void ClearPencilMarksNotIn(GameBoardRow groupRow)
+  {
+    var distinctPencilMarksInGroupColumn = groupRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
+    ClearPencilMarksNotIn(groupRow.Cells, distinctPencilMarksInGroupColumn);
+  }
+
+  private void ClearPencilMarksNotIn(IEnumerable<GameCell> cells, IEnumerable<int> valuesToClear)
+  {
+    var cellsNotProvided = Cells.Except(cells);
+
+    foreach (var number in valuesToClear)
+    {
+      foreach (var cell in cellsNotProvided)
+      {
+        cell.ClearPencilMark(number);
+      }
+    }
+  }
 }

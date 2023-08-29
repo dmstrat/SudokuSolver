@@ -1,4 +1,5 @@
-﻿using Sudoku.GameBoard.Helpers;
+﻿using System.Diagnostics;
+using Sudoku.GameBoard.Helpers;
 using Sudoku.GameBoard.Validators;
 using System.Text;
 
@@ -66,6 +67,7 @@ namespace Sudoku.GameBoard
 
     private void ClearPencilMarksFor(IGameCell cell)
     {
+      Trace.WriteLine($"SOLVED CELL:value:{cell.Value}/group:{cell.GetGroupIndex()}/row:{cell.GetRowIndex()}/column:{cell.GetColumnIndex()}/");
       var group = GetGroupById(cell.GetGroupIndex()+1);
       var row = GetRowById(cell.GetRowIndex()+1);
       var column = GetColumnById(cell.GetColumnIndex()+1);
