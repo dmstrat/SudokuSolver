@@ -2,11 +2,16 @@
 using Sudoku.GameBoard.Helpers;
 using Sudoku.GameBoard.Validators;
 using System.Text;
+#pragma warning disable CS8618
 
 namespace Sudoku.GameBoard
 {
+  public delegate void GameBoardHadActivity(IGameBoard gameBoard);
+
   public class GameBoard : IGameBoard
   {
+    public event GameBoardHadActivity BoardHadActivity;
+
     public IList<GameCell> Cells { get; }
 
     public IList<GameBoardGroup> Groups
@@ -22,6 +27,8 @@ namespace Sudoku.GameBoard
         return groups;
       }
     }
+
+    public void NoOpMethod(IGameBoard gameBoard) { }
 
     public IList<GameBoardRow> Rows
     {
@@ -62,7 +69,20 @@ namespace Sudoku.GameBoard
       foreach (var cell in Cells)
       {
         cell.CellValueUpdated += ClearPencilMarksFor;
+        cell.CellPencilMarksUpdated += PencilMarksUpdated;
       }
+
+      BoardHadActivity += NoOpMethod;
+    }
+
+    private void ReportBoardHadActivity()
+    {
+      BoardHadActivity(this);
+    }
+
+    private void PencilMarksUpdated(IGameCell cell)
+    {
+      ReportBoardHadActivity();
     }
 
     private void ClearPencilMarksFor(IGameCell cell)
@@ -74,6 +94,7 @@ namespace Sudoku.GameBoard
       group.ClearPencilMark(cell.Value);
       row.ClearPencilMark(cell.Value);
       column.ClearPencilMark(cell.Value);
+      ReportBoardHadActivity();
     }
 
     public IEnumerable<GameBoardGroup> GetGroups()
@@ -195,16 +216,20 @@ namespace Sudoku.GameBoard
       var group = Groups[cell.GroupIndex];
       return group;
     }
+
     public GameBoardRow GetRowBy(GameCell cell)
     {
       var row = Rows[cell.RowIndex];
       return row;
     }
+    
     public GameBoardColumn GetColumnBy(GameCell cell)
     {
       var column = Columns[cell.ColumnIndex];
       return column;
     }
+
+    
 
     public IEnumerable<GameCell> GetCells()
     {

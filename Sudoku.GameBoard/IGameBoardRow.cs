@@ -3,5 +3,5 @@
 public interface IGameBoardRow
 {
   public void ClearPencilMark(int? cellValue);
-  public void ClearPencilMarksNotIn(GameBoardRow row);
+  public void ClearPencilMarksNotIn(GameBoardGroupRow row);
 }

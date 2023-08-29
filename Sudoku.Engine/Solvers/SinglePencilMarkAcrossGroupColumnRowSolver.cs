@@ -14,16 +14,13 @@ namespace Sudoku.Engine.Solvers
   /// </summary>
   public class SinglePencilMarkAcrossGroupColumnRowSolver : ISolver
   {
-    private IGameBoard _GameBoard;
+    private Dictionary<int, int> _ValuesWithCount = new();
 
     public IGameBoard Solve(IGameBoard gameBoard)
     {
-      _GameBoard = gameBoard;
-
       //loop through each row, column, and group: see if there is a single pencil mark regardless of 
       // other pencil marks in that group, row, column
-
-      var groups = _GameBoard.GetGroups();
+      var groups = gameBoard.GetGroups();
       foreach (var group in groups)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(group.Cells);
@@ -34,7 +31,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      var rows = _GameBoard.GetRows();
+      var rows = gameBoard.GetRows();
       foreach (var row in rows)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(row.Cells);
@@ -45,7 +42,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      var columns = _GameBoard.GetColumns();
+      var columns = gameBoard.GetColumns();
       foreach (var column in columns)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(column.Cells);
@@ -56,7 +53,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      return _GameBoard;
+      return gameBoard;
     }
 
     private void SolveGroupingWithValue(IEnumerable<GameCell> gameCells, int valueToSolveInGroup)
@@ -72,8 +69,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
     }
-
-    private Dictionary<int, int> _ValuesWithCount = new();
+    
     private Dictionary<int, int> BuildPencilMarksWithCount(IEnumerable<GameCell> gameCells)
     {
       _ValuesWithCount = new Dictionary<int, int>();

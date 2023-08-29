@@ -29,52 +29,18 @@ namespace Sudoku.Engine.Solvers
       var middleColumnCells = group.GetColumnCells(ColumnPosition.Middle);
       var rightColumnCells = group.GetColumnCells(ColumnPosition.Right);
 
-      var leftColumnPencilMarks = leftColumnCells.GetPencilMarks();
-      var middleColumnPencilMarks = middleColumnCells.GetPencilMarks();
-      var rightColumnPencilMarks = rightColumnCells.GetPencilMarks();
+      var leftColumnPencilMarks = leftColumnCells.GetPencilMarks().ToArray();
+      var middleColumnPencilMarks = middleColumnCells.GetPencilMarks().ToArray();
+      var rightColumnPencilMarks = rightColumnCells.GetPencilMarks().ToArray();
 
-      var listOfLeftColumnValuesThatAreOnlyInColumn = new List<int>();
-      foreach (var leftCellPencilMark in leftColumnPencilMarks)
-      {
-        //is this value in any other column? 
-        var isValuePresentInMiddleColumn = middleColumnPencilMarks.Contains(leftCellPencilMark);
-        var isValuePresentInRightColumn = rightColumnPencilMarks.Contains(leftCellPencilMark);
-        if (isValuePresentInMiddleColumn || isValuePresentInRightColumn)
-        {
-          continue;
-        }
+      var listOfLeftColumnValuesThatAreOnlyInColumn = GenerateListOfUniquePencilMarksFor(leftColumnPencilMarks, 
+        middleColumnPencilMarks, rightColumnPencilMarks);
 
-        listOfLeftColumnValuesThatAreOnlyInColumn.Add(leftCellPencilMark);
-      }
+      var listOfMiddleColumnValuesThatAreOnlyInColumn = GenerateListOfUniquePencilMarksFor(middleColumnPencilMarks,
+        leftColumnPencilMarks, rightColumnPencilMarks);
 
-      var listOfMiddleColumnValuesThatAreOnlyInColumn = new List<int>();
-      foreach (var middleCellPencilMark in middleColumnPencilMarks)
-      {
-        //is this value in any other column? 
-        var isValuePresentInLeftColumn = leftColumnPencilMarks.Contains(middleCellPencilMark);
-        var isValuePresentInRightColumn = rightColumnPencilMarks.Contains(middleCellPencilMark);
-        if (isValuePresentInLeftColumn || isValuePresentInRightColumn)
-        {
-          continue;
-        }
-
-        listOfMiddleColumnValuesThatAreOnlyInColumn.Add(middleCellPencilMark);
-      }
-
-      var listOfRightColumnValuesThatAreOnlyInColumn = new List<int>();
-      foreach (var rightCellPencilMark in rightColumnPencilMarks)
-      {
-        //is this value in any other column? 
-        var isValuePresentInMiddleColumn = middleColumnPencilMarks.Contains(rightCellPencilMark);
-        var isValuePresentInLeftColumn = leftColumnPencilMarks.Contains(rightCellPencilMark);
-        if (isValuePresentInMiddleColumn || isValuePresentInLeftColumn)
-        {
-          continue;
-        }
-
-        listOfRightColumnValuesThatAreOnlyInColumn.Add(rightCellPencilMark);
-      }
-
+      var listOfRightColumnValuesThatAreOnlyInColumn = GenerateListOfUniquePencilMarksFor(rightColumnPencilMarks,
+        middleColumnPencilMarks, leftColumnPencilMarks);
 
       if (listOfLeftColumnValuesThatAreOnlyInColumn.Any())
       {
@@ -83,12 +49,10 @@ namespace Sudoku.Engine.Solvers
           var gameColumn = gameBoard.GetColumnBy(leftColumnCells.Cells.First());
           gameColumn.ClearPencilMarksNotIn(group, value);
         }
-        //we have columns to clear in other groups
       }
 
       if (listOfMiddleColumnValuesThatAreOnlyInColumn.Any())
       {
-        //we have columns to clear in other groups
         foreach (var value in listOfMiddleColumnValuesThatAreOnlyInColumn)
         {
           var gameColumn = gameBoard.GetColumnBy(middleColumnCells.Cells.First());
@@ -98,7 +62,6 @@ namespace Sudoku.Engine.Solvers
 
       if (listOfRightColumnValuesThatAreOnlyInColumn.Any())
       {
-        //we have columns to clear in other groups
         foreach (var value in listOfRightColumnValuesThatAreOnlyInColumn)
         {
           var gameColumn = gameBoard.GetColumnBy(rightColumnCells.Cells.First());
@@ -113,52 +76,18 @@ namespace Sudoku.Engine.Solvers
       var middleRowCells = group.GetRowCells(RowPosition.Middle);
       var bottomRowCells = group.GetRowCells(RowPosition.Bottom);
 
-      var topRowPencilMarks = topRowCells.GetPencilMarks();
-      var middleRowPencilMarks = middleRowCells.GetPencilMarks();
-      var bottomRowPencilMarks = bottomRowCells.GetPencilMarks();
+      var topRowPencilMarks = topRowCells.GetPencilMarks().ToArray();
+      var middleRowPencilMarks = middleRowCells.GetPencilMarks().ToArray();
+      var bottomRowPencilMarks = bottomRowCells.GetPencilMarks().ToArray();
 
-      var listOfTopRowValuesThatAreOnlyInColumn = new List<int>();
-      foreach (var topCellPencilMark in topRowPencilMarks)
-      {
-        //is this value in any other row? 
-        var isValuePresentInMiddleRow = middleRowPencilMarks.Contains(topCellPencilMark);
-        var isValuePresentInBottomRow = bottomRowPencilMarks.Contains(topCellPencilMark);
-        if (isValuePresentInMiddleRow || isValuePresentInBottomRow)
-        {
-          continue;
-        }
+      var listOfTopRowValuesThatAreOnlyInColumn =
+        GenerateListOfUniquePencilMarksFor(topRowPencilMarks, middleRowPencilMarks, bottomRowPencilMarks);
 
-        listOfTopRowValuesThatAreOnlyInColumn.Add(topCellPencilMark);
-      }
+      var listOfMiddleRowValuesThatAreOnlyInColumn =
+        GenerateListOfUniquePencilMarksFor(middleRowPencilMarks, topRowPencilMarks, bottomRowPencilMarks);
 
-      var listOfMiddleRowValuesThatAreOnlyInColumn = new List<int>();
-      foreach (var middleCellPencilMark in middleRowPencilMarks)
-      {
-        //is this value in any other row? 
-        var isValuePresentInTopRow = topRowPencilMarks.Contains(middleCellPencilMark);
-        var isValuePresentInBottomRow = bottomRowPencilMarks.Contains(middleCellPencilMark);
-        if (isValuePresentInTopRow || isValuePresentInBottomRow)
-        {
-          continue;
-        }
-
-        listOfMiddleRowValuesThatAreOnlyInColumn.Add(middleCellPencilMark);
-      }
-
-      var listOfBottomRowValuesThatAreOnlyInColumn = new List<int>();
-      foreach (var bottomCellPencilMark in bottomRowPencilMarks)
-      {
-        //is this value in any other row? 
-        var isValuePresentInMiddleRow = middleRowPencilMarks.Contains(bottomCellPencilMark);
-        var isValuePresentInTopRow = topRowPencilMarks.Contains(bottomCellPencilMark);
-        if (isValuePresentInMiddleRow || isValuePresentInTopRow)
-        {
-          continue;
-        }
-
-        listOfBottomRowValuesThatAreOnlyInColumn.Add(bottomCellPencilMark);
-      }
-
+      var listOfBottomRowValuesThatAreOnlyInColumn =
+        GenerateListOfUniquePencilMarksFor(bottomRowPencilMarks, middleRowPencilMarks, topRowPencilMarks);
 
       if (listOfTopRowValuesThatAreOnlyInColumn.Any())
       {
@@ -167,12 +96,10 @@ namespace Sudoku.Engine.Solvers
           var gameColumn = gameBoard.GetColumnBy(topRowCells.Cells.First());
           gameColumn.ClearPencilMarksNotIn(group, value);
         }
-        //we have row to clear in other groups
       }
 
       if (listOfMiddleRowValuesThatAreOnlyInColumn.Any())
       {
-        //we have row to clear in other groups
         foreach (var value in listOfMiddleRowValuesThatAreOnlyInColumn)
         {
           var gameColumn = gameBoard.GetColumnBy(middleRowCells.Cells.First());
@@ -182,13 +109,29 @@ namespace Sudoku.Engine.Solvers
 
       if (listOfBottomRowValuesThatAreOnlyInColumn.Any())
       {
-        //we have rows to clear in other groups
         foreach (var value in listOfBottomRowValuesThatAreOnlyInColumn)
         {
           var gameColumn = gameBoard.GetColumnBy(bottomRowCells.Cells.First());
           gameColumn.ClearPencilMarksNotIn(group, value);
         }
       }
+    }
+
+    private static List<int> GenerateListOfUniquePencilMarksFor(int[] sourceList, int[] otherCollection1,
+      int[] otherCollection2)
+    {
+      var listOfValuesRemaining = new List<int>();
+      foreach (var sourceListPencilMark in sourceList)
+      {
+        var isValuePresentInCollection1 = otherCollection1.Contains(sourceListPencilMark);
+        var isValuePresentInCollection2 = otherCollection2.Contains(sourceListPencilMark);
+        if (isValuePresentInCollection1 || isValuePresentInCollection2)
+        {
+          continue;
+        }
+        listOfValuesRemaining.Add(sourceListPencilMark);
+      }
+      return listOfValuesRemaining;
     }
   }
 }

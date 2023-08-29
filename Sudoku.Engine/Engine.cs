@@ -11,12 +11,21 @@ namespace Sudoku.Engine
     private readonly IGameBoard _OriginalGameBoard;
     private IGameBoard _GameBoard;
     private IEnumerable<ISolver> _Solvers;
+    private bool _BoardHadActivity;
+    private readonly int _BoardInactivityMaxCount = 5;
 
     public Engine(IGameBoard gameBoard)
     {
       _OriginalGameBoard = GameBoardFactory.Create(gameBoard.GetValuesAsString());
-      _GameBoard = gameBoard;
+      _GameBoard = (GameBoard.GameBoard)gameBoard;
       _Solvers = CollectDefaultSolversForEngine();
+      _BoardHadActivity = false;
+      gameBoard.BoardHadActivity += SomethingChanged;
+    }
+
+    public void SomethingChanged(IGameBoard gameBoard)
+    {
+      _BoardHadActivity = true;
     }
 
     public IGameBoard Solve()
@@ -26,8 +35,8 @@ namespace Sudoku.Engine
       var loopCount = 0;
       var pencilMarksGenerator = new PencilMarksGenerator();
       _GameBoard = pencilMarksGenerator.GeneratePencilMarks(_GameBoard);
-
-      while (notSolved && loopCount <= _MaxLoopCount)
+      var boardHadNoActivityCount = 0;
+      while (notSolved && (boardHadNoActivityCount <= _BoardInactivityMaxCount) && loopCount <= _MaxLoopCount)
       {
         foreach (var solver in _Solvers)
         {
@@ -36,6 +45,14 @@ namespace Sudoku.Engine
 
         LogPencilMarks();
         notSolved = IsGameUnsolved();
+        if (_BoardHadActivity)
+        {
+          boardHadNoActivityCount = 0;
+        }
+        else
+        {
+          boardHadNoActivityCount++;
+        }
         loopCount++;
       }
       return _GameBoard;
@@ -51,7 +68,8 @@ namespace Sudoku.Engine
       var solverList = new List<ISolver>();
       solverList.Add(new SinglePencilMarkLeftSolver());
       solverList.Add(new SinglePencilMarkAcrossGroupColumnRowSolver());
-      solverList.Add(new StraightLineRemovesPencilMarksSolver());
+      //solverList.Add(new StraightLineRemovesPencilMarksSolver());
+      solverList.Add(new Pattern01Solver());
       return solverList;
     }
 

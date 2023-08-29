@@ -1,49 +1,80 @@
-﻿using System.Diagnostics;
-using System.Runtime.CompilerServices;
-using Sudoku.GameBoard.Constants;
+﻿using Sudoku.GameBoard.Constants;
 using Sudoku.GameBoard.Exceptions;
+using System.Diagnostics;
 
 namespace Sudoku.GameBoard
 {
-    // ReSharper disable once InconsistentNaming
-    public delegate void CellValueUpdated(IGameCell cell);
+  // ReSharper disable InconsistentNaming
+  public delegate void CellValueUpdated(IGameCell cell);
+  public delegate void CellPencilMarksUpdated(IGameCell cell);
 
   [DebuggerDisplay("{DebuggerDisplay,nq}")]
   public class GameCell : IGameCell
   {
-    private string DebuggerDisplay
-    {
-      get
-      {
-        var debuggerString = $"[{_CellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
-        return debuggerString;
-      }
-    }
-
     public event CellValueUpdated CellValueUpdated;
+    public event CellPencilMarksUpdated CellPencilMarksUpdated;
 
     private static readonly string _EmptyValueAsString = " ";
 
+    /// <summary>
+    /// Represents the cell's index in an array of all game cells in game board (zero-based)
+    ///   from left to right, top to bottom (0-80)
+    /// </summary>
     public int Index { get; set; }
+
+    /// <summary>
+    /// Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
+    /// </summary>
     public int GroupIndex { get; set; }
+
+    /// <summary>
+    /// Represents the row index (zero-based) from top to bottom (0-8)
+    /// </summary>
     public int RowIndex { get; set; }
+
+    /// <summary>
+    /// Represents the column index (zero-based) from left to right (0-8)
+    /// </summary>
     public int ColumnIndex { get; set; }
 
     /// <summary>
+    /// Represents the column position in the group it resides.
+    ///   Possible Values: Left, Middle, Right
+    /// </summary>
+    public ColumnPosition ColumnPosition { get; set; }
+
+    /// <summary>
+    /// Represents the row position in the group it resides.
+    ///   Possible Values: Top, Middle, Bottom
+    /// </summary>
+    public RowPosition RowPosition { get; set; }
+
+    /// <summary>
+    /// Represents the POSSIBLE values for this cell
+    /// </summary>
+    public IEnumerable<int> PencilMarks
+    {
+      get => _PencilMarks;
+      set
+      {
+        _PencilMarks = value;
+        CellPencilMarksUpdated(this);
+      }
+    }
+    private IEnumerable<int> _PencilMarks = new List<int>();
+
+    /// <summary>
     /// This value indicates if this GameCell Value is part of the original puzzle values
+    ///   This will indicate that the value can NOT be changed.
     /// </summary>
     public bool IsPuzzleValue { get; }
 
     /// <summary>
-    /// A list of 'pencil marks' that indicate possible values for the solve.
-    /// </summary>
-    public int?[]? PossibleValues { get; set; }
-    
-    /// <summary>
     /// The solve or puzzle value of the cell
     /// </summary>
-    public int? Value {
-      get => _CellValue;
+    public int? Value
+    {
+      get => _Value;
       set
       {
         if (IsPuzzleValue)
@@ -51,18 +82,42 @@ namespace Sudoku.GameBoard
           throw new InvalidOperationException("Cannot change a puzzle value.");
         }
 
-        _CellValue = value;
+        _Value = value;
         if (value != null)
         {
-          ClearPencilMarks();
+          _PencilMarks = new List<int>();
           CellValueUpdated(this);
         }
       }
     }
+    private int? _Value = null;
 
-    public IEnumerable<int> PencilMarks { get; set; } = Enumerable.Empty<int>();
-    public ColumnPosition ColumnPosition { get; set; }
-    public RowPosition RowPosition { get; set; }
+    private string DebuggerDisplay
+    {
+      get
+      {
+        var debuggerString = $"[{_Value ?? ' '}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
+        return debuggerString;
+      }
+    }
+
+    /// <summary>
+    /// The individual cell holding a single number for the solve or part of the puzzle.
+    /// </summary>
+    /// <param name="index">Game Cell's index in Game Board</param>
+    /// <param name="initialValue">The initial value for the cell.  Blank/Empty/Null means Empty Cell</param>
+    /// <param name="isPuzzleValue">Is this a puzzle value that should be locked and not changed by logic?</param>
+    public GameCell(int index, int? initialValue, bool isPuzzleValue = false)
+    {
+      Index = index;
+      GenerateGroupRowColumnIndexes(index);
+      _Value = initialValue;
+      IsPuzzleValue = isPuzzleValue;
+      ValidateInput();
+      Index = index;
+      CellValueUpdated += NoOpGameCellUpdateMethod;
+      CellPencilMarksUpdated += NoOpGameCellUpdateMethod;
+    }
 
     public int GetGroupIndex()
     {
@@ -79,37 +134,6 @@ namespace Sudoku.GameBoard
       return ColumnIndex;
     }
 
-    private int? _CellValue = null;
-
-    /// <summary>
-    /// The individual cell holding a single number for the solve or part of the puzzle.
-    /// </summary>
-    /// <param name="index">Game Cell's index in Game Board</param>
-    /// <param name="initialCellValue"></param>
-    /// <param name="isPuzzleValue"></param>
-    public GameCell(int index, int? initialCellValue, bool isPuzzleValue = false)
-    {
-      Index = index;
-      GenerateGroupRowColumnIndexes(index);
-      _CellValue = initialCellValue;
-      IsPuzzleValue = isPuzzleValue;
-      ValidateInput();
-      Index = index;
-      CellValueUpdated += NoOpGameCellUpdateMethod;
-    }
-
-    private static void NoOpGameCellUpdateMethod(IGameCell cell)
-    {
-      //intentionally no-op method
-    }
-
-    private void GenerateGroupRowColumnIndexes(int index)
-    {
-      GroupIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.GROUP_ARRAY_INDEX_VALUE];
-      RowIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.ROW_ARRAY_INDEX_VALUE];
-      ColumnIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.COLUMN_ARRAY_INDEX_VALUE];
-    }
-
     public override string ToString()
     {
       var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
@@ -117,36 +141,17 @@ namespace Sudoku.GameBoard
       return returnValue;
     }
 
-    private void ValidateInput()
-    {
-      var cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece = IsPuzzleValue && _CellValue == null;
-      if (cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece)
-      {
-        throw new InvalidOperationException("Can NOT construct GameCell as PuzzlePiece and a null/empty value.");
-      }
-
-      var invalidValuesAreNotAllowed = _CellValue is < 1 or > 9;
-      if (invalidValuesAreNotAllowed)
-      {
-        throw new InvalidOperationException("Invalid Value provided.  Valid Values are 1-9(always) or null(when not a puzzle piece)");
-      } 
-    }
-
     public void AddPencilMark(int pencilMark)
     {
-      //EnsureGameCellHasNoGameValueAlready();
+      var doNotAddPencilMarksToSolvedCells = _Value.HasValue;
+      if (doNotAddPencilMarksToSolvedCells)
+      {
+        return;
+      }
       var needToAddPencilMark = !PencilMarks.Contains(pencilMark);
       if (needToAddPencilMark)
       {
-        PencilMarks = PencilMarks.Concat(new List<int>() { pencilMark });
-      }
-    }
-
-    private void EnsureGameCellHasNoGameValueAlready()
-    {
-      if (Value.HasValue)
-      {
-        throw new NoPencilMarksAllowedWhenValueAlreadyExists();
+        _PencilMarks = PencilMarks.Concat(new List<int>() { pencilMark });
       }
     }
 
@@ -161,6 +166,33 @@ namespace Sudoku.GameBoard
     {
       PencilMarks = new List<int>();
       CheckCell();
+    }
+
+    private static void NoOpGameCellUpdateMethod(IGameCell cell)
+    {
+      //intentionally no-op method
+    }
+
+    private void GenerateGroupRowColumnIndexes(int index)
+    {
+      GroupIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.GROUP_ARRAY_INDEX_VALUE];
+      RowIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.ROW_ARRAY_INDEX_VALUE];
+      ColumnIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.COLUMN_ARRAY_INDEX_VALUE];
+    }
+
+    private void ValidateInput()
+    {
+      var cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece = IsPuzzleValue && _Value == null;
+      if (cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece)
+      {
+        throw new InvalidOperationException("Can NOT construct GameCell as PuzzlePiece and a null/empty value.");
+      }
+
+      var invalidValuesAreNotAllowed = _Value is < 1 or > 9;
+      if (invalidValuesAreNotAllowed)
+      {
+        throw new InvalidOperationException("Invalid Value provided.  Valid Values are 1-9(always) or null(when not a puzzle piece)");
+      }
     }
 
     private void CheckCell()

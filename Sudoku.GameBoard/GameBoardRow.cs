@@ -27,7 +27,7 @@ public class GameBoardRow : IGameBoardRow
     }
   }
 
-  public void ClearPencilMarksNotIn(GameBoardRow groupRow)
+  public void ClearPencilMarksNotIn(GameBoardGroupRow groupRow)
   {
     var distinctPencilMarksInGroupColumn = groupRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
     ClearPencilMarksNotIn(groupRow.Cells, distinctPencilMarksInGroupColumn);

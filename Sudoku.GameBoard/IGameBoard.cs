@@ -2,6 +2,7 @@
 {
   public interface IGameBoard
   {
+    public event GameBoardHadActivity BoardHadActivity;
     public IEnumerable<GameCell> GetCells();
     public IEnumerable<GameBoardGroup> GetGroups();
     public IEnumerable<GameBoardRow> GetRows();

@@ -47,23 +47,23 @@ namespace Sudoku.Engine.Solvers
 
       if (clearOtherCellsFromTheseTopNumbers)
       {
-        var row = (IGameBoardRow)gameBoard.GetRowBy(topRow.Cells.First());
-        row.ClearPencilMarksNotIn(row);
-        group.ClearPencilMarksNotIn(row);
+        var row = gameBoard.GetRowBy(topRow.Cells.First());
+        row.ClearPencilMarksNotIn(topRow);
+        group.ClearPencilMarksNotIn(topRow);
       }
 
       if (clearOtherCellsFromTheseMiddleNumbers)
       {
         var row = gameBoard.GetRowBy(middleRow.Cells.First());
-        row.ClearPencilMarksNotIn(row);
-        group.ClearPencilMarksNotIn(row);
+        row.ClearPencilMarksNotIn(middleRow);
+        group.ClearPencilMarksNotIn(middleRow);
       }
 
       if (clearOtherCellsFromTheseBottomNumbers)
       {
         var row = gameBoard.GetRowBy(bottomRow.Cells.First());
-        row.ClearPencilMarksNotIn(row);
-        group.ClearPencilMarksNotIn(row);
+        row.ClearPencilMarksNotIn(bottomRow);
+        group.ClearPencilMarksNotIn(bottomRow);
       }
     }
 

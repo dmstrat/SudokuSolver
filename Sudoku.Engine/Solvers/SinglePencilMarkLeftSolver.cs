@@ -4,12 +4,9 @@ namespace Sudoku.Engine.Solvers
 {
   public class SinglePencilMarkLeftSolver : ISolver
   {
-    private IGameBoard _GameBoard;
-
     public IGameBoard Solve(IGameBoard gameBoard)
     {
-      _GameBoard = gameBoard;
-      var cellsToSolve = _GameBoard.GetCells().Where(x => !x.Value.HasValue);
+      var cellsToSolve = gameBoard.GetCells().Where(x => !x.Value.HasValue);
       bool didWork;
       do
       {
@@ -26,7 +23,7 @@ namespace Sudoku.Engine.Solvers
         }
       } while (didWork);
 
-      return _GameBoard;
+      return gameBoard;
     }
   }
 }

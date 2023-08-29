@@ -4,7 +4,7 @@ using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests
 {
-  internal class SinglePencilMarkAcrossGroupColumnRowSolverTests
+  internal class EngineSolverTests
   {
     private ConsoleTraceListener _Listener;
 
@@ -26,7 +26,7 @@ namespace Sudoku.Engine.Tests
     [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardMedium01.Game_Input_Phase_2, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardMedium02.Game_Input, GameBoardMedium02.Game_Output)]
-    public void GivenBoard01SolveResultsCorrect(string gameBoardInput, string solvedGameOutput)
+    public void GivenBoardSolvesToExpectation(string gameBoardInput, string solvedGameOutput)
     {
       //Build Game Board
       //Instance Engine 
