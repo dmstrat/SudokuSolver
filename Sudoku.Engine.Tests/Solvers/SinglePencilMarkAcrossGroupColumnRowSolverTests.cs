@@ -1,10 +1,11 @@
-﻿using Sudoku.Engine.Tests.TestBoards;
+﻿using System.Diagnostics;
+using Sudoku.Engine.Solvers;
+using Sudoku.Engine.Tests.TestBoards;
 using Sudoku.GameBoard;
-using System.Diagnostics;
 
-namespace Sudoku.Engine.Tests
+namespace Sudoku.Engine.Tests.Solvers
 {
-  internal class EngineSolverTests
+  internal class SinglePencilMarkAcrossGroupColumnRowSolverTests
   {
     private ConsoleTraceListener _Listener;
 
@@ -22,19 +23,15 @@ namespace Sudoku.Engine.Tests
     }
 
     [TestCase(GameBoard01.MissingOneNumberPerRowAndColumn_Input, GameBoard01.Solved_Output)]
-    //[TestCase(GameBoard01.MissingOneValueFromOneGroup_Input, GameBoard01.Solved_Output)]
     [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
-    [TestCase(GameBoardMedium01.Game_Input_Phase_2, GameBoardMedium01.Game_Output)]
-    [TestCase(GameBoardMedium02.Game_Input, GameBoardMedium02.Game_Output)]
-    [TestCase(GameBoardModerate01.Game_Input, GameBoardModerate01.Game_Output)]
-    [TestCase(GameBoardHard01.Game_Input, GameBoardHard01.Game_Output)]
-    
-    public void GivenBoardSolvesToExpectation(string gameBoardInput, string solvedGameOutput)
+    public void GivenBoard01SolveResultsCorrectUsingSoloValueInGroupColumnRowSolver(string gameBoardInput, string solvedGameOutput)
     {
       //Build Game Board
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput);
       var engine = new Engine(gameBoard);
+      var solvers = new List<ISolver> { new SinglePencilMarkAcrossGroupColumnRowSolver() };
+      engine.RegisterSolvers(solvers);
       //Solve 
       var result = engine.Solve();
       //Verify solve 
@@ -42,4 +39,5 @@ namespace Sudoku.Engine.Tests
       Assert.That(actualResults, Is.EqualTo(solvedGameOutput));
     }
   }
+
 }

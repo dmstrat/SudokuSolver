@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Sudoku.GameBoard.Helpers;
 
 namespace Sudoku.GameBoard
 {
@@ -27,6 +28,9 @@ namespace Sudoku.GameBoard
           _ = int.TryParse(gameBoardWithPuzzleNumbers[i].ToString(), NumberStyles.Integer, null, out var nextNumber);
           newCell = new GameCell(i,nextNumber, _IsPartOfPuzzle);
         }
+
+        newCell.ColumnPosition = GameBoardHelper.GetColumnPosition(i);
+        newCell.RowPosition = GameBoardHelper.GetRowPosition(i);
         gameCells.Add(newCell);
       }
 
