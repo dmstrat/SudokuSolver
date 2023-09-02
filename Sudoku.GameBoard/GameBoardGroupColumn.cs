@@ -27,6 +27,10 @@ public class GameBoardGroupColumn
     }
   }
 
+  /// <summary>
+  /// Get Distinct List of Pencil Marks for this groupColumn cells
+  /// </summary>
+  /// <returns></returns>
   public IEnumerable<int> GetPencilMarks()
   {
     var distinctPencilMarks = Cells.SelectMany(x => x.PencilMarks).Distinct(); //.Select() Select(x=>x.PencilMarks).Select(y=>y.GetEnumerator().Current).ToList().Distinct();

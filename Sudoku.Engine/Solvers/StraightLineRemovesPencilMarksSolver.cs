@@ -33,40 +33,31 @@ namespace Sudoku.Engine.Solvers
       var middleColumnPencilMarks = middleColumnCells.GetPencilMarks().ToArray();
       var rightColumnPencilMarks = rightColumnCells.GetPencilMarks().ToArray();
 
-      var listOfLeftColumnValuesThatAreOnlyInColumn = GenerateListOfUniquePencilMarksFor(leftColumnPencilMarks, 
+      var numbersOnlyInLeftColumnOfGroup = GenerateListOfUniquePencilMarksFor(leftColumnPencilMarks,
         middleColumnPencilMarks, rightColumnPencilMarks);
 
-      var listOfMiddleColumnValuesThatAreOnlyInColumn = GenerateListOfUniquePencilMarksFor(middleColumnPencilMarks,
+      var numbersOnlyInMiddleColumnOfGroup = GenerateListOfUniquePencilMarksFor(middleColumnPencilMarks,
         leftColumnPencilMarks, rightColumnPencilMarks);
 
-      var listOfRightColumnValuesThatAreOnlyInColumn = GenerateListOfUniquePencilMarksFor(rightColumnPencilMarks,
+      var numbersOnlyInRightColumnOfGroup = GenerateListOfUniquePencilMarksFor(rightColumnPencilMarks,
         middleColumnPencilMarks, leftColumnPencilMarks);
 
-      if (listOfLeftColumnValuesThatAreOnlyInColumn.Any())
+      if (numbersOnlyInLeftColumnOfGroup.Any())
       {
-        foreach (var value in listOfLeftColumnValuesThatAreOnlyInColumn)
-        {
-          var gameColumn = gameBoard.GetColumnBy(leftColumnCells.Cells.First());
-          gameColumn.ClearPencilMarksNotIn(group, value);
-        }
+        var gameColumn = gameBoard.GetColumnBy(leftColumnCells.Cells.First());
+        gameColumn.ClearPencilMarksNotIn(group, numbersOnlyInLeftColumnOfGroup);
       }
 
-      if (listOfMiddleColumnValuesThatAreOnlyInColumn.Any())
+      if (numbersOnlyInMiddleColumnOfGroup.Any())
       {
-        foreach (var value in listOfMiddleColumnValuesThatAreOnlyInColumn)
-        {
-          var gameColumn = gameBoard.GetColumnBy(middleColumnCells.Cells.First());
-          gameColumn.ClearPencilMarksNotIn(group, value);
-        }
+        var gameColumn = gameBoard.GetColumnBy(middleColumnCells.Cells.First());
+        gameColumn.ClearPencilMarksNotIn(group, numbersOnlyInMiddleColumnOfGroup);
       }
 
-      if (listOfRightColumnValuesThatAreOnlyInColumn.Any())
+      if (numbersOnlyInRightColumnOfGroup.Any())
       {
-        foreach (var value in listOfRightColumnValuesThatAreOnlyInColumn)
-        {
-          var gameColumn = gameBoard.GetColumnBy(rightColumnCells.Cells.First());
-          gameColumn.ClearPencilMarksNotIn(group, value);
-        }
+        var gameColumn = gameBoard.GetColumnBy(rightColumnCells.Cells.First());
+        gameColumn.ClearPencilMarksNotIn(group, numbersOnlyInRightColumnOfGroup);
       }
     }
 
@@ -80,40 +71,31 @@ namespace Sudoku.Engine.Solvers
       var middleRowPencilMarks = middleRowCells.GetPencilMarks().ToArray();
       var bottomRowPencilMarks = bottomRowCells.GetPencilMarks().ToArray();
 
-      var listOfTopRowValuesThatAreOnlyInColumn =
+      var numbersOnlyInTopRowOfGroup =
         GenerateListOfUniquePencilMarksFor(topRowPencilMarks, middleRowPencilMarks, bottomRowPencilMarks);
 
-      var listOfMiddleRowValuesThatAreOnlyInColumn =
+      var numbersOnlyInMiddleRowOfGroup =
         GenerateListOfUniquePencilMarksFor(middleRowPencilMarks, topRowPencilMarks, bottomRowPencilMarks);
 
-      var listOfBottomRowValuesThatAreOnlyInColumn =
+      var numbersOnlyInBottomRowOfGroup =
         GenerateListOfUniquePencilMarksFor(bottomRowPencilMarks, middleRowPencilMarks, topRowPencilMarks);
 
-      if (listOfTopRowValuesThatAreOnlyInColumn.Any())
+      if (numbersOnlyInTopRowOfGroup.Any())
       {
-        foreach (var value in listOfTopRowValuesThatAreOnlyInColumn)
-        {
-          var gameColumn = gameBoard.GetColumnBy(topRowCells.Cells.First());
-          gameColumn.ClearPencilMarksNotIn(group, value);
-        }
+        var gameRow = gameBoard.GetRowBy(topRowCells.Cells.First());
+        gameRow.ClearPencilMarksNotIn(group, numbersOnlyInTopRowOfGroup);
       }
 
-      if (listOfMiddleRowValuesThatAreOnlyInColumn.Any())
+      if (numbersOnlyInMiddleRowOfGroup.Any())
       {
-        foreach (var value in listOfMiddleRowValuesThatAreOnlyInColumn)
-        {
-          var gameColumn = gameBoard.GetColumnBy(middleRowCells.Cells.First());
-          gameColumn.ClearPencilMarksNotIn(group, value);
-        }
+        var gameRow = gameBoard.GetRowBy(middleRowCells.Cells.First());
+        gameRow.ClearPencilMarksNotIn(group, numbersOnlyInMiddleRowOfGroup);
       }
 
-      if (listOfBottomRowValuesThatAreOnlyInColumn.Any())
+      if (numbersOnlyInBottomRowOfGroup.Any())
       {
-        foreach (var value in listOfBottomRowValuesThatAreOnlyInColumn)
-        {
-          var gameColumn = gameBoard.GetColumnBy(bottomRowCells.Cells.First());
-          gameColumn.ClearPencilMarksNotIn(group, value);
-        }
+        var gameRow = gameBoard.GetRowBy(bottomRowCells.Cells.First());
+        gameRow.ClearPencilMarksNotIn(group, numbersOnlyInBottomRowOfGroup);
       }
     }
 

@@ -27,10 +27,10 @@ public class GameBoardColumn : IGameBoardColumn
     }
   }
 
-  public void ClearPencilMarksNotIn(IGameBoardGroup group, int valueToClear)
+  public void ClearPencilMarksNotIn(IGameBoardGroup group, IEnumerable<int> valuesToClear)
   {
     var cellsNotInGroup = Cells.Where(x => x.GroupIndex != group.GetCells().First().GroupIndex);
-    ClearPencilMarksIn(cellsNotInGroup, new[]{valueToClear});
+    ClearPencilMarksIn(cellsNotInGroup, valuesToClear);
   }
 
   public void ClearPencilMarksNotIn(GameBoardGroupColumn groupColumn)
@@ -62,9 +62,4 @@ public class GameBoardColumn : IGameBoardColumn
       }
     }
   }
-}
-
-public interface IGameBoardColumn
-{
-  public void ClearPencilMark(int? cellValue);
 }

@@ -9,6 +9,11 @@ public class GameBoardGroupRow
     Cells = inputGameCells;
   }
 
+  public IEnumerable<GameCell> GetCells()
+  {
+    return Cells;
+  }
+
   public string GetValuesAsString()
   {
     var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));

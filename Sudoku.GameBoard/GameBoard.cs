@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using Sudoku.GameBoard.Helpers;
+﻿using Sudoku.GameBoard.Helpers;
 using Sudoku.GameBoard.Validators;
+using System.Diagnostics;
 using System.Text;
 #pragma warning disable CS8618
 
@@ -62,8 +62,14 @@ namespace Sudoku.GameBoard
     {
       Cells = gameCells;
       RegisterCellEvents();
+      Trace.WriteLine($"CurrentBoard:{BuildZeroBasedString()}");
     }
 
+    public string BuildZeroBasedString()
+    {
+      var boardWithZerosForBlank = string.Join("", Cells.Select(x => x.Value ?? 0));
+      return boardWithZerosForBlank;
+    }
     private void RegisterCellEvents()
     {
       foreach (var cell in Cells)

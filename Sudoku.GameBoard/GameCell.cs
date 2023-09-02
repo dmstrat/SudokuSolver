@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
 using Sudoku.GameBoard.Constants;
 using Sudoku.GameBoard.Exceptions;
 
@@ -73,7 +74,7 @@ public class GameCell : IGameCell
     {
       var cellValue = Value.HasValue ? Value.Value.ToString() : _EmptyValueAsString;
       var debuggerString =
-        $"[{cellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
+        $"<{Index}>[{cellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
       return debuggerString;
     }
   }
@@ -86,9 +87,22 @@ public class GameCell : IGameCell
     get => _PencilMarks;
     set
     {
+      var noWork = PencilMarksAreNotDifferent(_PencilMarks, value);
+      if (noWork)
+      {
+        return;
+      }
+      Trace.WriteLine($"CELL [BEFORE]:{DebuggerDisplay}");
       _PencilMarks = value;
       CellPencilMarksUpdated(this);
+      Trace.WriteLine($"CELL [AFTER]:{DebuggerDisplay}");
+
     }
+  }
+
+  private bool PencilMarksAreNotDifferent(IEnumerable<int> existingPencilMarks, IEnumerable<int> newPencilMarks)
+  {
+    return existingPencilMarks.OrderBy(x => x).SequenceEqual(newPencilMarks.OrderBy(x => x));
   }
 
   /// <summary>
@@ -136,11 +150,9 @@ public class GameCell : IGameCell
 
   public void ClearPencilMark(int cellValue)
   {
-    Trace.WriteLine($"CELL [BEFORE]:{DebuggerDisplay}");
     var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int> { cellValue });
     PencilMarks = newPencilMarks;
     CheckCell();
-    Trace.WriteLine($"CELL [AFTER]:{DebuggerDisplay}");
   }
 
   public void ClearPencilMarks()
@@ -164,11 +176,6 @@ public class GameCell : IGameCell
   public void AddPencilMark(int pencilMark)
   {
     var doNotAddPencilMarksToSolvedCells = _Value.HasValue;
-
-    if (_Value == null)
-    {
-      return;
-    }
 
     if (doNotAddPencilMarksToSolvedCells)
     {

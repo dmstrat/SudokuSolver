@@ -26,6 +26,7 @@ namespace Sudoku.Engine
     public void SomethingChanged(IGameBoard gameBoard)
     {
       _BoardHadActivity = true;
+      Trace.WriteLine($"CurrentBoard:{_GameBoard.BuildZeroBasedString()}");
     }
 
     public IGameBoard Solve()

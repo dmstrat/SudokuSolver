@@ -12,5 +12,6 @@
     public GameBoardGroup GetGroupBy(GameCell cell);
     public GameBoardRow GetRowBy(GameCell cell);
     public GameBoardColumn GetColumnBy(GameCell cell);
+    public string BuildZeroBasedString();
   }
 }
