@@ -1,6 +1,6 @@
 ﻿namespace Sudoku.GameBoard.Constants
 {
-  public static class GameBoardColumnCellNumbers
+  public static class GameBoardColumnCellIndexes
   {
     public static readonly int[] ColumnNumber1 = { 0, 9, 18, 27, 36, 45, 54, 63, 72 };
     public static readonly int[] ColumnNumber2 = { 1, 10, 19, 28, 37, 46, 55, 64, 73 };

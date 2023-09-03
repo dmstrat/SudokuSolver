@@ -1,4 +1,3 @@
-using System.Diagnostics.SymbolStore;
 using Microsoft.Extensions.Logging;
 using Sudoku.Engine.Tests.Loggers;
 using Sudoku.GameBoard.Exceptions;
@@ -10,22 +9,16 @@ namespace Sudoku.GameBoard.Tests
   public class GameBoardTests
   {
     public const int NumberOfGameCellsInGameBoard = 81;
-    private readonly ILoggerFactory _LoggerFactory;
     private readonly ILogger _Logger;
 
     public GameBoardTests()
     {
-      _LoggerFactory = LoggerFactory.Create(config =>
+      var loggerFactory = LoggerFactory.Create(config =>
       {
         config.AddProvider(new NUnitLoggerProvider())
           .SetMinimumLevel(LogLevel.Trace);
       });
-      _Logger = _LoggerFactory.CreateLogger<GameBoardTests>();
-    }
-
-    [SetUp]
-    public void Setup()
-    {
+      _Logger = loggerFactory.CreateLogger<GameBoardTests>();
     }
 
     [Test]

@@ -3,14 +3,11 @@ using Sudoku.Engine.Exceptions;
 using Sudoku.Engine.Loggers;
 using Sudoku.Engine.Solvers;
 using Sudoku.GameBoard;
-using System.Data;
-using System.Diagnostics;
 
 namespace Sudoku.Engine
 {
   public class Engine
   {
-    private readonly int[] _ValidGameNumbers = { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
     private const int MAX_LOOP_COUNT = 100;
     private readonly IGameBoard _OriginalGameBoard;
     private IGameBoard _GameBoard;
@@ -101,17 +98,14 @@ namespace Sudoku.Engine
 
     private void LogPencilMarks()
     {
-      Trace.WriteLine($"Pencil Marks: ");
-      Trace.Indent();
+      _Logger.LogStep(0, "Pencil Marks:");
       foreach (var cell in _GameBoard.GetCells())
       {
         if (cell.Value is null)
         {
-          Trace.WriteLine(
-            $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", cell.GetPencilMarks())}"); //add missing numbers as pencil marks to cell 
+          _Logger.LogStep(0, $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", cell.GetPencilMarks())}");
         }
       }
-      Trace.Unindent();
     }
   }
 }

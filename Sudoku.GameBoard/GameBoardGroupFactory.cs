@@ -15,31 +15,31 @@ namespace Sudoku.GameBoard
       switch (groupNumber)
       {
         case 1:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber1;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber1;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 2:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber2;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber2;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 3:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber3;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber3;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 4:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber4;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber4;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 5:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber5;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber5;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 6:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber6;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber6;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 7:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber7;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber7;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 8:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber8;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber8;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
         case 9:
-          groupNumberArray = GameBoardGroupCellNumbers.GroupNumber9;
+          groupNumberArray = GameBoardGroupCellIndexes.GroupNumber9;
           return BuildGroupByArrayOfIndexes(gameBoard, groupNumberArray);
       }
 

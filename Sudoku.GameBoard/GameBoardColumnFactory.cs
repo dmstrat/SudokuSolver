@@ -15,31 +15,31 @@ namespace Sudoku.GameBoard
       switch (columnNumber)
       {
         case 1:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber1;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber1;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 2:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber2;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber2;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 3:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber3;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber3;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 4:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber4;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber4;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 5:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber5;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber5;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 6:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber6;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber6;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 7:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber7;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber7;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 8:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber8;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber8;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
         case 9:
-          columnNumberArray = GameBoardColumnCellNumbers.ColumnNumber9;
+          columnNumberArray = GameBoardColumnCellIndexes.ColumnNumber9;
           return BuildRowByArrayOfIndexes(gameBoard, columnNumberArray);
       }
 

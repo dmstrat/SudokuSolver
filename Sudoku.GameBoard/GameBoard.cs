@@ -2,6 +2,9 @@
 using Sudoku.GameBoard.Validators;
 using System.Diagnostics;
 using System.Text;
+using Microsoft.Extensions.Logging;
+using Sudoku.GameBoard.Loggers;
+
 #pragma warning disable CS8618
 
 namespace Sudoku.GameBoard
@@ -11,6 +14,8 @@ namespace Sudoku.GameBoard
   public class GameBoard : IGameBoard
   {
     public event GameBoardHadActivity OnChanged;
+
+    private ILogger _Logger;
 
     public IList<GameCell> Cells { get; }
 
@@ -58,8 +63,9 @@ namespace Sudoku.GameBoard
       }
     }
 
-    public GameBoard(IList<GameCell> gameCells)
+    public GameBoard(IList<GameCell> gameCells, ILogger logger)
     {
+      _Logger = logger;
       Cells = gameCells;
       RegisterCellEvents();
       Trace.WriteLine($"CurrentBoard:{BuildZeroBasedString()}");
@@ -93,7 +99,7 @@ namespace Sudoku.GameBoard
 
     private void ClearPencilMarksFor(IGameCell cell)
     {
-      Trace.WriteLine($"SOLVED CELL:value:{cell.Value}/group:{cell.GetGroupIndex()}/row:{cell.GetRowIndex()}/column:{cell.GetColumnIndex()}/");
+      _Logger.LogAction("SOLVED CELL", $"Value:{cell.Value}/group:{cell.GetGroupIndex()}/row:{cell.GetRowIndex()}/column:{cell.GetColumnIndex()}/");
       var group = GetGroupById(cell.GetGroupIndex()+1);
       var row = GetRowById(cell.GetRowIndex()+1);
       var column = GetColumnById(cell.GetColumnIndex()+1);
@@ -253,7 +259,7 @@ namespace Sudoku.GameBoard
     public GameBoardGroup GetGroupById(int groupNumber)
     {
       GameBoardValidator.EnsureGroupNumberIsValid(groupNumber);
-      var indexList = GameBoardHelper.GetGroupIndexList(groupNumber);
+      var indexList = GameBoardHelper.GetGroupCellIndexesBy(groupNumber);
       var groupCells = indexList!.Select(GetCellByIndex).ToList();
       var returnObject = new GameBoardGroup(groupCells);
       return returnObject;
@@ -262,7 +268,7 @@ namespace Sudoku.GameBoard
     public GameBoardRow GetRowById(int rowNumber)
     {
       GameBoardValidator.EnsureRowNumberIsValid(rowNumber);
-      var indexList = GameBoardHelper.GetRowIndexList(rowNumber);
+      var indexList = GameBoardHelper.GetRowCellIndexesBy(rowNumber);
       var rowCells = indexList!.Select(GetCellByIndex).ToList();
       var returnObject = new GameBoardRow(rowCells);
       return returnObject;
@@ -271,7 +277,7 @@ namespace Sudoku.GameBoard
     public GameBoardColumn GetColumnById(int columnNumber)
     {
       GameBoardValidator.EnsureColumnNumberIsValid(columnNumber);
-      var indexList = GameBoardHelper.GetColumnIndexList(columnNumber);
+      var indexList = GameBoardHelper.GetColumnCellIndexesBy(columnNumber);
       var columnCells = indexList!.Select(GetCellByIndex).ToList();
       var returnObject = new GameBoardColumn(columnCells);
       return returnObject;

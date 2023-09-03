@@ -5,21 +5,17 @@ namespace Sudoku.GameBoard.Tests
 {
   public class GameCellTests
   {
-    private readonly ILoggerFactory _LoggerFactory;
     private readonly ILogger _Logger;
 
     public GameCellTests()
     {
-      _LoggerFactory = LoggerFactory.Create(config =>
+      var loggerFactory = LoggerFactory.Create(config =>
       {
         config.AddProvider(new NUnitLoggerProvider())
           .SetMinimumLevel(LogLevel.Trace);
       });
-      _Logger = _LoggerFactory.CreateLogger<GameBoardTests>();
+      _Logger = loggerFactory.CreateLogger<GameBoardTests>();
     }
-
-    [SetUp]
-    public void Setup() { }
 
     /// <summary>
     /// Cycle through changing the valid initial value to ANY VALID VALUE including null/empty
@@ -208,7 +204,7 @@ namespace Sudoku.GameBoard.Tests
       //add pencil marks provided (all valid, possible duplicates but that should be allowed as well)
       //no failures/exceptions or otherwise. 
       //verify pencil mark is there
-      var newCell = new GameCell(index, ctorValue, _Logger, isPuzzleValue);
+      var newCell = new GameCell(index, ctorValue, isPuzzleValue, 0, ColumnPosition.Left, RowPosition.Top, _Logger);
       foreach (var pencilMark in pencilMarks)
       {
         newCell.AddPencilMark(pencilMark);
@@ -226,7 +222,7 @@ namespace Sudoku.GameBoard.Tests
 
     private static GameCell GameCellCtor(int index, int? ctorValue, bool isPuzzlePiece, ILogger logger)
     {
-      var newCell = new GameCell(index, ctorValue, logger, isPuzzlePiece);
+      var newCell = new GameCell(index, ctorValue, isPuzzlePiece, 0, ColumnPosition.Left, RowPosition.Top, logger);
       Assert.That(newCell, Is.Not.Null, $"Ctor failed on values: index={index} | ctorValue={ctorValue} | isPuzzlePiece={isPuzzlePiece}.");
       AssertProperties(newCell, ctorValue, isPuzzlePiece);
       return newCell;

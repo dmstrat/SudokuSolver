@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.ComponentModel.DataAnnotations;
+using Microsoft.Extensions.Logging;
 using Sudoku.GameBoard.Constants;
 using Sudoku.GameBoard.Exceptions;
 using Sudoku.GameBoard.Loggers;
@@ -13,18 +14,22 @@ public delegate void CellPencilMarksUpdated(IGameCell cell);
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GameCell : IGameCell
 {
-  private static readonly string _EmptyValueAsString = " ";
+  private const string _EmptyValueAsString = " ";
   private IEnumerable<int> _PencilMarks = new List<int>();
   private int? _Value;
-  private ILogger _Logger;
+  private readonly ILogger _Logger;
 
   /// <summary>
-  ///   The individual cell holding a single number for the solve or part of the puzzle.
+  /// The individual cell that holds a single number for the game.
   /// </summary>
   /// <param name="index">Game Cell's index in Game Board</param>
-  /// <param name="initialValue">The initial value for the cell.  Blank/Empty/Null means Empty Cell</param>
-  /// <param name="isPuzzleValue">Is this a puzzle value that should be locked and not changed by logic?</param>
-  public GameCell(int index, int? initialValue, ILogger logger, bool isPuzzleValue = false)
+  /// <param name="initialValue">The initial value for the cell.  Blank/Empty/Null/0 means Empty Cell</param>
+  /// <param name="logger">logger to be used by this class</param>
+  /// <param name="rowPosition">The row position relative to the Group the cell is in</param>
+  /// <param name="isPuzzleValue">If set to true, is considered part of the puzzle and can not change.</param>
+  /// <param name="groupIndex">The index value for the group the cell is located</param>
+  /// <param name="columnPosition">The column position relative to the group the cell is located</param>
+  public GameCell(int index, int? initialValue, bool isPuzzleValue, int groupIndex, ColumnPosition columnPosition, RowPosition rowPosition, ILogger logger)
   {
     _Logger = logger;
     Index = index;
@@ -33,6 +38,8 @@ public class GameCell : IGameCell
     IsPuzzleValue = isPuzzleValue;
     ValidateInput();
     Index = index;
+    ColumnPosition = columnPosition;
+    RowPosition = rowPosition;
     CellValueUpdated += NoOpGameCellUpdateMethod;
     CellPencilMarksUpdated += NoOpGameCellUpdateMethod;
   }
@@ -41,34 +48,40 @@ public class GameCell : IGameCell
   ///   Represents the cell's index in an array of all game cells in game board (zero-based)
   ///   from left to right, top to bottom (0-80)
   /// </summary>
+  [Required, Range(0,81)]
   public int Index { get; private set; }
 
   /// <summary>
   ///   Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
   /// </summary>
+  [Required, Range(0,8)]
   public int GroupIndex { get; private set; }
 
   /// <summary>
   ///   Represents the row index (zero-based) from top to bottom (0-8)
   /// </summary>
+  [Required, Range(0, 8)]
   public int RowIndex { get; private set; }
 
   /// <summary>
   ///   Represents the column index (zero-based) from left to right (0-8)
   /// </summary>
+  [Required, Range(0, 8)]
   public int ColumnIndex { get; private set; }
 
   /// <summary>
   ///   Represents the column position in the group it resides.
   ///   Possible Values: Left, Middle, Right
   /// </summary>
-  public ColumnPosition ColumnPosition { get; set; }
+  [Required]
+  public ColumnPosition ColumnPosition { get; private set; }
 
   /// <summary>
   ///   Represents the row position in the group it resides.
   ///   Possible Values: Top, Middle, Bottom
   /// </summary>
-  public RowPosition RowPosition { get; set; }
+  [Required]
+  public RowPosition RowPosition { get; private set; }
 
   private string DebuggerDisplay
   {
@@ -115,6 +128,7 @@ public class GameCell : IGameCell
   /// <summary>
   ///   The solve or puzzle value of the cell
   /// </summary>
+  [Range(1,9)]
   public int? Value
   {
     get => _Value;
