@@ -33,9 +33,9 @@ namespace Sudoku.Engine.Solvers
       var middleRow = group.GetRowCells(RowPosition.Middle);
       var bottomRow = group.GetRowCells(RowPosition.Bottom);
 
-      var distinctNumbersInTopRow = topRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
-      var distinctNumbersInMiddleRow = middleRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
-      var distinctNumbersInBottomRow = bottomRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
+      var distinctNumbersInTopRow = topRow.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
+      var distinctNumbersInMiddleRow = middleRow.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
+      var distinctNumbersInBottomRow = bottomRow.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
 
       var emptyCellCountForTopRow = topRow.Cells.Count(x => !x.Value.HasValue);
       var emptyCellCountForMiddleRow = middleRow.Cells.Count(x => !x.Value.HasValue);
@@ -75,9 +75,9 @@ namespace Sudoku.Engine.Solvers
       var middleColumn = group.GetColumnCells(ColumnPosition.Middle);
       var rightColumn = group.GetColumnCells(ColumnPosition.Right);
 
-      var distinctNumbersInLeftColumn = leftColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
-      var distinctNumbersInMiddleColumn = middleColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
-      var distinctNumbersInRightColumn = rightColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
+      var distinctNumbersInLeftColumn = leftColumn.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
+      var distinctNumbersInMiddleColumn = middleColumn.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
+      var distinctNumbersInRightColumn = rightColumn.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
 
       var emptyCellCountForLeftColumn = leftColumn.Cells.Count(x => !x.Value.HasValue);
       var emptyCellCountForMiddleColumn = middleColumn.Cells.Count(x => !x.Value.HasValue);

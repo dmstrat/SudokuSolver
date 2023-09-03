@@ -1,36 +1,50 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-using Sudoku.GameBoard.Constants;
+﻿using Microsoft.Extensions.Logging;
 using Sudoku.GameBoard.Exceptions;
+using Sudoku.GameBoard.Loggers;
+using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace Sudoku.GameBoard;
 
 // ReSharper disable InconsistentNaming
 public delegate void CellValueUpdated(IGameCell cell);
-
 public delegate void CellPencilMarksUpdated(IGameCell cell);
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GameCell : IGameCell
 {
-  private static readonly string _EmptyValueAsString = " ";
+  private const string _EmptyValueAsString = " ";
   private IEnumerable<int> _PencilMarks = new List<int>();
   private int? _Value;
+  private readonly ILogger _Logger;
 
   /// <summary>
-  ///   The individual cell holding a single number for the solve or part of the puzzle.
+  /// The individual cell that holds a single number for the game.
   /// </summary>
-  /// <param name="index">Game Cell's index in Game Board</param>
-  /// <param name="initialValue">The initial value for the cell.  Blank/Empty/Null means Empty Cell</param>
-  /// <param name="isPuzzleValue">Is this a puzzle value that should be locked and not changed by logic?</param>
-  public GameCell(int index, int? initialValue, bool isPuzzleValue = false)
+  /// <param name="initialValue">The initial value for the cell.  Blank/Empty/Null/0 means Empty Cell [1-9]</param>
+  /// <param name="isPuzzleValue">If set to true, is considered part of the puzzle and can not change.</param>
+  /// <param name="index">Game Cell's index in Game Board [0-80]</param>
+  /// <param name="groupIndex">The index value for the group the cell is located [0-8]</param>
+  /// <param name="rowIndex">Row Index for the position of the cell in the game relative to the gameBoard [0-8]</param>
+  /// <param name="columnIndex">Column Index for the position of the cell in the game relative to the gameBoard</param>
+  /// <param name="columnPosition">Column position relative to the group the cell is located [Left, Middle, Right]</param>
+  /// <param name="rowPosition">The row position relative to the Group the cell is located [Top, Middle, Bottom]</param>
+  /// <param name="logger">logger to be used by this class</param>
+  public GameCell(int? initialValue, bool isPuzzleValue, int index,
+    int groupIndex, int rowIndex, int columnIndex,
+    ColumnPosition columnPosition, RowPosition rowPosition, ILogger logger)
   {
-    Index = index;
-    GenerateGroupRowColumnIndexes(index);
     _Value = initialValue;
     IsPuzzleValue = isPuzzleValue;
-    ValidateInput();
     Index = index;
+    GroupIndex = groupIndex;
+    RowIndex = rowIndex;
+    ColumnIndex = columnIndex;
+    ColumnPosition = columnPosition;
+    RowPosition = rowPosition;
+    _Logger = logger;
+
+    ValidateInput();
     CellValueUpdated += NoOpGameCellUpdateMethod;
     CellPencilMarksUpdated += NoOpGameCellUpdateMethod;
   }
@@ -39,34 +53,75 @@ public class GameCell : IGameCell
   ///   Represents the cell's index in an array of all game cells in game board (zero-based)
   ///   from left to right, top to bottom (0-80)
   /// </summary>
-  public int Index { get; set; }
+  [Required(ErrorMessage = "Cell's Index MUST be provided.")]
+  [Range(0,81, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  public int Index { get; private set; }
 
   /// <summary>
-  ///   Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
+  ///   This value indicates if this GameCell Value is part of the original puzzle values
+  ///   This will indicate that the value can NOT be changed.
   /// </summary>
-  public int GroupIndex { get; set; }
+  public bool IsPuzzleValue { get; }
+
+  /// <summary>
+  ///   The solve or puzzle value of the cell
+  /// </summary>
+  [Range(1, 9, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  public int? Value
+  {
+    get => _Value;
+    set
+    {
+      if (IsPuzzleValue)
+      {
+        throw new InvalidOperationException("Cannot change a puzzle value.");
+      }
+
+      _Value = value;
+      if (value == null)
+      {
+        return;
+      }
+
+      ClearPencilMarks();
+      CellValueUpdated(this);
+    }
+  }
+
+  /// <summary>
+  /// Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
+  /// </summary>
+  [Required(ErrorMessage = "GroupIndex MUST be supplied.")]
+  [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  public int GroupIndex { get; private set; }
 
   /// <summary>
   ///   Represents the row index (zero-based) from top to bottom (0-8)
   /// </summary>
-  public int RowIndex { get; set; }
+  [Required(ErrorMessage = "RowIndex MUST be supplied.")]
+  [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  public int RowIndex { get; private set; }
 
   /// <summary>
-  ///   Represents the column index (zero-based) from left to right (0-8)
+  /// Represents the column index (zero-based) from left to right (0-8)
   /// </summary>
-  public int ColumnIndex { get; set; }
+  [Required(ErrorMessage = "ColumnIndex MUST be supplied.")]
+  [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  public int ColumnIndex { get; private set; }
 
   /// <summary>
-  ///   Represents the column position in the group it resides.
+  /// Represents the column position in the group it resides.
   ///   Possible Values: Left, Middle, Right
   /// </summary>
-  public ColumnPosition ColumnPosition { get; set; }
+  [Required(ErrorMessage = "ColumnPosition MUST be supplied.")]
+  public ColumnPosition ColumnPosition { get; private set; }
 
   /// <summary>
-  ///   Represents the row position in the group it resides.
+  /// Represents the row position in the group it resides.
   ///   Possible Values: Top, Middle, Bottom
   /// </summary>
-  public RowPosition RowPosition { get; set; }
+  [Required(ErrorMessage = "RowPosition MUST be supplied.")]
+  public RowPosition RowPosition { get; private set; }
 
   private string DebuggerDisplay
   {
@@ -80,9 +135,9 @@ public class GameCell : IGameCell
   }
 
   /// <summary>
-  ///   Represents the POSSIBLE values for this cell
+  /// Represents the POSSIBLE values for this cell
   /// </summary>
-  public IEnumerable<int> PencilMarks
+  private IEnumerable<int> PencilMarks
   {
     get => _PencilMarks;
     set
@@ -92,46 +147,13 @@ public class GameCell : IGameCell
       {
         return;
       }
-      Trace.WriteLine($"CELL [BEFORE]:{DebuggerDisplay}");
+      _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
       _PencilMarks = value;
       CellPencilMarksUpdated(this);
-      Trace.WriteLine($"CELL [AFTER]:{DebuggerDisplay}");
-
+      _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
     }
   }
 
-  private bool PencilMarksAreNotDifferent(IEnumerable<int> existingPencilMarks, IEnumerable<int> newPencilMarks)
-  {
-    return existingPencilMarks.OrderBy(x => x).SequenceEqual(newPencilMarks.OrderBy(x => x));
-  }
-
-  /// <summary>
-  ///   This value indicates if this GameCell Value is part of the original puzzle values
-  ///   This will indicate that the value can NOT be changed.
-  /// </summary>
-  public bool IsPuzzleValue { get; }
-
-  /// <summary>
-  ///   The solve or puzzle value of the cell
-  /// </summary>
-  public int? Value
-  {
-    get => _Value;
-    set
-    {
-      if (IsPuzzleValue)
-      {
-        throw new InvalidOperationException("Cannot change a puzzle value.");
-      }
-
-      _Value = value;
-      if (value != null)
-      {
-        _PencilMarks = new List<int>();
-        CellValueUpdated(this);
-      }
-    }
-  }
 
   public int GetGroupIndex()
   {
@@ -148,6 +170,11 @@ public class GameCell : IGameCell
     return ColumnIndex;
   }
 
+  public IEnumerable<int> GetPencilMarks()
+  {
+    return PencilMarks;
+  }
+
   public void ClearPencilMark(int cellValue)
   {
     var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int> { cellValue });
@@ -157,10 +184,8 @@ public class GameCell : IGameCell
 
   public void ClearPencilMarks()
   {
-    Trace.WriteLine($"CELL CLEARING [BEFORE]: {DebuggerDisplay}");
     PencilMarks = new List<int>();
     CheckCell();
-    Trace.WriteLine($"CELL CLEARING [AFTER]: {DebuggerDisplay}");
   }
 
   public event CellValueUpdated CellValueUpdated;
@@ -171,6 +196,14 @@ public class GameCell : IGameCell
     var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
     var returnValue = valueAsString.Length == 0 ? _EmptyValueAsString : valueAsString;
     return returnValue;
+  }
+
+  public void AddPencilMarks(int[] pencilMarks)
+  {
+    foreach (var pencilMark in pencilMarks)
+    {
+      AddPencilMark(pencilMark);
+    }
   }
 
   public void AddPencilMark(int pencilMark)
@@ -191,14 +224,7 @@ public class GameCell : IGameCell
 
   private static void NoOpGameCellUpdateMethod(IGameCell cell)
   {
-    //intentionally no-op method
-  }
-
-  private void GenerateGroupRowColumnIndexes(int index)
-  {
-    GroupIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.GROUP_ARRAY_INDEX_VALUE];
-    RowIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.ROW_ARRAY_INDEX_VALUE];
-    ColumnIndex = CellIndexToGroupRowColumnValues.CellIndexes[index, GameGuides.COLUMN_ARRAY_INDEX_VALUE];
+    //intentional no-op method
   }
 
   private void ValidateInput()
@@ -224,5 +250,10 @@ public class GameCell : IGameCell
     {
       throw new GameInvalidValuesInBoard("Can not have empty PencilMarks AND no Value for cell");
     }
+  }
+
+  private static bool PencilMarksAreNotDifferent(IEnumerable<int> existingPencilMarks, IEnumerable<int> newPencilMarks)
+  {
+    return existingPencilMarks.OrderBy(x => x).SequenceEqual(newPencilMarks.OrderBy(x => x));
   }
 }

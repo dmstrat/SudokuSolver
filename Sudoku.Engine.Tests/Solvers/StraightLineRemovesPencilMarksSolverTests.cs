@@ -1,18 +1,29 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Sudoku.Engine.Solvers;
 using Sudoku.Engine.Tests.Builders;
+using Sudoku.Engine.Tests.Loggers;
 using Sudoku.Engine.Tests.TestBoards;
 using Sudoku.GameBoard;
+using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
   internal class StraightLineRemovesPencilMarksSolverTests
   {
     private ConsoleTraceListener _Listener;
+    private readonly ILoggerFactory _LoggerFactory;
+    private ILogger _Logger;
+
+    public StraightLineRemovesPencilMarksSolverTests()
+    {
+      _LoggerFactory = new NullLoggerFactory();
+    }
 
     [SetUp]
     public void Setup()
     {
+      _Logger = _LoggerFactory.CreateLogger<StraightLineRemovesPencilMarksSolverTests>();
       _Listener = new ConsoleTraceListener();
       Trace.Listeners.Add(_Listener);
     }
@@ -28,10 +39,11 @@ namespace Sudoku.Engine.Tests.Solvers
 
     public void GivenBoard01SolveResultsCorrectHavingSingleStraightLineValueInGroupColumnSolver(string gameBoardInput, string solvedGameOutput)
     {
+      _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
-      var engine = new Engine(gameBoard);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
+      var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new StraightLineRemovesPencilMarksSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 
@@ -74,10 +86,11 @@ namespace Sudoku.Engine.Tests.Solvers
     [TestCase(GameBoardForStraightLineRowsTests.Game_Input, GameBoardForStraightLineRowsTests.Game_Output)]
     public void GivenBoard01SolveResultsCorrectHavingSingleStraightLineValueInGroupRowSolver(string gameBoardInput, string solvedGameOutput)
     {
+      _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
-      var engine = new Engine(gameBoard);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
+      var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new StraightLineRemovesPencilMarksSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 
@@ -124,11 +137,11 @@ namespace Sudoku.Engine.Tests.Solvers
     {
       //Build Game Board WITH PencilMarks
       //solve for columns with single value for group
-      var gameBoard = GameBoardBuilder.Build(gameBoardInput);
+      var gameBoard = GameBoardBuilder.Build(gameBoardInput, _Logger);
       var solver = new StraightLineRemovesPencilMarksSolver();
 
       var cellAtRow4Column9OriginalPencilMarks = gameBoard.GetGroups().First(x => x.Index == groupIndex).Cells
-        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).PencilMarks;
+        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).GetPencilMarks();
       Assert.That(cellAtRow4Column9OriginalPencilMarks, Is.EqualTo(startingPencilMarks));
 
       var group3 = gameBoard.GetGroups().First(x => x.Index == 2);
@@ -136,7 +149,7 @@ namespace Sudoku.Engine.Tests.Solvers
 
       //assert cell at given column and row index has the provided pencils marks EXACTLY
       var cellAtRow4Column9PencilMarks = gameBoard.GetGroups().First(x => x.Index == groupIndex).Cells
-        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).PencilMarks;
+        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).GetPencilMarks();
 
       Assert.That(cellAtRow4Column9PencilMarks, Is.EqualTo(expectedPencilMarks));
     }

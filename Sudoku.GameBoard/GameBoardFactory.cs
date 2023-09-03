@@ -1,40 +1,38 @@
-﻿using System.Globalization;
-using Sudoku.GameBoard.Helpers;
+﻿using Microsoft.Extensions.Logging;
+using System.Globalization;
 
 namespace Sudoku.GameBoard
 {
   public static class GameBoardFactory
   {
     private static readonly int NumberOfGameCellsInGame = 81;
-    private const string _EmptyValueAsSpace = " ";
-    private const string _EmptyValueAsZero = "0";
-    private const bool _IsPartOfPuzzle = true;
-    private const bool _IsNotPartOfPuzzle = false;
+    private const string EMPTY_VALUE_AS_SPACE = " ";
+    private const string EMPTY_VALUE_AS_ZERO = "0";
+    private const bool IS_NOT_PUZZLE_VALUE = false;
+    private const bool IS_PUZZLE_VALUE = true;
 
-    public static GameBoard Create(string gameBoardWithPuzzleNumbers)
+    public static GameBoard Create(string gameBoardWithPuzzleNumbers, ILogger logger)
     {
       var gameCells = new List<GameCell>();
       for (int i = 0; i < NumberOfGameCellsInGame; i++)
       {
-        var newValue = gameBoardWithPuzzleNumbers[i].ToString();
-        var isEmptyCellValue = newValue is _EmptyValueAsSpace or _EmptyValueAsZero;
+        var unparsedNextValue = gameBoardWithPuzzleNumbers[i].ToString();
+        var isEmptyCellValue = unparsedNextValue is EMPTY_VALUE_AS_SPACE or EMPTY_VALUE_AS_ZERO;
+
         GameCell newCell;
         if (isEmptyCellValue)
         {
-          newCell = new GameCell(i, null, _IsNotPartOfPuzzle);
+          newCell = GameCellFactory.Create(null, IS_NOT_PUZZLE_VALUE, i, logger);
         }
         else
         {
-          _ = int.TryParse(gameBoardWithPuzzleNumbers[i].ToString(), NumberStyles.Integer, null, out var nextNumber);
-          newCell = new GameCell(i,nextNumber, _IsPartOfPuzzle);
+          _ = int.TryParse(unparsedNextValue, NumberStyles.Integer, null, out var nextNumber);
+          newCell = GameCellFactory.Create(nextNumber, IS_PUZZLE_VALUE, i, logger);
         }
-
-        newCell.ColumnPosition = GameBoardHelper.GetColumnPosition(i);
-        newCell.RowPosition = GameBoardHelper.GetRowPosition(i);
         gameCells.Add(newCell);
       }
 
-      var newBoard = new GameBoard(gameCells);
+      var newBoard = new GameBoard(gameCells, logger);
       newBoard.Validate();
       return newBoard;
     }

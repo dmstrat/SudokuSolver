@@ -37,13 +37,13 @@ public class GameBoardGroup : IGameBoardGroup
 
   public void ClearPencilMarksNotIn(GameBoardGroupColumn groupColumn)
   {
-    var distinctPencilMarksInGroupColumn = groupColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
+    var distinctPencilMarksInGroupColumn = groupColumn.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
     ClearPencilMarksNotIn(groupColumn.Cells, distinctPencilMarksInGroupColumn);
   }
 
   public void ClearPencilMarksNotIn(GameBoardGroupRow groupRow)
   {
-    var distinctPencilMarksInGroupColumn = groupRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
+    var distinctPencilMarksInGroupColumn = groupRow.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
     ClearPencilMarksNotIn(groupRow.Cells, distinctPencilMarksInGroupColumn);
   }
 

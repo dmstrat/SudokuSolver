@@ -6,55 +6,61 @@ namespace Sudoku.GameBoard.Helpers
     internal static class GameBoardHelper
   {
 
-    internal static IEnumerable<int> GetGroupIndexList(int groupNumber)
+    internal static int GetGroupIndexBy(int cellIndex)
     {
-      var indexList = groupNumber switch
+      var foundGroupIndex = GameBoardGroupCellIndexes.GroupIndexes.FirstOrDefault(x => x.Value.Contains(cellIndex)).Key;// !=null ? true : false;
+      return foundGroupIndex;
+    }
+
+    internal static IEnumerable<int> GetGroupCellIndexesBy(int groupIndex)
+    {
+      var indexList = groupIndex switch
       {
-        1 => GameBoardGroupCellNumbers.GroupNumber1,
-        2 => GameBoardGroupCellNumbers.GroupNumber2,
-        3 => GameBoardGroupCellNumbers.GroupNumber3,
-        4 => GameBoardGroupCellNumbers.GroupNumber4,
-        5 => GameBoardGroupCellNumbers.GroupNumber5,
-        6 => GameBoardGroupCellNumbers.GroupNumber6,
-        7 => GameBoardGroupCellNumbers.GroupNumber7,
-        8 => GameBoardGroupCellNumbers.GroupNumber8,
-        9 => GameBoardGroupCellNumbers.GroupNumber9,
+        0 => GameBoardGroupCellIndexes.GroupNumber1,
+        1 => GameBoardGroupCellIndexes.GroupNumber2,
+        2 => GameBoardGroupCellIndexes.GroupNumber3,
+        3 => GameBoardGroupCellIndexes.GroupNumber4,
+        4 => GameBoardGroupCellIndexes.GroupNumber5,
+        5 => GameBoardGroupCellIndexes.GroupNumber6,
+        6 => GameBoardGroupCellIndexes.GroupNumber7,
+        7 => GameBoardGroupCellIndexes.GroupNumber8,
+        8 => GameBoardGroupCellIndexes.GroupNumber9,
         _ => Array.Empty<int>()
       };
       return indexList;
     }
 
-    internal static IEnumerable<int> GetRowIndexList(int rowNumber)
+    internal static IEnumerable<int> GetRowCellIndexesBy(int rowIndex)
     {
-      var indexList = rowNumber switch
+      var indexList = rowIndex switch
       {
-        1 => GameBoardRowCellNumbers.RowNumber1,
-        2 => GameBoardRowCellNumbers.RowNumber2,
-        3 => GameBoardRowCellNumbers.RowNumber3,
-        4 => GameBoardRowCellNumbers.RowNumber4,
-        5 => GameBoardRowCellNumbers.RowNumber5,
-        6 => GameBoardRowCellNumbers.RowNumber6,
-        7 => GameBoardRowCellNumbers.RowNumber7,
-        8 => GameBoardRowCellNumbers.RowNumber8,
-        9 => GameBoardRowCellNumbers.RowNumber9,
+        0 => GameBoardRowCellNumbers.RowNumber1,
+        1 => GameBoardRowCellNumbers.RowNumber2,
+        2=> GameBoardRowCellNumbers.RowNumber3,
+        3 => GameBoardRowCellNumbers.RowNumber4,
+        4 => GameBoardRowCellNumbers.RowNumber5,
+        5 => GameBoardRowCellNumbers.RowNumber6,
+        6 => GameBoardRowCellNumbers.RowNumber7,
+        7 => GameBoardRowCellNumbers.RowNumber8,
+        8 => GameBoardRowCellNumbers.RowNumber9,
         _ => Array.Empty<int>()
       };
       return indexList;
     }
 
-    internal static IEnumerable<int> GetColumnIndexList(int columnNumber)
+    internal static IEnumerable<int> GetColumnCellIndexesBy(int columnIndex)
     {
-      var indexList = columnNumber switch
+      var indexList = columnIndex switch
       {
-        1 => GameBoardColumnCellNumbers.ColumnNumber1,
-        2 => GameBoardColumnCellNumbers.ColumnNumber2,
-        3 => GameBoardColumnCellNumbers.ColumnNumber3,
-        4 => GameBoardColumnCellNumbers.ColumnNumber4,
-        5 => GameBoardColumnCellNumbers.ColumnNumber5,
-        6 => GameBoardColumnCellNumbers.ColumnNumber6,
-        7 => GameBoardColumnCellNumbers.ColumnNumber7,
-        8 => GameBoardColumnCellNumbers.ColumnNumber8,
-        9 => GameBoardColumnCellNumbers.ColumnNumber9,
+        0 => GameBoardColumnCellIndexes.ColumnNumber1,
+        1 => GameBoardColumnCellIndexes.ColumnNumber2,
+        2 => GameBoardColumnCellIndexes.ColumnNumber3,
+        3 => GameBoardColumnCellIndexes.ColumnNumber4,
+        4 => GameBoardColumnCellIndexes.ColumnNumber5,
+        5 => GameBoardColumnCellIndexes.ColumnNumber6,
+        6 => GameBoardColumnCellIndexes.ColumnNumber7,
+        7 => GameBoardColumnCellIndexes.ColumnNumber8,
+        8 => GameBoardColumnCellIndexes.ColumnNumber9,
         _ => Array.Empty<int>()
       };
       return indexList;
@@ -76,16 +82,15 @@ namespace Sudoku.GameBoard.Helpers
         8 => ColumnPosition.Right,
         _ => ThrowInvalidColumnIndexException()
       };
-
       return columnPosition;
     }
 
     private static ColumnPosition ThrowInvalidColumnIndexException()
     {
-      throw new InternalException("Invalid colum index for some reason, this shouldn't get out in the wild.");
+      throw new InternalException("Invalid column index for some reason, this shouldn't get out in the wild.");
     }
 
-    internal static RowPosition GetRowPosition(int cellIndex)
+    internal static RowPosition GetRowPositionBy(int cellIndex)
     {
       var isTopRow = GameBoardRowGroupPositionCellNumbers.Top.Contains(cellIndex);
 

@@ -1,33 +1,36 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
 using Sudoku.Engine.Exceptions;
+using Sudoku.Engine.Loggers;
 using Sudoku.Engine.Solvers;
 using Sudoku.GameBoard;
-using System.Data;
 
 namespace Sudoku.Engine
 {
   public class Engine
   {
-    private const int _MaxLoopCount = 100;
+    private const int MAX_LOOP_COUNT = 100;
     private readonly IGameBoard _OriginalGameBoard;
     private IGameBoard _GameBoard;
     private IEnumerable<ISolver> _Solvers;
     private bool _BoardHadActivity;
-    private readonly int _BoardInactivityMaxCount = 5;
+    private const int BOARD_INACTIVITY_MAX_COUNT = 2;
+    private readonly ILogger _Logger;
 
-    public Engine(IGameBoard gameBoard)
+    public Engine(IGameBoard gameBoard, ILoggerFactory loggerFactory)
     {
-      _OriginalGameBoard = GameBoardFactory.Create(gameBoard.GetValuesAsString());
+      _Logger = loggerFactory.CreateLogger(nameof(Engine));
+
+      _OriginalGameBoard = GameBoardFactory.Create(gameBoard.GetValuesAsString(), _Logger);
       _GameBoard = (GameBoard.GameBoard)gameBoard;
       _Solvers = CollectDefaultSolversForEngine();
       _BoardHadActivity = false;
-      gameBoard.BoardHadActivity += SomethingChanged;
+      gameBoard.OnChanged += SomethingChanged;
     }
 
     public void SomethingChanged(IGameBoard gameBoard)
     {
       _BoardHadActivity = true;
-      Trace.WriteLine($"CurrentBoard:{_GameBoard.BuildZeroBasedString()}");
+      _Logger.LogBoardValues(gameBoard.BuildZeroBasedString());
     }
 
     public IGameBoard Solve()
@@ -35,10 +38,10 @@ namespace Sudoku.Engine
       EnsureGameBoardProvided();
       var notSolved = true;
       var loopCount = 0;
-      var pencilMarksGenerator = new PencilMarksGenerator();
+      var pencilMarksGenerator = new PencilMarksGenerator(_Logger);
       _GameBoard = pencilMarksGenerator.GeneratePencilMarks(_GameBoard);
       var boardHadNoActivityCount = 0;
-      while (notSolved && (boardHadNoActivityCount <= _BoardInactivityMaxCount) && loopCount <= _MaxLoopCount)
+      while (notSolved && (boardHadNoActivityCount <= BOARD_INACTIVITY_MAX_COUNT) && loopCount <= MAX_LOOP_COUNT)
       {
         foreach (var solver in _Solvers)
         {
@@ -66,13 +69,15 @@ namespace Sudoku.Engine
       _Solvers = solvers;
     }
 
-    private IEnumerable<ISolver> CollectDefaultSolversForEngine()
+    private static IEnumerable<ISolver> CollectDefaultSolversForEngine()
     {
-      var solverList = new List<ISolver>();
-      solverList.Add(new SinglePencilMarkLeftSolver());
-      solverList.Add(new SinglePencilMarkAcrossGroupColumnRowSolver());
-      solverList.Add(new StraightLineRemovesPencilMarksSolver());
-      solverList.Add(new Pattern01Solver());
+      var solverList = new List<ISolver>
+      {
+        new SinglePencilMarkLeftSolver(),
+        new SinglePencilMarkAcrossGroupColumnRowSolver(),
+        new StraightLineRemovesPencilMarksSolver(),
+        new Pattern01Solver()
+      };
       return solverList;
     }
 
@@ -81,93 +86,6 @@ namespace Sudoku.Engine
       var atLeastOneCellNotSolved = _GameBoard.GetCells().Any(x => x.Value is null);
       return atLeastOneCellNotSolved;
     }
-
-    private void ComputePencilMarks()
-    {
-      foreach (var cell in _GameBoard.GetCells())
-      {
-        ComputePencilMarksForCell(cell);
-      }
-    }
-
-    private void ComputePencilMarksForCell(GameCell cell)
-    {
-      var numberOfListsJoined = 3;
-      var haveWorkToDo = !cell.Value.HasValue;
-      if (haveWorkToDo)
-      {
-        var validGameNumbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-        //get group, row, and column
-        var group = _GameBoard.GetGroupBy(cell);
-        var row = _GameBoard.GetRowBy(cell);
-        var column = _GameBoard.GetColumnBy(cell);
-        //determine possible pencil marks 
-        //what are the missing numbers from group?
-        var actualNumberListFromGroup = group.Cells.Select(x => x.Value ?? 0).Except(new List<int>(){0}).ToList();
-        var missingNumbersListFromGroup = validGameNumbers.Except<int>(actualNumberListFromGroup);
-        //missing numbers from column?
-        var actualNumberListFromRow = row.Cells.Select(x => x.Value ?? 0).Except(new List<int>() { 0 }).ToList();
-        var missingNumbersListFromRow = validGameNumbers.Except<int>(actualNumberListFromRow);
-        //missing numbers from row?
-        var actualNumberListFromColumn = column.Cells.Select(x => x.Value ?? 0).Except(new List<int>() { 0 }).ToList();
-        var missingNumbersListFromColumn = validGameNumbers.Except<int>(actualNumberListFromColumn);
-        //merge missing numbers from all lists
-        var allMissingNumbersJoinedTogether = missingNumbersListFromGroup
-          .Concat(missingNumbersListFromRow.Concat(missingNumbersListFromColumn));//.Distinct();
-        //build list of numbers that are in every list
-        var missingNumbers = allMissingNumbersJoinedTogether.GroupBy(val => val)
-          .Where(group => group.Count() == numberOfListsJoined)
-          .Select(groupValue => groupValue.Key).ToList();
-
-        Trace.WriteLine($"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", missingNumbers)}");//add missing numbers as pencil marks to cell 
-        foreach (var missingNumber in missingNumbers)
-        {
-          cell.AddPencilMark(missingNumber);
-        }
-      }
-    }
-
-    private void SolveEachCellWithSinglePencilMark()
-    {
-      foreach (var cell in _GameBoard.GetCells())
-      {
-        //is cell already solved?
-        var cellIsSolved = cell.Value.HasValue;
-        if (cellIsSolved) continue;
-        //solve cell if there is only one pencil mark
-        var onlyOneChoice = cell.PencilMarks.Count() == 1;
-        if (onlyOneChoice)
-        {
-          cell.Value = cell.PencilMarks.First();
-        }
-      }
-    }
-
-    private void TryToSolveRows()
-    {
-      foreach (var row in _GameBoard.GetRows())
-      {
-        var workToDo = RowIsNotSolved(row);
-        if (workToDo)
-        {
-          TryToSolveRow(row);
-        }
-      }
-    }
-
-    private static bool RowIsNotSolved(GameBoardRow row)
-    {
-      var emptyCellsInRow = row.Cells.Any(x => x.Value is null);
-      return emptyCellsInRow;
-    }
-
-    private static void TryToSolveRow(GameBoardRow row)
-    {
-    }
-
-    private void TryToSolveColumns() { }
-
-    private void TryToSolveGroups() { }
 
     private void EnsureGameBoardProvided()
     {
@@ -180,17 +98,14 @@ namespace Sudoku.Engine
 
     private void LogPencilMarks()
     {
-      Trace.WriteLine($"Pencil Marks: ");
-      Trace.Indent();
+      _Logger.LogStep(0, "Pencil Marks:");
       foreach (var cell in _GameBoard.GetCells())
       {
         if (cell.Value is null)
         {
-          Trace.WriteLine(
-            $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", cell.PencilMarks)}"); //add missing numbers as pencil marks to cell 
+          _Logger.LogStep(0, $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", cell.GetPencilMarks())}");
         }
       }
-      Trace.Unindent();
     }
   }
 }

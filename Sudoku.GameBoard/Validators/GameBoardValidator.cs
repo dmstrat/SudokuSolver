@@ -7,7 +7,6 @@ namespace Sudoku.GameBoard.Validators
   {
     // ReSharper disable once InconsistentNaming
     internal static readonly int[] ValidGameNumbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    
 
     public static void ValidateBoard(IGameBoard board)
     {
@@ -48,18 +47,18 @@ namespace Sudoku.GameBoard.Validators
       }
     }
 
-    internal static void EnsureGroupNumberIsValid(int groupNumber)
+    internal static void EnsureGroupNumberIsValid(int groupIndex)
     {
-      var groupNumberIsOutsideValidRange = groupNumber is < 1 or > 9;
+      var groupNumberIsOutsideValidRange = groupIndex is < 0 or > 8;
       if (groupNumberIsOutsideValidRange)
       {
         throw new InvalidGroupNumber();
       }
     }
 
-    internal static void EnsureRowNumberIsValid(int rowNumber)
+    internal static void EnsureRowNumberIsValid(int rowIndex)
     {
-      var rowNumberIsOutsideValidRange = rowNumber is < 1 or > 9;
+      var rowNumberIsOutsideValidRange = rowIndex is < 0 or > 8;
       if (rowNumberIsOutsideValidRange)
       {
         throw new InvalidRowNumber();
@@ -68,7 +67,7 @@ namespace Sudoku.GameBoard.Validators
 
     internal static void EnsureColumnNumberIsValid(int columnNumber)
     {
-      var columnNumberIsOutsideValidRange = columnNumber is < 1 or > 9;
+      var columnNumberIsOutsideValidRange = columnNumber is < 0 or > 8;
       if (columnNumberIsOutsideValidRange)
       {
         throw new InvalidColumnNumber();
@@ -125,6 +124,5 @@ namespace Sudoku.GameBoard.Validators
         throw new InvalidNumberInGameBoard();
       }
     }
-
   }
 }

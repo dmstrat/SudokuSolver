@@ -1,12 +1,27 @@
 ﻿using Sudoku.Engine.Tests.TestBoards;
 using Sudoku.GameBoard;
 using System.Diagnostics;
+using Microsoft.Extensions.Logging;
+using Sudoku.Engine.Tests.Loggers;
 
 namespace Sudoku.Engine.Tests
 {
   internal class EngineSolverTests
   {
     private ConsoleTraceListener _Listener;
+    private readonly ILoggerFactory _LoggerFactory;
+    private readonly ILogger _Logger;
+
+    public EngineSolverTests()
+    {
+      _Listener = new ConsoleTraceListener();
+      _LoggerFactory = LoggerFactory.Create(config =>
+      {
+        config.AddProvider(new NUnitLoggerProvider())
+          .SetMinimumLevel(LogLevel.Trace);
+      });
+      _Logger = _LoggerFactory.CreateLogger<EngineSolverTests>();
+    }
 
     [SetUp]
     public void Setup()
@@ -22,7 +37,6 @@ namespace Sudoku.Engine.Tests
     }
 
     [TestCase(GameBoard01.MissingOneNumberPerRowAndColumn_Input, GameBoard01.Solved_Output)]
-    //[TestCase(GameBoard01.MissingOneValueFromOneGroup_Input, GameBoard01.Solved_Output)]
     [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardMedium01.Game_Input_Phase_2, GameBoardMedium01.Game_Output)]
     [TestCase(GameBoardMedium02.Game_Input, GameBoardMedium02.Game_Output)]
@@ -31,10 +45,11 @@ namespace Sudoku.Engine.Tests
     
     public void GivenBoardSolvesToExpectation(string gameBoardInput, string solvedGameOutput)
     {
+      _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
-      var engine = new Engine(gameBoard);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
+      var engine = new Engine(gameBoard, _LoggerFactory);
       //Solve 
       var result = engine.Solve();
       //Verify solve 
