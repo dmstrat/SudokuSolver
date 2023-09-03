@@ -1,11 +1,25 @@
-﻿namespace Sudoku.GameBoard.Tests
+﻿using Microsoft.Extensions.Logging;
+using Sudoku.Engine.Tests.Loggers;
+
+namespace Sudoku.GameBoard.Tests
 {
   public class GameCellTests
   {
-    [SetUp]
-    public void Setup()
+    private readonly ILoggerFactory _LoggerFactory;
+    private readonly ILogger _Logger;
+
+    public GameCellTests()
     {
+      _LoggerFactory = LoggerFactory.Create(config =>
+      {
+        config.AddProvider(new NUnitLoggerProvider())
+          .SetMinimumLevel(LogLevel.Trace);
+      });
+      _Logger = _LoggerFactory.CreateLogger<GameBoardTests>();
     }
+
+    [SetUp]
+    public void Setup() { }
 
     /// <summary>
     /// Cycle through changing the valid initial value to ANY VALID VALUE including null/empty
@@ -17,7 +31,7 @@
     /// <param name="isPuzzlePiece">This is true for ALL cases it indicates NO CHANGES allowed.</param>
     /// <param name="newValue">The new value attempting to change the GameCell</param>
     /// <param name="expectedException">This is InvalidOperationException for ALL cases</param>
-    [TestCase(0, 1, true, 2, typeof(InvalidOperationException))] 
+    [TestCase(0, 1, true, 2, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 3, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 4, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 5, typeof(InvalidOperationException))]
@@ -25,12 +39,10 @@
     [TestCase(0, 1, true, 7, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 8, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 9, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, null, typeof(InvalidOperationException))] 
-    
-
+    [TestCase(0, 1, true, null, typeof(InvalidOperationException))]
     public void GameCellCtorWithValueAndIsPuzzleReturnsInvalidOperation(int index, int? ctorValue, bool isPuzzlePiece, int? newValue, Type expectedException)
     {
-      Assert.Throws(expectedException, () => GameCellCtorAndChangeValue(index, ctorValue, isPuzzlePiece, newValue));
+      Assert.Throws(expectedException, () => GameCellCtorAndChangeValue(index, ctorValue, isPuzzlePiece, newValue, _Logger));
     }
 
     [TestCase(0, null, false, null)]
@@ -45,7 +57,7 @@
     [TestCase(0, null, false, 9)]
     [TestCase(0, 1, false, null)]
     [TestCase(0, 1, false, 1)]
-    [TestCase(0, 1,false,2)]
+    [TestCase(0, 1, false, 2)]
     [TestCase(0, 1, false, 3)]
     [TestCase(0, 1, false, 4)]
     [TestCase(0, 1, false, 5)]
@@ -133,10 +145,9 @@
     [TestCase(0, 9, false, 7)]
     [TestCase(0, 9, false, 8)]
     [TestCase(0, 9, false, 9)]
-
     public void GameCellCtorWithValidValueAndNotPuzzleThenCellHasNewValue(int index, int? ctorValue, bool isPuzzlePiece, int? newValue)
     {
-      Assert.DoesNotThrow(() => GameCellCtorAndChangeValue(index, ctorValue, isPuzzlePiece, newValue));
+      Assert.DoesNotThrow(() => GameCellCtorAndChangeValue(index, ctorValue, isPuzzlePiece, newValue, _Logger));
     }
 
     /// <summary>
@@ -155,7 +166,7 @@
     public void GameCellCtorWithInvalidCtorValueCombinationsReturnsInvalidOperationException(int index, int? ctorValue,
       bool isPuzzlePiece, Type expectedException)
     {
-      Assert.Throws(expectedException, () => GameCellCtor(index, ctorValue, isPuzzlePiece), $" Expected Exception on combo: {ctorValue} | {isPuzzlePiece} | {nameof(expectedException)}");
+      Assert.Throws(expectedException, () => GameCellCtor(index, ctorValue, isPuzzlePiece, _Logger), $" Expected Exception on combo: {ctorValue} | {isPuzzlePiece} | {nameof(expectedException)}");
     }
 
     /// <summary>
@@ -186,7 +197,7 @@
     // ReSharper disable once InconsistentNaming
     public void GameCellCtorWithValidCtorValueCompletesWithoutError(int index, int? ctorValue, bool isPuzzlePiece)
     {
-      Assert.DoesNotThrow(() => GameCellCtor(index, ctorValue, isPuzzlePiece));
+      Assert.DoesNotThrow(() => GameCellCtor(index, ctorValue, isPuzzlePiece, _Logger));
     }
 
     [TestCase(0, null, false, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
@@ -197,25 +208,25 @@
       //add pencil marks provided (all valid, possible duplicates but that should be allowed as well)
       //no failures/exceptions or otherwise. 
       //verify pencil mark is there
-      var newCell = new GameCell(index, ctorValue, isPuzzleValue);
+      var newCell = new GameCell(index, ctorValue, _Logger, isPuzzleValue);
       foreach (var pencilMark in pencilMarks)
       {
         newCell.AddPencilMark(pencilMark);
-        Assert.That(newCell.PencilMarks.Where(x=>x == pencilMark), Has.Exactly(1).Items);
+        Assert.That(newCell.GetPencilMarks().Where(x => x == pencilMark), Has.Exactly(1).Items);
       }
     }
 
-    private static GameCell GameCellCtorAndChangeValue(int index, int? ctorValue, bool isPuzzlePiece, int? newValue)
+    private static GameCell GameCellCtorAndChangeValue(int index, int? ctorValue, bool isPuzzlePiece, int? newValue, ILogger logger)
     {
-      var newCell = GameCellCtor(index, ctorValue, isPuzzlePiece);
+      var newCell = GameCellCtor(index, ctorValue, isPuzzlePiece, logger);
       newCell.Value = newValue;
       AssertProperties(newCell, newValue, isPuzzlePiece);
       return newCell;
     }
 
-    private static GameCell GameCellCtor(int index, int? ctorValue, bool isPuzzlePiece)
+    private static GameCell GameCellCtor(int index, int? ctorValue, bool isPuzzlePiece, ILogger logger)
     {
-      var newCell = new GameCell(index, ctorValue, isPuzzlePiece);
+      var newCell = new GameCell(index, ctorValue, logger, isPuzzlePiece);
       Assert.That(newCell, Is.Not.Null, $"Ctor failed on values: index={index} | ctorValue={ctorValue} | isPuzzlePiece={isPuzzlePiece}.");
       AssertProperties(newCell, ctorValue, isPuzzlePiece);
       return newCell;

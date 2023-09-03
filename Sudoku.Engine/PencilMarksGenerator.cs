@@ -55,13 +55,10 @@ namespace Sudoku.Engine
         //build list of numbers that are missing in EVERY list
         var actualMissingNumbersForThisCell = missingNumbersFromGroupAndColumnAndRow.GroupBy(val => val)
           .Where(numGroup => numGroup.Count() == numberOfListsJoined)
-          .Select(groupValue => groupValue.Key).ToList();
+          .Select(groupValue => groupValue.Key).ToArray();
 
         _Logger.LogStep(2, $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", actualMissingNumbersForThisCell)}");
-        foreach (var missingNumber in actualMissingNumbersForThisCell)
-        {
-          cell.AddPencilMark(missingNumber);
-        }
+          cell.AddPencilMarks(actualMissingNumbersForThisCell);
       }
     }
   }

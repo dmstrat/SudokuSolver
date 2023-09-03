@@ -42,7 +42,7 @@ namespace Sudoku.Engine.Tests.Solvers
       _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
       var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new StraightLineRemovesPencilMarksSolver() };
       engine.RegisterSolvers(solvers);
@@ -89,7 +89,7 @@ namespace Sudoku.Engine.Tests.Solvers
       _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
       var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new StraightLineRemovesPencilMarksSolver() };
       engine.RegisterSolvers(solvers);
@@ -141,7 +141,7 @@ namespace Sudoku.Engine.Tests.Solvers
       var solver = new StraightLineRemovesPencilMarksSolver();
 
       var cellAtRow4Column9OriginalPencilMarks = gameBoard.GetGroups().First(x => x.Index == groupIndex).Cells
-        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).PencilMarks;
+        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).GetPencilMarks();
       Assert.That(cellAtRow4Column9OriginalPencilMarks, Is.EqualTo(startingPencilMarks));
 
       var group3 = gameBoard.GetGroups().First(x => x.Index == 2);
@@ -149,7 +149,7 @@ namespace Sudoku.Engine.Tests.Solvers
 
       //assert cell at given column and row index has the provided pencils marks EXACTLY
       var cellAtRow4Column9PencilMarks = gameBoard.GetGroups().First(x => x.Index == groupIndex).Cells
-        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).PencilMarks;
+        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).GetPencilMarks();
 
       Assert.That(cellAtRow4Column9PencilMarks, Is.EqualTo(expectedPencilMarks));
     }

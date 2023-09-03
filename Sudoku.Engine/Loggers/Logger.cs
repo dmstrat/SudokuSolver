@@ -20,6 +20,5 @@ namespace Sudoku.Engine.Loggers
       this ILogger logger,
       int step,
       string message);
-
   }
 }

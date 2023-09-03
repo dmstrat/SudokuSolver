@@ -12,13 +12,14 @@ namespace Sudoku.ConsoleApp
     static void Main(string[] args)
     {
       LoggerFactory = CreateLoggerFactory();
+      var logger = LoggerFactory.CreateLogger<Program>();
       var boardAsString = Boards.EasyBoards.EasyBoard01;
-      var gameBoard = GameBoardFactory.Create(boardAsString);
+      var gameBoard = GameBoardFactory.Create(boardAsString, logger);
       var engine = new Engine.Engine(gameBoard, LoggerFactory);
       var result = engine.Solve();
     }
 
-    static ILoggerFactory CreateLoggerFactory()
+    private static ILoggerFactory CreateLoggerFactory()
     {
       var loggerFactory = Microsoft.Extensions.Logging.LoggerFactory.Create(builder =>
       {

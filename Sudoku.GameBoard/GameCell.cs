@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
 using Sudoku.GameBoard.Constants;
 using Sudoku.GameBoard.Exceptions;
+using Sudoku.GameBoard.Loggers;
+using System.Diagnostics;
 
 namespace Sudoku.GameBoard;
 
@@ -15,6 +16,7 @@ public class GameCell : IGameCell
   private static readonly string _EmptyValueAsString = " ";
   private IEnumerable<int> _PencilMarks = new List<int>();
   private int? _Value;
+  private ILogger _Logger;
 
   /// <summary>
   ///   The individual cell holding a single number for the solve or part of the puzzle.
@@ -22,8 +24,9 @@ public class GameCell : IGameCell
   /// <param name="index">Game Cell's index in Game Board</param>
   /// <param name="initialValue">The initial value for the cell.  Blank/Empty/Null means Empty Cell</param>
   /// <param name="isPuzzleValue">Is this a puzzle value that should be locked and not changed by logic?</param>
-  public GameCell(int index, int? initialValue, bool isPuzzleValue = false)
+  public GameCell(int index, int? initialValue, ILogger logger, bool isPuzzleValue = false)
   {
+    _Logger = logger;
     Index = index;
     GenerateGroupRowColumnIndexes(index);
     _Value = initialValue;
@@ -38,22 +41,22 @@ public class GameCell : IGameCell
   ///   Represents the cell's index in an array of all game cells in game board (zero-based)
   ///   from left to right, top to bottom (0-80)
   /// </summary>
-  public int Index { get; set; }
+  public int Index { get; private set; }
 
   /// <summary>
   ///   Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
   /// </summary>
-  public int GroupIndex { get; set; }
+  public int GroupIndex { get; private set; }
 
   /// <summary>
   ///   Represents the row index (zero-based) from top to bottom (0-8)
   /// </summary>
-  public int RowIndex { get; set; }
+  public int RowIndex { get; private set; }
 
   /// <summary>
   ///   Represents the column index (zero-based) from left to right (0-8)
   /// </summary>
-  public int ColumnIndex { get; set; }
+  public int ColumnIndex { get; private set; }
 
   /// <summary>
   ///   Represents the column position in the group it resides.
@@ -81,7 +84,7 @@ public class GameCell : IGameCell
   /// <summary>
   ///   Represents the POSSIBLE values for this cell
   /// </summary>
-  public IEnumerable<int> PencilMarks
+  private IEnumerable<int> PencilMarks
   {
     get => _PencilMarks;
     set
@@ -91,11 +94,10 @@ public class GameCell : IGameCell
       {
         return;
       }
-      Trace.WriteLine($"CELL [BEFORE]:{DebuggerDisplay}");
+      _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
       _PencilMarks = value;
       CellPencilMarksUpdated(this);
-      Trace.WriteLine($"CELL [AFTER]:{DebuggerDisplay}");
-
+      _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
     }
   }
 
@@ -124,11 +126,13 @@ public class GameCell : IGameCell
       }
 
       _Value = value;
-      if (value != null)
+      if (value == null)
       {
-        _PencilMarks = new List<int>();
-        CellValueUpdated(this);
+        return;
       }
+
+      ClearPencilMarks();
+      CellValueUpdated(this);
     }
   }
 
@@ -147,6 +151,11 @@ public class GameCell : IGameCell
     return ColumnIndex;
   }
 
+  public IEnumerable<int> GetPencilMarks()
+  {
+    return PencilMarks;
+  }
+
   public void ClearPencilMark(int cellValue)
   {
     var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int> { cellValue });
@@ -156,10 +165,8 @@ public class GameCell : IGameCell
 
   public void ClearPencilMarks()
   {
-    Trace.WriteLine($"CELL CLEARING [BEFORE]: {DebuggerDisplay}");
     PencilMarks = new List<int>();
     CheckCell();
-    Trace.WriteLine($"CELL CLEARING [AFTER]: {DebuggerDisplay}");
   }
 
   public event CellValueUpdated CellValueUpdated;
@@ -170,6 +177,14 @@ public class GameCell : IGameCell
     var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
     var returnValue = valueAsString.Length == 0 ? _EmptyValueAsString : valueAsString;
     return returnValue;
+  }
+
+  public void AddPencilMarks(int[] pencilMarks)
+  {
+    foreach (var pencilMark in pencilMarks)
+    {
+      AddPencilMark(pencilMark);
+    }
   }
 
   public void AddPencilMark(int pencilMark)

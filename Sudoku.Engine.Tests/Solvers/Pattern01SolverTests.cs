@@ -41,7 +41,7 @@ namespace Sudoku.Engine.Tests.Solvers
       _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
       var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new Pattern01Solver() };
       engine.RegisterSolvers(solvers);
@@ -58,7 +58,7 @@ namespace Sudoku.Engine.Tests.Solvers
       _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
-      var gameBoard = GameBoardFactory.Create(gameBoardInput);
+      var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
       var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new Pattern01Solver() };
       engine.RegisterSolvers(solvers);

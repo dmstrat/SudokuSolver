@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.Extensions.Logging;
 using Sudoku.GameBoard.Helpers;
 
 namespace Sudoku.GameBoard
@@ -11,7 +12,7 @@ namespace Sudoku.GameBoard
     private const bool _IsPartOfPuzzle = true;
     private const bool _IsNotPartOfPuzzle = false;
 
-    public static GameBoard Create(string gameBoardWithPuzzleNumbers)
+    public static GameBoard Create(string gameBoardWithPuzzleNumbers, ILogger logger)
     {
       var gameCells = new List<GameCell>();
       for (int i = 0; i < NumberOfGameCellsInGame; i++)
@@ -21,12 +22,12 @@ namespace Sudoku.GameBoard
         GameCell newCell;
         if (isEmptyCellValue)
         {
-          newCell = new GameCell(i, null, _IsNotPartOfPuzzle);
+          newCell = new GameCell(i, null, logger, _IsNotPartOfPuzzle);
         }
         else
         {
           _ = int.TryParse(gameBoardWithPuzzleNumbers[i].ToString(), NumberStyles.Integer, null, out var nextNumber);
-          newCell = new GameCell(i,nextNumber, _IsPartOfPuzzle);
+          newCell = new GameCell(i,nextNumber, logger, _IsPartOfPuzzle);
         }
 
         newCell.ColumnPosition = GameBoardHelper.GetColumnPosition(i);

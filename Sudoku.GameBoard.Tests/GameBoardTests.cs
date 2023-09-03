@@ -1,4 +1,6 @@
 using System.Diagnostics.SymbolStore;
+using Microsoft.Extensions.Logging;
+using Sudoku.Engine.Tests.Loggers;
 using Sudoku.GameBoard.Exceptions;
 using Sudoku.GameBoard.Tests.Asserts;
 using Sudoku.GameBoard.Tests.GameBoards;
@@ -8,6 +10,18 @@ namespace Sudoku.GameBoard.Tests
   public class GameBoardTests
   {
     public const int NumberOfGameCellsInGameBoard = 81;
+    private readonly ILoggerFactory _LoggerFactory;
+    private readonly ILogger _Logger;
+
+    public GameBoardTests()
+    {
+      _LoggerFactory = LoggerFactory.Create(config =>
+      {
+        config.AddProvider(new NUnitLoggerProvider())
+          .SetMinimumLevel(LogLevel.Trace);
+      });
+      _Logger = _LoggerFactory.CreateLogger<GameBoardTests>();
+    }
 
     [SetUp]
     public void Setup()
@@ -17,14 +31,14 @@ namespace Sudoku.GameBoard.Tests
     [Test]
     public void BoardFactoryTest()
     {
-      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled);
+      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled, _Logger);
       Assert.That(newBoard, Is.Not.Null);
     }
 
     [Test]
     public void UsingFactoryGameBoardHasCorrectNumberOfGameCellsForSudoku()
     {
-      var newBoard= GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled);
+      var newBoard= GameBoardFactory.Create(GameBoardInputs.GameBoard01AllCellsFilled, _Logger);
       Assert.That(newBoard, Is.Not.Null);
       var actualString = newBoard.ToString();
       Assert.Multiple(() =>
@@ -40,7 +54,7 @@ namespace Sudoku.GameBoard.Tests
     [Test]
     public void UsingFactoryWithZerosGivesGameBoardEmptyOrNullValuesForThoseCells()
     {
-      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsByZeros);
+      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsByZeros, _Logger);
       Assert.That(newBoard, Is.Not.Null);
       var actualString = newBoard.ToString();
       Assert.Multiple(() =>
@@ -55,7 +69,7 @@ namespace Sudoku.GameBoard.Tests
     [Test]
     public void UsingFactoryWithSpacesZerosGivesGameBoardEmptyOrNullValuesForThoseCells()
     {
-      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces);
+      var newBoard = GameBoardFactory.Create(GameBoardInputs.GameBoard02SomeEmptyCellsBySpaces, _Logger);
       Assert.That(newBoard, Is.Not.Null);
       var actualString = newBoard.ToString();
       Assert.Multiple(() =>
@@ -79,7 +93,7 @@ namespace Sudoku.GameBoard.Tests
 
     public void GetGroupByNumberReturnsCorrectValues(string gameBoardAsString, int groupNumber, string groupValuesAsString)
     {
-      var gameBoard = GameBoardFactory.Create(gameBoardAsString);
+      var gameBoard = GameBoardFactory.Create(gameBoardAsString, _Logger);
       var gameBoardGroup = GameBoardGroupFactory.Create(gameBoard, groupNumber);
       var groupString = gameBoardGroup.GetValuesAsString();
       Assert.That(groupString, Is.EqualTo(groupValuesAsString));
@@ -97,7 +111,7 @@ namespace Sudoku.GameBoard.Tests
 
     public void GetRowByNumberReturnsCorrectValues(string gameBoardAsString, int rowNumber, string expectedRowValuesAsString)
     {
-      var gameBoard = GameBoardFactory.Create(gameBoardAsString);
+      var gameBoard = GameBoardFactory.Create(gameBoardAsString, _Logger);
       var gameBoardRow = GameBoardRowFactory.Create(gameBoard, rowNumber);
       var rowString = gameBoardRow.GetAsString();
       Assert.That(rowString, Is.EqualTo(expectedRowValuesAsString));
@@ -115,7 +129,7 @@ namespace Sudoku.GameBoard.Tests
 
     public void GetColumnByNumberReturnsCorrectValues(string gameBoardAsString, int columnNumber, string expectedColumnValuesAsString)
     {
-      var gameBoard = GameBoardFactory.Create(gameBoardAsString);
+      var gameBoard = GameBoardFactory.Create(gameBoardAsString, _Logger);
       var gameBoardColumn = GameBoardColumnFactory.Create(gameBoard, columnNumber);
       var columnString = gameBoardColumn.GetAsString();
       Assert.That(columnString, Is.EqualTo(expectedColumnValuesAsString));
@@ -133,7 +147,7 @@ namespace Sudoku.GameBoard.Tests
 
     public void ValidateBoardGroups(string gameBoardAsString, int groupNumber, string groupValuesAsString)
     {
-      var gameBoard = GameBoardFactory.Create(gameBoardAsString);
+      var gameBoard = GameBoardFactory.Create(gameBoardAsString, _Logger);
 
       var actualGroup = gameBoard.GetGroupById(groupNumber);
       GameBoardGroupAsserts.AssertGameBoardGroup(groupValuesAsString, actualGroup);
@@ -144,7 +158,7 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(GameBoardInputs.GameBoard02InvalidGroup)]
     public void InvalidBoardsThrowInvalidValuesException(string gameBoardAsString)
     {
-      Assert.Throws<GameInvalidValuesInBoard>(() => GameBoardFactory.Create(gameBoardAsString));
+      Assert.Throws<GameInvalidValuesInBoard>(() => GameBoardFactory.Create(gameBoardAsString, _Logger));
     }
   }
 }
