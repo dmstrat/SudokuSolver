@@ -10,7 +10,7 @@ namespace Sudoku.Engine.Tests
   {
     private ConsoleTraceListener _Listener;
     private readonly ILoggerFactory _LoggerFactory;
-    private ILogger _Logger;
+    private readonly ILogger _Logger;
 
     public EngineSolverTests()
     {

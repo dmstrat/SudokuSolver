@@ -1,11 +1,10 @@
-﻿using System.Diagnostics;
-using System.Net.Mime;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Sudoku.Engine.Solvers;
 using Sudoku.Engine.Tests.Loggers;
 using Sudoku.Engine.Tests.TestBoards;
 using Sudoku.GameBoard;
+using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
@@ -38,6 +37,7 @@ namespace Sudoku.Engine.Tests.Solvers
     [TestCase(GameBoardForStraightLineTests.Game_Input)]
     public void GivenSimpleBoardWithStraightValuesInGroupWillRemovePencilMarksFromRestOfGroup(string gameBoardInput)
     {
+      //TODO: finish writing test
       _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 

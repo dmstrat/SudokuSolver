@@ -7,15 +7,15 @@ namespace Sudoku.Engine.Tests.Loggers;
 public class NUnitLogger : ILogger
 {
   private static readonly string[] NewLineChars = new[] { Environment.NewLine };
-  private readonly string _category;
-  private readonly LogLevel _minLogLevel;
-  private readonly DateTimeOffset? _logStart;
+  private readonly string _Category;
+  private readonly LogLevel _MinLogLevel;
+  private readonly DateTimeOffset? _LogStart;
 
   public NUnitLogger(string category, LogLevel minLogLevel, DateTimeOffset? logStart)
   {
-    _minLogLevel = minLogLevel;
-    _category = category;
-    _logStart = logStart;
+    _MinLogLevel = minLogLevel;
+    _Category = category;
+    _LogStart = logStart;
   }
 
   public void Log<TState>(
@@ -29,12 +29,12 @@ public class NUnitLogger : ILogger
     // Buffer the message into a single string in order to avoid shearing the message when running across multiple threads.
     var messageBuilder = new StringBuilder();
 
-    var timestamp = _logStart.HasValue ?
-      $"{(DateTimeOffset.UtcNow - _logStart.Value).TotalSeconds.ToString("N3", CultureInfo.InvariantCulture)}s" :
+    var timestamp = _LogStart.HasValue ?
+      $"{(DateTimeOffset.UtcNow - _LogStart.Value).TotalSeconds.ToString("N3", CultureInfo.InvariantCulture)}s" :
       DateTimeOffset.UtcNow.ToString("s", CultureInfo.InvariantCulture);
 
-    var firstLinePrefix = $"| [{timestamp}] {_category} {logLevel}: ";
-    var lines = formatter(state, exception).Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
+    var firstLinePrefix = $"| [{timestamp}] {_Category} {logLevel}: ";
+    var lines = formatter(state, arg2: exception).Split(NewLineChars, StringSplitOptions.RemoveEmptyEntries);
     messageBuilder.AppendLine(firstLinePrefix + lines.FirstOrDefault() ?? string.Empty);
 
     var additionalLinePrefix = "|" + new string(' ', firstLinePrefix.Length - 1);
@@ -57,7 +57,7 @@ public class NUnitLogger : ILogger
     var message = messageBuilder.ToString();
     if (message.EndsWith(Environment.NewLine, StringComparison.Ordinal))
     {
-      message = message.Substring(0, message.Length - Environment.NewLine.Length);
+      message = message[..^Environment.NewLine.Length];
     }
 
     try
@@ -74,7 +74,7 @@ public class NUnitLogger : ILogger
   }
 
   public bool IsEnabled(LogLevel logLevel)
-    => logLevel >= _minLogLevel;
+    => logLevel >= _MinLogLevel;
 
   public IDisposable BeginScope<TState>(TState state)
     => new NullScope();

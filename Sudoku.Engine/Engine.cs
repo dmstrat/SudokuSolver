@@ -16,8 +16,8 @@ namespace Sudoku.Engine
     private IEnumerable<ISolver> _Solvers;
     private bool _BoardHadActivity;
     private const int BOARD_INACTIVITY_MAX_COUNT = 2;
-    private ILoggerFactory _LoggerFactory;
-    private ILogger _Logger;
+    private readonly ILoggerFactory _LoggerFactory;
+    private readonly ILogger _Logger;
 
     public Engine(IGameBoard gameBoard, ILoggerFactory loggerFactory)
     {
@@ -43,7 +43,7 @@ namespace Sudoku.Engine
       EnsureGameBoardProvided();
       var notSolved = true;
       var loopCount = 0;
-      var pencilMarksGenerator = new PencilMarksGenerator();
+      var pencilMarksGenerator = new PencilMarksGenerator(_Logger);
       _GameBoard = pencilMarksGenerator.GeneratePencilMarks(_GameBoard);
       var boardHadNoActivityCount = 0;
       while (notSolved && (boardHadNoActivityCount <= BOARD_INACTIVITY_MAX_COUNT) && loopCount <= MAX_LOOP_COUNT)
@@ -74,13 +74,15 @@ namespace Sudoku.Engine
       _Solvers = solvers;
     }
 
-    private IEnumerable<ISolver> CollectDefaultSolversForEngine()
+    private static IEnumerable<ISolver> CollectDefaultSolversForEngine()
     {
-      var solverList = new List<ISolver>();
-      solverList.Add(new SinglePencilMarkLeftSolver());
-      solverList.Add(new SinglePencilMarkAcrossGroupColumnRowSolver());
-      solverList.Add(new StraightLineRemovesPencilMarksSolver());
-      solverList.Add(new Pattern01Solver());
+      var solverList = new List<ISolver>
+      {
+        new SinglePencilMarkLeftSolver(),
+        new SinglePencilMarkAcrossGroupColumnRowSolver(),
+        new StraightLineRemovesPencilMarksSolver(),
+        new Pattern01Solver()
+      };
       return solverList;
     }
 

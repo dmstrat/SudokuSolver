@@ -137,7 +137,7 @@ namespace Sudoku.Engine.Tests.Solvers
     {
       //Build Game Board WITH PencilMarks
       //solve for columns with single value for group
-      var gameBoard = GameBoardBuilder.Build(gameBoardInput);
+      var gameBoard = GameBoardBuilder.Build(gameBoardInput, _Logger);
       var solver = new StraightLineRemovesPencilMarksSolver();
 
       var cellAtRow4Column9OriginalPencilMarks = gameBoard.GetGroups().First(x => x.Index == groupIndex).Cells
