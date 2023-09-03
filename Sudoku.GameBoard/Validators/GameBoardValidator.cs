@@ -7,7 +7,6 @@ namespace Sudoku.GameBoard.Validators
   {
     // ReSharper disable once InconsistentNaming
     internal static readonly int[] ValidGameNumbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
-    
 
     public static void ValidateBoard(IGameBoard board)
     {
@@ -125,6 +124,5 @@ namespace Sudoku.GameBoard.Validators
         throw new InvalidNumberInGameBoard();
       }
     }
-
   }
 }

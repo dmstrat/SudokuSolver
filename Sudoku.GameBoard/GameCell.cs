@@ -7,7 +7,6 @@ namespace Sudoku.GameBoard;
 
 // ReSharper disable InconsistentNaming
 public delegate void CellValueUpdated(IGameCell cell);
-
 public delegate void CellPencilMarksUpdated(IGameCell cell);
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]

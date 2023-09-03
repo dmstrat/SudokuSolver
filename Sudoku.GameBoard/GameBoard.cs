@@ -10,7 +10,7 @@ namespace Sudoku.GameBoard
 
   public class GameBoard : IGameBoard
   {
-    public event GameBoardHadActivity BoardHadActivity;
+    public event GameBoardHadActivity OnChanged;
 
     public IList<GameCell> Cells { get; }
 
@@ -78,17 +78,17 @@ namespace Sudoku.GameBoard
         cell.CellPencilMarksUpdated += PencilMarksUpdated;
       }
 
-      BoardHadActivity += NoOpMethod;
+      OnChanged += NoOpMethod;
     }
 
-    private void ReportBoardHadActivity()
+    private void ReportBoardChanged()
     {
-      BoardHadActivity(this);
+      OnChanged(this);
     }
 
     private void PencilMarksUpdated(IGameCell cell)
     {
-      ReportBoardHadActivity();
+      ReportBoardChanged();
     }
 
     private void ClearPencilMarksFor(IGameCell cell)
@@ -100,7 +100,7 @@ namespace Sudoku.GameBoard
       group.ClearPencilMark(cell.Value);
       row.ClearPencilMark(cell.Value);
       column.ClearPencilMark(cell.Value);
-      ReportBoardHadActivity();
+      ReportBoardChanged();
     }
 
     public IEnumerable<GameBoardGroup> GetGroups()
@@ -234,8 +234,6 @@ namespace Sudoku.GameBoard
       var column = Columns[cell.ColumnIndex];
       return column;
     }
-
-    
 
     public IEnumerable<GameCell> GetCells()
     {

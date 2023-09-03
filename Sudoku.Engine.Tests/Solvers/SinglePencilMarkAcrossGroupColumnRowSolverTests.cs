@@ -1,17 +1,28 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Sudoku.Engine.Solvers;
+using Sudoku.Engine.Tests.Loggers;
 using Sudoku.Engine.Tests.TestBoards;
 using Sudoku.GameBoard;
+using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
   internal class SinglePencilMarkAcrossGroupColumnRowSolverTests
   {
     private ConsoleTraceListener _Listener;
+    private readonly ILoggerFactory _LoggerFactory;
+    private ILogger _Logger;
+
+    public SinglePencilMarkAcrossGroupColumnRowSolverTests()
+    {
+      _LoggerFactory = new NullLoggerFactory();
+    }
 
     [SetUp]
     public void Setup()
     {
+      _Logger = _LoggerFactory.CreateLogger<SinglePencilMarkAcrossGroupColumnRowSolverTests>();
       _Listener = new ConsoleTraceListener();
       Trace.Listeners.Add(_Listener);
     }
@@ -26,10 +37,11 @@ namespace Sudoku.Engine.Tests.Solvers
     [TestCase(GameBoardMedium01.Game_Input, GameBoardMedium01.Game_Output)]
     public void GivenBoard01SolveResultsCorrectUsingSoloValueInGroupColumnRowSolver(string gameBoardInput, string solvedGameOutput)
     {
+      _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput);
-      var engine = new Engine(gameBoard);
+      var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new SinglePencilMarkAcrossGroupColumnRowSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 

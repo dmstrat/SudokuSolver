@@ -1,18 +1,29 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Sudoku.Engine.Solvers;
 using Sudoku.Engine.Tests.Builders;
+using Sudoku.Engine.Tests.Loggers;
 using Sudoku.Engine.Tests.TestBoards;
 using Sudoku.GameBoard;
+using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
   internal class StraightLineRemovesPencilMarksSolverTests
   {
     private ConsoleTraceListener _Listener;
+    private readonly ILoggerFactory _LoggerFactory;
+    private ILogger _Logger;
+
+    public StraightLineRemovesPencilMarksSolverTests()
+    {
+      _LoggerFactory = new NullLoggerFactory();
+    }
 
     [SetUp]
     public void Setup()
     {
+      _Logger = _LoggerFactory.CreateLogger<StraightLineRemovesPencilMarksSolverTests>();
       _Listener = new ConsoleTraceListener();
       Trace.Listeners.Add(_Listener);
     }
@@ -28,10 +39,11 @@ namespace Sudoku.Engine.Tests.Solvers
 
     public void GivenBoard01SolveResultsCorrectHavingSingleStraightLineValueInGroupColumnSolver(string gameBoardInput, string solvedGameOutput)
     {
+      _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput);
-      var engine = new Engine(gameBoard);
+      var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new StraightLineRemovesPencilMarksSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 
@@ -74,10 +86,11 @@ namespace Sudoku.Engine.Tests.Solvers
     [TestCase(GameBoardForStraightLineRowsTests.Game_Input, GameBoardForStraightLineRowsTests.Game_Output)]
     public void GivenBoard01SolveResultsCorrectHavingSingleStraightLineValueInGroupRowSolver(string gameBoardInput, string solvedGameOutput)
     {
+      _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput);
-      var engine = new Engine(gameBoard);
+      var engine = new Engine(gameBoard, _LoggerFactory);
       var solvers = new List<ISolver> { new StraightLineRemovesPencilMarksSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 

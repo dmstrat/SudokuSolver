@@ -18,6 +18,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\BuildAndTest.yml = .github\workflows\BuildAndTest.yml
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UX", "UX", "{2DBD0FCC-6150-469F-AE2F-064D8F13E6FC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sudoku.ConsoleApp", "Ux\Sudoku.ConsoleApp\Sudoku.ConsoleApp.csproj", "{34C60E19-39DA-4E8E-A09B-083831C42355}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,12 +44,17 @@ Global
 		{25FCC75D-0682-4D3E-AB7C-0C81C7E396FD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25FCC75D-0682-4D3E-AB7C-0C81C7E396FD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25FCC75D-0682-4D3E-AB7C-0C81C7E396FD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34C60E19-39DA-4E8E-A09B-083831C42355}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34C60E19-39DA-4E8E-A09B-083831C42355}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34C60E19-39DA-4E8E-A09B-083831C42355}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34C60E19-39DA-4E8E-A09B-083831C42355}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{F6A2FC70-2568-42C1-8648-7E2A5208F0B9} = {73C53E24-77C6-407B-A96F-634CB51718D1}
+		{34C60E19-39DA-4E8E-A09B-083831C42355} = {2DBD0FCC-6150-469F-AE2F-064D8F13E6FC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {16318EAD-EEE5-483A-B904-B9C4E8C84429}

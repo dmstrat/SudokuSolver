@@ -1,32 +1,40 @@
-﻿using System.Diagnostics;
+﻿using Microsoft.Extensions.Logging;
 using Sudoku.Engine.Exceptions;
+using Sudoku.Engine.Loggers;
 using Sudoku.Engine.Solvers;
 using Sudoku.GameBoard;
 using System.Data;
+using System.Diagnostics;
 
 namespace Sudoku.Engine
 {
   public class Engine
   {
-    private const int _MaxLoopCount = 100;
+    private const int MAX_LOOP_COUNT = 100;
     private readonly IGameBoard _OriginalGameBoard;
     private IGameBoard _GameBoard;
     private IEnumerable<ISolver> _Solvers;
     private bool _BoardHadActivity;
-    private readonly int _BoardInactivityMaxCount = 5;
+    private const int BOARD_INACTIVITY_MAX_COUNT = 2;
+    private ILoggerFactory _LoggerFactory;
+    private ILogger _Logger;
 
-    public Engine(IGameBoard gameBoard)
+    public Engine(IGameBoard gameBoard, ILoggerFactory loggerFactory)
     {
+      _LoggerFactory = loggerFactory;
+      _Logger = _LoggerFactory.CreateLogger(nameof(Engine));
+
       _OriginalGameBoard = GameBoardFactory.Create(gameBoard.GetValuesAsString());
       _GameBoard = (GameBoard.GameBoard)gameBoard;
       _Solvers = CollectDefaultSolversForEngine();
       _BoardHadActivity = false;
-      gameBoard.BoardHadActivity += SomethingChanged;
+      gameBoard.OnChanged += SomethingChanged;
     }
 
     public void SomethingChanged(IGameBoard gameBoard)
     {
       _BoardHadActivity = true;
+      _Logger.LogBoardValues(gameBoard.BuildZeroBasedString());
       Trace.WriteLine($"CurrentBoard:{_GameBoard.BuildZeroBasedString()}");
     }
 
@@ -38,7 +46,7 @@ namespace Sudoku.Engine
       var pencilMarksGenerator = new PencilMarksGenerator();
       _GameBoard = pencilMarksGenerator.GeneratePencilMarks(_GameBoard);
       var boardHadNoActivityCount = 0;
-      while (notSolved && (boardHadNoActivityCount <= _BoardInactivityMaxCount) && loopCount <= _MaxLoopCount)
+      while (notSolved && (boardHadNoActivityCount <= BOARD_INACTIVITY_MAX_COUNT) && loopCount <= MAX_LOOP_COUNT)
       {
         foreach (var solver in _Solvers)
         {
@@ -133,7 +141,11 @@ namespace Sudoku.Engine
       {
         //is cell already solved?
         var cellIsSolved = cell.Value.HasValue;
-        if (cellIsSolved) continue;
+        if (cellIsSolved)
+        {
+          continue;
+        }
+
         //solve cell if there is only one pencil mark
         var onlyOneChoice = cell.PencilMarks.Count() == 1;
         if (onlyOneChoice)
@@ -142,32 +154,6 @@ namespace Sudoku.Engine
         }
       }
     }
-
-    private void TryToSolveRows()
-    {
-      foreach (var row in _GameBoard.GetRows())
-      {
-        var workToDo = RowIsNotSolved(row);
-        if (workToDo)
-        {
-          TryToSolveRow(row);
-        }
-      }
-    }
-
-    private static bool RowIsNotSolved(GameBoardRow row)
-    {
-      var emptyCellsInRow = row.Cells.Any(x => x.Value is null);
-      return emptyCellsInRow;
-    }
-
-    private static void TryToSolveRow(GameBoardRow row)
-    {
-    }
-
-    private void TryToSolveColumns() { }
-
-    private void TryToSolveGroups() { }
 
     private void EnsureGameBoardProvided()
     {
