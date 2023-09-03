@@ -11,6 +11,5 @@ namespace Sudoku.Engine.Tests.Loggers
     internal static partial void LogBoardValues(
       this ILogger logger,
       string boardAsString);
-
   }
 }
