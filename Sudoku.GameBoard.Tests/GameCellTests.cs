@@ -198,16 +198,18 @@ namespace Sudoku.GameBoard.Tests
 
     [TestCase(0, null, false, new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 })]
     [TestCase(0, null, false, new[] { 1, 2, 3, 3, 3, 4, 4, 4, 5 })]
-    public void AddValidPencilMarksToCellWithoutException(int index, int? ctorValue, bool isPuzzleValue, int[] pencilMarks)
+    public void AddValidAndPossiblyDuplicatePencilMarksToCellWithoutException(int index, int? ctorValue, bool isPuzzleValue, int[] pencilMarks)
     {
       //generate game cell
-      //add pencil marks provided (all valid, possible duplicates but that should be allowed as well)
-      //no failures/exceptions or otherwise. 
+      var newCell = GameCellFactory.Create(ctorValue, isPuzzleValue, index, _Logger);
+
+      //add pencil marks provided (all valid, possible duplicates
+      // but that should be allowed as well)
+      newCell.AddPencilMarks(pencilMarks);
+
       //verify pencil mark is there
-      var newCell = new GameCell(index, ctorValue, isPuzzleValue, 0, ColumnPosition.Left, RowPosition.Top, _Logger);
       foreach (var pencilMark in pencilMarks)
       {
-        newCell.AddPencilMark(pencilMark);
         Assert.That(newCell.GetPencilMarks().Where(x => x == pencilMark), Has.Exactly(1).Items);
       }
     }
@@ -222,13 +224,13 @@ namespace Sudoku.GameBoard.Tests
 
     private static GameCell GameCellCtor(int index, int? ctorValue, bool isPuzzlePiece, ILogger logger)
     {
-      var newCell = new GameCell(index, ctorValue, isPuzzlePiece, 0, ColumnPosition.Left, RowPosition.Top, logger);
+      var newCell = GameCellFactory.Create(ctorValue, isPuzzlePiece, index, logger);
       Assert.That(newCell, Is.Not.Null, $"Ctor failed on values: index={index} | ctorValue={ctorValue} | isPuzzlePiece={isPuzzlePiece}.");
       AssertProperties(newCell, ctorValue, isPuzzlePiece);
       return newCell;
     }
 
-    private static void AssertProperties(GameCell cell, int? expectedValue, bool isPuzzlePiece)
+    private static void AssertProperties(IGameCell cell, int? expectedValue, bool isPuzzlePiece)
     {
       Assert.Multiple(() =>
       {
