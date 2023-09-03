@@ -53,7 +53,8 @@ public class GameCell : IGameCell
   ///   Represents the cell's index in an array of all game cells in game board (zero-based)
   ///   from left to right, top to bottom (0-80)
   /// </summary>
-  [Required, Range(0,81)]
+  [Required(ErrorMessage = "Cell's Index MUST be provided.")]
+  [Range(0,81, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int Index { get; private set; }
 
   /// <summary>
@@ -65,7 +66,7 @@ public class GameCell : IGameCell
   /// <summary>
   ///   The solve or puzzle value of the cell
   /// </summary>
-  [Range(1, 9)]
+  [Range(1, 9, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int? Value
   {
     get => _Value;
@@ -88,35 +89,38 @@ public class GameCell : IGameCell
   }
 
   /// <summary>
-  ///   Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
+  /// Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
   /// </summary>
-  [Required, Range(0,8)]
+  [Required(ErrorMessage = "GroupIndex MUST be supplied.")]
+  [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int GroupIndex { get; private set; }
 
   /// <summary>
   ///   Represents the row index (zero-based) from top to bottom (0-8)
   /// </summary>
-  [Required, Range(0, 8)]
+  [Required(ErrorMessage = "RowIndex MUST be supplied.")]
+  [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int RowIndex { get; private set; }
 
   /// <summary>
-  ///   Represents the column index (zero-based) from left to right (0-8)
+  /// Represents the column index (zero-based) from left to right (0-8)
   /// </summary>
-  [Required, Range(0, 8)]
+  [Required(ErrorMessage = "ColumnIndex MUST be supplied.")]
+  [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int ColumnIndex { get; private set; }
 
   /// <summary>
-  ///   Represents the column position in the group it resides.
+  /// Represents the column position in the group it resides.
   ///   Possible Values: Left, Middle, Right
   /// </summary>
-  [Required]
+  [Required(ErrorMessage = "ColumnPosition MUST be supplied.")]
   public ColumnPosition ColumnPosition { get; private set; }
 
   /// <summary>
-  ///   Represents the row position in the group it resides.
+  /// Represents the row position in the group it resides.
   ///   Possible Values: Top, Middle, Bottom
   /// </summary>
-  [Required]
+  [Required(ErrorMessage = "RowPosition MUST be supplied.")]
   public RowPosition RowPosition { get; private set; }
 
   private string DebuggerDisplay
@@ -131,7 +135,7 @@ public class GameCell : IGameCell
   }
 
   /// <summary>
-  ///   Represents the POSSIBLE values for this cell
+  /// Represents the POSSIBLE values for this cell
   /// </summary>
   private IEnumerable<int> PencilMarks
   {
@@ -252,5 +256,4 @@ public class GameCell : IGameCell
   {
     return existingPencilMarks.OrderBy(x => x).SequenceEqual(newPencilMarks.OrderBy(x => x));
   }
-
 }

@@ -128,15 +128,15 @@ namespace Sudoku.GameBoard.Tests
       Assert.That(columnString, Is.EqualTo(expectedColumnValuesAsString));
     }
 
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Group01)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 2, GameBoardOutputs.GameBoard01Group02)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 3, GameBoardOutputs.GameBoard01Group03)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 4, GameBoardOutputs.GameBoard01Group04)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 5, GameBoardOutputs.GameBoard01Group05)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 6, GameBoardOutputs.GameBoard01Group06)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 7, GameBoardOutputs.GameBoard01Group07)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 8, GameBoardOutputs.GameBoard01Group08)]
-    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 9, GameBoardOutputs.GameBoard01Group09)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 0, GameBoardOutputs.GameBoard01Group01)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 1, GameBoardOutputs.GameBoard01Group02)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 2, GameBoardOutputs.GameBoard01Group03)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 3, GameBoardOutputs.GameBoard01Group04)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 4, GameBoardOutputs.GameBoard01Group05)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 5, GameBoardOutputs.GameBoard01Group06)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 6, GameBoardOutputs.GameBoard01Group07)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 7, GameBoardOutputs.GameBoard01Group08)]
+    [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 8, GameBoardOutputs.GameBoard01Group09)]
 
     public void ValidateBoardGroups(string gameBoardAsString, int groupNumber, string groupValuesAsString)
     {

@@ -12,55 +12,55 @@ namespace Sudoku.GameBoard.Helpers
       return foundGroupIndex;
     }
 
-    internal static IEnumerable<int> GetGroupCellIndexesBy(int groupNumber)
+    internal static IEnumerable<int> GetGroupCellIndexesBy(int groupIndex)
     {
-      var indexList = groupNumber switch
+      var indexList = groupIndex switch
       {
-        1 => GameBoardGroupCellIndexes.GroupNumber1,
-        2 => GameBoardGroupCellIndexes.GroupNumber2,
-        3 => GameBoardGroupCellIndexes.GroupNumber3,
-        4 => GameBoardGroupCellIndexes.GroupNumber4,
-        5 => GameBoardGroupCellIndexes.GroupNumber5,
-        6 => GameBoardGroupCellIndexes.GroupNumber6,
-        7 => GameBoardGroupCellIndexes.GroupNumber7,
-        8 => GameBoardGroupCellIndexes.GroupNumber8,
-        9 => GameBoardGroupCellIndexes.GroupNumber9,
+        0 => GameBoardGroupCellIndexes.GroupNumber1,
+        1 => GameBoardGroupCellIndexes.GroupNumber2,
+        2 => GameBoardGroupCellIndexes.GroupNumber3,
+        3 => GameBoardGroupCellIndexes.GroupNumber4,
+        4 => GameBoardGroupCellIndexes.GroupNumber5,
+        5 => GameBoardGroupCellIndexes.GroupNumber6,
+        6 => GameBoardGroupCellIndexes.GroupNumber7,
+        7 => GameBoardGroupCellIndexes.GroupNumber8,
+        8 => GameBoardGroupCellIndexes.GroupNumber9,
         _ => Array.Empty<int>()
       };
       return indexList;
     }
 
-    internal static IEnumerable<int> GetRowCellIndexesBy(int rowNumber)
+    internal static IEnumerable<int> GetRowCellIndexesBy(int rowIndex)
     {
-      var indexList = rowNumber switch
+      var indexList = rowIndex switch
       {
-        1 => GameBoardRowCellNumbers.RowNumber1,
-        2 => GameBoardRowCellNumbers.RowNumber2,
-        3 => GameBoardRowCellNumbers.RowNumber3,
-        4 => GameBoardRowCellNumbers.RowNumber4,
-        5 => GameBoardRowCellNumbers.RowNumber5,
-        6 => GameBoardRowCellNumbers.RowNumber6,
-        7 => GameBoardRowCellNumbers.RowNumber7,
-        8 => GameBoardRowCellNumbers.RowNumber8,
-        9 => GameBoardRowCellNumbers.RowNumber9,
+        0 => GameBoardRowCellNumbers.RowNumber1,
+        1 => GameBoardRowCellNumbers.RowNumber2,
+        2=> GameBoardRowCellNumbers.RowNumber3,
+        3 => GameBoardRowCellNumbers.RowNumber4,
+        4 => GameBoardRowCellNumbers.RowNumber5,
+        5 => GameBoardRowCellNumbers.RowNumber6,
+        6 => GameBoardRowCellNumbers.RowNumber7,
+        7 => GameBoardRowCellNumbers.RowNumber8,
+        8 => GameBoardRowCellNumbers.RowNumber9,
         _ => Array.Empty<int>()
       };
       return indexList;
     }
 
-    internal static IEnumerable<int> GetColumnCellIndexesBy(int columnNumber)
+    internal static IEnumerable<int> GetColumnCellIndexesBy(int columnIndex)
     {
-      var indexList = columnNumber switch
+      var indexList = columnIndex switch
       {
-        1 => GameBoardColumnCellIndexes.ColumnNumber1,
-        2 => GameBoardColumnCellIndexes.ColumnNumber2,
-        3 => GameBoardColumnCellIndexes.ColumnNumber3,
-        4 => GameBoardColumnCellIndexes.ColumnNumber4,
-        5 => GameBoardColumnCellIndexes.ColumnNumber5,
-        6 => GameBoardColumnCellIndexes.ColumnNumber6,
-        7 => GameBoardColumnCellIndexes.ColumnNumber7,
-        8 => GameBoardColumnCellIndexes.ColumnNumber8,
-        9 => GameBoardColumnCellIndexes.ColumnNumber9,
+        0 => GameBoardColumnCellIndexes.ColumnNumber1,
+        1 => GameBoardColumnCellIndexes.ColumnNumber2,
+        2 => GameBoardColumnCellIndexes.ColumnNumber3,
+        3 => GameBoardColumnCellIndexes.ColumnNumber4,
+        4 => GameBoardColumnCellIndexes.ColumnNumber5,
+        5 => GameBoardColumnCellIndexes.ColumnNumber6,
+        6 => GameBoardColumnCellIndexes.ColumnNumber7,
+        7 => GameBoardColumnCellIndexes.ColumnNumber8,
+        8 => GameBoardColumnCellIndexes.ColumnNumber9,
         _ => Array.Empty<int>()
       };
       return indexList;
@@ -82,7 +82,6 @@ namespace Sudoku.GameBoard.Helpers
         8 => ColumnPosition.Right,
         _ => ThrowInvalidColumnIndexException()
       };
-
       return columnPosition;
     }
 
