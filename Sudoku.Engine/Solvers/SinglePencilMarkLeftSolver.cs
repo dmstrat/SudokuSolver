@@ -14,10 +14,10 @@ namespace Sudoku.Engine.Solvers
         foreach (var cell in cellsToSolve)
         {
           //solve cell if there is only one pencil mark
-          var onlyOneChoice = cell.GetPencilMarks().Count() == 1;
+          var onlyOneChoice = cell.PencilMarks.Count() == 1;
           if (onlyOneChoice)
           {
-            cell.Value = cell.GetPencilMarks().First();
+            cell.Value = cell.PencilMarks.First();
             didWork = true;
           }
         }

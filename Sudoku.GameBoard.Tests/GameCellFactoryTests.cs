@@ -112,9 +112,9 @@ namespace Sudoku.GameBoard.Tests
     {
       var gameCell = GameCellFactory.Create(ctorValue, isPuzzleValue, cellIndex, _Logger);
 
-      var actualGroupIndex = gameCell.GetGroupIndex();
-      var actualRowIndex = gameCell.GetRowIndex();
-      var actualColumnIndex = gameCell.GetColumnIndex();
+      var actualGroupIndex = gameCell.GroupIndex;
+      var actualRowIndex = gameCell.RowIndex;
+      var actualColumnIndex = gameCell.ColumnIndex;
 
       Assert.Multiple(() =>
       {

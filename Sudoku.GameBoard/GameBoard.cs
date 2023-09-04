@@ -1,9 +1,8 @@
-﻿using Sudoku.GameBoard.Helpers;
-using Sudoku.GameBoard.Validators;
-using System.Diagnostics;
-using System.Text;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Sudoku.GameBoard.Helpers;
 using Sudoku.GameBoard.Loggers;
+using Sudoku.GameBoard.Validators;
+using System.Text;
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 #pragma warning disable CS8618
@@ -67,62 +66,13 @@ namespace Sudoku.GameBoard
       _Logger = logger;
       Cells = gameCells;
       RegisterCellEvents();
-      Trace.WriteLine($"CurrentBoard:{BuildZeroBasedString()}");
+      logger.LogAction("Board Created", BuildZeroBasedString());
     }
 
     public string BuildZeroBasedString()
     {
       var boardWithZerosForBlank = string.Join("", Cells.Select(x => x.Value ?? 0));
       return boardWithZerosForBlank;
-    }
-
-    public override string ToString()
-    {
-      var rowSeparator = "----------------------------------------";
-      var stringBuilder = new StringBuilder();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.AppendLine(rowSeparator);
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.AppendLine(rowSeparator);
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9);
-      stringBuilder.AppendLine();
-      stringBuilder.AppendLine(rowSeparator);
-      stringBuilder.Append(rowSeparator);
-      stringBuilder.AppendLine();
-      var newString = stringBuilder.ToString();
-      return newString;
     }
 
     public string GetValuesAsString()
@@ -179,6 +129,55 @@ namespace Sudoku.GameBoard
       var columnCells = indexList!.Select(GetCellByIndex).ToList();
       var returnObject = new GameBoardColumn(columnCells);
       return returnObject;
+    }
+
+    public override string ToString()
+    {
+      var rowSeparator = "----------------------------------------";
+      var stringBuilder = new StringBuilder();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.AppendLine(rowSeparator);
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.AppendLine(rowSeparator);
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      stringBuilder = GenerateRow(stringBuilder, Cells, 0 + 9 + 9 + 9 + 9 + 9 + 9 + 9 + 9);
+      stringBuilder.AppendLine();
+      stringBuilder.AppendLine(rowSeparator);
+      stringBuilder.Append(rowSeparator);
+      stringBuilder.AppendLine();
+      var newString = stringBuilder.ToString();
+      return newString;
     }
 
     public void Validate()
@@ -251,10 +250,10 @@ namespace Sudoku.GameBoard
 
     private void ClearPencilMarksFor(IGameCell cell)
     {
-      _Logger.LogAction("SOLVED CELL", $"Value:{cell.Value}/group:{cell.GetGroupIndex()}/row:{cell.GetRowIndex()}/column:{cell.GetColumnIndex()}/");
-      var group = GetGroupBy(cell.GetGroupIndex());
-      var row = GetRowBy(cell.GetRowIndex());
-      var column = GetColumnBy(cell.GetColumnIndex());
+      _Logger.LogAction("SOLVED CELL", $"Value:{cell.Value}/group:{cell.GroupIndex}/row:{cell.RowIndex}/column:{cell.ColumnIndex}/");
+      var group = GetGroupBy(cell.GroupIndex);
+      var row = GetRowBy(cell.RowIndex);
+      var column = GetColumnBy(cell.ColumnIndex);
       group.ClearPencilMark(cell.Value);
       row.ClearPencilMark(cell.Value);
       column.ClearPencilMark(cell.Value);

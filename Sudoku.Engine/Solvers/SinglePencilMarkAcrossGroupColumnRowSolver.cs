@@ -60,7 +60,7 @@ namespace Sudoku.Engine.Solvers
     {
       foreach (var cell in gameCells)
       {
-        foreach (var cellPencilMark in cell.GetPencilMarks())
+        foreach (var cellPencilMark in cell.PencilMarks)
         {
           if (cellPencilMark == valueToSolveInGroup)
           {
@@ -76,7 +76,7 @@ namespace Sudoku.Engine.Solvers
 
       foreach (var cell in gameCells)
       {
-        foreach (var pencilMark in cell.GetPencilMarks())
+        foreach (var pencilMark in cell.PencilMarks)
         {
           if (_ValuesWithCount.ContainsKey(pencilMark))
           {

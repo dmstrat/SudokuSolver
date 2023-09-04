@@ -103,7 +103,7 @@ namespace Sudoku.Engine
       {
         if (cell.Value is null)
         {
-          _Logger.LogStep(0, $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", cell.GetPencilMarks())}");
+          _Logger.LogStep(0, $"Cell Index: {cell.Index} => Pencil Marks: {string.Join(",", cell.PencilMarks)}");
         }
       }
     }

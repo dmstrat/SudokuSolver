@@ -32,7 +32,7 @@ public class GameBoardGroupRow
 
   public IEnumerable<int> GetPencilMarks()
   {
-    var distinctPencilMarks = Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
+    var distinctPencilMarks = Cells.SelectMany(x => x.PencilMarks).Distinct();
     return distinctPencilMarks;
   }
 }

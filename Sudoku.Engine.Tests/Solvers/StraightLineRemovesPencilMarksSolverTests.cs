@@ -139,7 +139,7 @@ namespace Sudoku.Engine.Tests.Solvers
       var solver = new StraightLineRemovesPencilMarksSolver();
 
       var cellAtRow4Column9OriginalPencilMarks = gameBoard.Groups.First(x => x.Index == groupIndex).Cells
-        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).GetPencilMarks();
+        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).PencilMarks;
       Assert.That(cellAtRow4Column9OriginalPencilMarks, Is.EqualTo(startingPencilMarks));
 
       var group3 = gameBoard.Groups.First(x => x.Index == 2);
@@ -147,7 +147,7 @@ namespace Sudoku.Engine.Tests.Solvers
 
       //assert cell at given column and row index has the provided pencils marks EXACTLY
       var cellAtRow4Column9PencilMarks = gameBoard.Groups.First(x => x.Index == groupIndex).Cells
-        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).GetPencilMarks();
+        .First(x => x.ColumnIndex == cellColumnIndex && x.RowIndex == cellRowIndex).PencilMarks;
 
       Assert.That(cellAtRow4Column9PencilMarks, Is.EqualTo(expectedPencilMarks));
     }

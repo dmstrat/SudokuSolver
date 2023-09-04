@@ -247,7 +247,7 @@ namespace Sudoku.GameBoard.Tests
       //verify pencil mark is there
       foreach (var pencilMark in pencilMarks)
       {
-        Assert.That(newCell.GetPencilMarks().Where(x => x == pencilMark), Has.Exactly(1).Items);
+        Assert.That(newCell.PencilMarks.Where(x => x == pencilMark), Has.Exactly(1).Items);
       }
     }
 
@@ -284,9 +284,9 @@ namespace Sudoku.GameBoard.Tests
       {
         Assert.That(cell.Value, Is.EqualTo(expectedValue), $"Cell Property 'Value' does not match: EXPECTED: {expectedValue} | ACTUAL: {cell.Value}.");
         Assert.That(cell.IsPuzzleValue, Is.EqualTo(isPuzzlePiece), $"Cell Property 'IsPuzzlePiece' does not match: EXPECTED: {isPuzzlePiece} | ACTUAL: {cell.IsPuzzleValue}");
-        Assert.That(cell.GetGroupIndex(), Is.EqualTo(groupIndex));
-        Assert.That(cell.GetRowIndex(), Is.EqualTo(rowIndex));
-        Assert.That(cell.GetColumnIndex(), Is.EqualTo(columnIndex));
+        Assert.That(cell.GroupIndex, Is.EqualTo(groupIndex));
+        Assert.That(cell.RowIndex, Is.EqualTo(rowIndex));
+        Assert.That(cell.ColumnIndex, Is.EqualTo(columnIndex));
         Assert.That(cell.ColumnPosition, Is.EqualTo(columnPosition));
         Assert.That(cell.RowPosition, Is.EqualTo(rowPosition));
       });
