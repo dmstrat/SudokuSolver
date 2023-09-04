@@ -1,9 +1,9 @@
-﻿using Sudoku.GameBoard.Helpers;
-using Sudoku.GameBoard.Validators;
-using System.Diagnostics;
-using System.Text;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
+using Sudoku.GameBoard.Helpers;
 using Sudoku.GameBoard.Loggers;
+using Sudoku.GameBoard.Validators;
+using System.Text;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 #pragma warning disable CS8618
 
@@ -24,25 +24,23 @@ namespace Sudoku.GameBoard
       get
       {
         var groups = new List<GameBoardGroup>();
-        for (int i = 0; i < 9; i++)
+        for (int groupIndex = 0; groupIndex < 9; groupIndex++)
         {
-          var newGroup = GetGroupById(i);
+          var newGroup = GetGroupBy(groupIndex);
           groups.Add(newGroup);
         }
         return groups;
       }
     }
 
-    public void NoOpMethod(IGameBoard gameBoard) { }
-
     public IList<GameBoardRow> Rows
     {
       get
       {
         var rows = new List<GameBoardRow>();
-        for (int i = 0; i < 9; i++)
+        for (int rowIndex = 0; rowIndex < 9; rowIndex++)
         {
-          var newRow = GetRowBy(i);
+          var newRow = GetRowBy(rowIndex);
           rows.Add(newRow);
         }
         return rows;
@@ -54,9 +52,9 @@ namespace Sudoku.GameBoard
       get
       {
         var columns = new List<GameBoardColumn>();
-        for (int i = 0; i < 9; i++)
+        for (int columnIndex = 0; columnIndex < 9; columnIndex++)
         {
-          var newColumn = GetColumnBy(i);
+          var newColumn = GetColumnBy(columnIndex);
           columns.Add(newColumn);
         }
         return columns;
@@ -68,7 +66,7 @@ namespace Sudoku.GameBoard
       _Logger = logger;
       Cells = gameCells;
       RegisterCellEvents();
-      Trace.WriteLine($"CurrentBoard:{BuildZeroBasedString()}");
+      logger.LogAction("Board Created", BuildZeroBasedString());
     }
 
     public string BuildZeroBasedString()
@@ -76,52 +74,61 @@ namespace Sudoku.GameBoard
       var boardWithZerosForBlank = string.Join("", Cells.Select(x => x.Value ?? 0));
       return boardWithZerosForBlank;
     }
-    private void RegisterCellEvents()
-    {
-      foreach (var cell in Cells)
-      {
-        cell.CellValueUpdated += ClearPencilMarksFor;
-        cell.CellPencilMarksUpdated += PencilMarksUpdated;
-      }
 
-      OnChanged += NoOpMethod;
+    public string GetValuesAsString()
+    {
+      var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
+      return newString;
+    }
+    
+    public GameBoardGroup GetGroupBy(GameCell cell)
+    {
+      var group = Groups[cell.GroupIndex];
+      return group;
     }
 
-    private void ReportBoardChanged()
+    public GameBoardRow GetRowBy(GameCell cell)
     {
-      OnChanged(this);
+      var row = Rows[cell.RowIndex];
+      return row;
+    }
+    
+    public GameBoardColumn GetColumnBy(GameCell cell)
+    {
+      var column = Columns[cell.ColumnIndex];
+      return column;
     }
 
-    private void PencilMarksUpdated(IGameCell cell)
+    public GameCell GetCellByIndex(int cellIndex)
     {
-      ReportBoardChanged();
+      return Cells[cellIndex];
     }
 
-    private void ClearPencilMarksFor(IGameCell cell)
+    public GameBoardGroup GetGroupBy(int groupIndex)
     {
-      _Logger.LogAction("SOLVED CELL", $"Value:{cell.Value}/group:{cell.GetGroupIndex()}/row:{cell.GetRowIndex()}/column:{cell.GetColumnIndex()}/");
-      var group = GetGroupById(cell.GetGroupIndex());
-      var row = GetRowBy(cell.GetRowIndex());
-      var column = GetColumnBy(cell.GetColumnIndex());
-      group.ClearPencilMark(cell.Value);
-      row.ClearPencilMark(cell.Value);
-      column.ClearPencilMark(cell.Value);
-      ReportBoardChanged();
+      GameBoardValidator.EnsureGroupNumberIsValid(groupIndex);
+      var indexList = GameBoardHelper.GetGroupCellIndexesBy(groupIndex);
+      var groupCells = indexList!.Select(GetCellByIndex).ToList();
+      var returnObject = new GameBoardGroup(groupCells);
+      return returnObject;
     }
 
-    public IEnumerable<GameBoardGroup> GetGroups()
+    public GameBoardRow GetRowBy(int rowIndex)
     {
-      return Groups;
+      GameBoardValidator.EnsureRowNumberIsValid(rowIndex);
+      var indexList = GameBoardHelper.GetRowCellIndexesBy(rowIndex);
+      var rowCells = indexList!.Select(GetCellByIndex).ToList();
+      var returnObject = new GameBoardRow(rowCells);
+      return returnObject;
     }
 
-    public IEnumerable<GameBoardRow> GetRows()
+    public GameBoardColumn GetColumnBy(int columnIndex)
     {
-      return Rows;
-    }
-
-    public IEnumerable<GameBoardColumn> GetColumns()
-    {
-      return Columns;
+      GameBoardValidator.EnsureColumnNumberIsValid(columnIndex);
+      var indexList = GameBoardHelper.GetColumnCellIndexesBy(columnIndex);
+      var columnCells = indexList!.Select(GetCellByIndex).ToList();
+      var returnObject = new GameBoardColumn(columnCells);
+      return returnObject;
     }
 
     public override string ToString()
@@ -173,6 +180,11 @@ namespace Sudoku.GameBoard
       return newString;
     }
 
+    public void Validate()
+    {
+      GameBoardValidator.ValidateBoard(this);
+    }
+
     private static StringBuilder GenerateRow(StringBuilder stringBuilder, IList<GameCell> gameCells, int startOffset)
     {
       var cell1 = gameCells[startOffset].Value.ToString();
@@ -217,70 +229,35 @@ namespace Sudoku.GameBoard
       return stringBuilder;
     }
 
-    public string GetValuesAsString()
+    private void RegisterCellEvents()
     {
-      var newString = Cells.Select(x => x.Value).Aggregate("", (current, next) => current + (next.HasValue ? next.ToString() : " "));
-      return newString;
-    }
-    
-    public GameBoardGroup GetGroupBy(GameCell cell)
-    {
-      var group = Groups[cell.GroupIndex];
-      return group;
+      foreach (var cell in Cells)
+      {
+        cell.OnChanged += ClearPencilMarksFor;
+        cell.OnPencilMarksChanged += PencilMarksChanged;
+      }
     }
 
-    public GameBoardRow GetRowBy(GameCell cell)
+    private void ReportBoardChanged()
     {
-      var row = Rows[cell.RowIndex];
-      return row;
-    }
-    
-    public GameBoardColumn GetColumnBy(GameCell cell)
-    {
-      var column = Columns[cell.ColumnIndex];
-      return column;
+      OnChanged?.Invoke(this);
     }
 
-    public IEnumerable<GameCell> GetCells()
+    private void PencilMarksChanged(IGameCell cell)
     {
-      return Cells;
+      ReportBoardChanged();
     }
 
-    public GameCell GetCellByIndex(int cellIndex)
+    private void ClearPencilMarksFor(IGameCell cell)
     {
-      return Cells[cellIndex];
-    }
-
-    public void Validate()
-    {
-      GameBoardValidator.ValidateBoard(this);
-    }
-
-    public GameBoardGroup GetGroupById(int groupIndex)
-    {
-      GameBoardValidator.EnsureGroupNumberIsValid(groupIndex);
-      var indexList = GameBoardHelper.GetGroupCellIndexesBy(groupIndex);
-      var groupCells = indexList!.Select(GetCellByIndex).ToList();
-      var returnObject = new GameBoardGroup(groupCells);
-      return returnObject;
-    }
-
-    public GameBoardRow GetRowBy(int rowIndex)
-    {
-      GameBoardValidator.EnsureRowNumberIsValid(rowIndex);
-      var indexList = GameBoardHelper.GetRowCellIndexesBy(rowIndex);
-      var rowCells = indexList!.Select(GetCellByIndex).ToList();
-      var returnObject = new GameBoardRow(rowCells);
-      return returnObject;
-    }
-
-    public GameBoardColumn GetColumnBy(int columnIndex)
-    {
-      GameBoardValidator.EnsureColumnNumberIsValid(columnIndex);
-      var indexList = GameBoardHelper.GetColumnCellIndexesBy(columnIndex);
-      var columnCells = indexList!.Select(GetCellByIndex).ToList();
-      var returnObject = new GameBoardColumn(columnCells);
-      return returnObject;
+      _Logger.LogAction("SOLVED CELL", $"Value:{cell.Value}/group:{cell.GroupIndex}/row:{cell.RowIndex}/column:{cell.ColumnIndex}/");
+      var group = GetGroupBy(cell.GroupIndex);
+      var row = GetRowBy(cell.RowIndex);
+      var column = GetColumnBy(cell.ColumnIndex);
+      group.ClearPencilMark(cell.Value);
+      row.ClearPencilMark(cell.Value);
+      column.ClearPencilMark(cell.Value);
+      ReportBoardChanged();
     }
   }
 }

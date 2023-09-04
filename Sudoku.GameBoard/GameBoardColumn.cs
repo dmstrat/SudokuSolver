@@ -35,7 +35,7 @@ public class GameBoardColumn : IGameBoardColumn
 
   public void ClearPencilMarksNotIn(GameBoardGroupColumn groupColumn)
   {
-    var distinctPencilMarksInGroupColumn = groupColumn.Cells.SelectMany(x => x.GetPencilMarks()).Distinct();
+    var distinctPencilMarksInGroupColumn = groupColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
     ClearPencilMarksNotIn(groupColumn.Cells, distinctPencilMarksInGroupColumn);
   }
 

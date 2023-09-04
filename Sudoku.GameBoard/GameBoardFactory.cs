@@ -14,20 +14,20 @@ namespace Sudoku.GameBoard
     public static GameBoard Create(string gameBoardWithPuzzleNumbers, ILogger logger)
     {
       var gameCells = new List<GameCell>();
-      for (int i = 0; i < NumberOfGameCellsInGame; i++)
+      for (var cellIndex = 0; cellIndex < NumberOfGameCellsInGame; cellIndex++)
       {
-        var unparsedNextValue = gameBoardWithPuzzleNumbers[i].ToString();
+        var unparsedNextValue = gameBoardWithPuzzleNumbers[cellIndex].ToString();
         var isEmptyCellValue = unparsedNextValue is EMPTY_VALUE_AS_SPACE or EMPTY_VALUE_AS_ZERO;
 
         GameCell newCell;
         if (isEmptyCellValue)
         {
-          newCell = GameCellFactory.Create(null, IS_NOT_PUZZLE_VALUE, i, logger);
+          newCell = GameCellFactory.Create(null, IS_NOT_PUZZLE_VALUE, cellIndex, logger);
         }
         else
         {
           _ = int.TryParse(unparsedNextValue, NumberStyles.Integer, null, out var nextNumber);
-          newCell = GameCellFactory.Create(nextNumber, IS_PUZZLE_VALUE, i, logger);
+          newCell = GameCellFactory.Create(nextNumber, IS_PUZZLE_VALUE, cellIndex, logger);
         }
         gameCells.Add(newCell);
       }

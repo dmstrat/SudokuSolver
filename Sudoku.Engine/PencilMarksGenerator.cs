@@ -20,7 +20,7 @@ namespace Sudoku.Engine
       using (_Logger.BeginScope("Generating Pencil Marks"))
       {
         _Logger.LogStep(1,$"Generate Pencil Marks - Start {DateTime.UtcNow:O}");
-        foreach (var cell in gameBoard.GetCells())
+        foreach (var cell in gameBoard.Cells)
         {
           ComputePencilMarksForCell(gameBoard, cell);
         }

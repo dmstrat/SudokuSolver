@@ -3,16 +3,22 @@ using Sudoku.GameBoard.Exceptions;
 using Sudoku.GameBoard.Loggers;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+
+#pragma warning disable CS8618
 
 namespace Sudoku.GameBoard;
 
 // ReSharper disable InconsistentNaming
 public delegate void CellValueUpdated(IGameCell cell);
-public delegate void CellPencilMarksUpdated(IGameCell cell);
+public delegate void CellPencilMarksChanged(IGameCell cell);
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GameCell : IGameCell
 {
+  public event CellValueUpdated OnChanged;
+  public event CellPencilMarksChanged OnPencilMarksChanged;
+
   private const string _EmptyValueAsString = " ";
   private IEnumerable<int> _PencilMarks = new List<int>();
   private int? _Value;
@@ -43,10 +49,7 @@ public class GameCell : IGameCell
     ColumnPosition = columnPosition;
     RowPosition = rowPosition;
     _Logger = logger;
-
     ValidateInput();
-    CellValueUpdated += NoOpGameCellUpdateMethod;
-    CellPencilMarksUpdated += NoOpGameCellUpdateMethod;
   }
 
   /// <summary>
@@ -54,8 +57,8 @@ public class GameCell : IGameCell
   ///   from left to right, top to bottom (0-80)
   /// </summary>
   [Required(ErrorMessage = "Cell's Index MUST be provided.")]
-  [Range(0,81, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
-  public int Index { get; private set; }
+  [Range(0, 80, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  public int Index { get; }
 
   /// <summary>
   ///   This value indicates if this GameCell Value is part of the original puzzle values
@@ -84,7 +87,7 @@ public class GameCell : IGameCell
       }
 
       ClearPencilMarks();
-      CellValueUpdated(this);
+      OnChanged?.Invoke(this);
     }
   }
 
@@ -123,21 +126,10 @@ public class GameCell : IGameCell
   [Required(ErrorMessage = "RowPosition MUST be supplied.")]
   public RowPosition RowPosition { get; private set; }
 
-  private string DebuggerDisplay
-  {
-    get
-    {
-      var cellValue = Value.HasValue ? Value.Value.ToString() : _EmptyValueAsString;
-      var debuggerString =
-        $"<{Index}>[{cellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
-      return debuggerString;
-    }
-  }
-
   /// <summary>
   /// Represents the POSSIBLE values for this cell
   /// </summary>
-  private IEnumerable<int> PencilMarks
+  public IEnumerable<int> PencilMarks
   {
     get => _PencilMarks;
     set
@@ -149,55 +141,35 @@ public class GameCell : IGameCell
       }
       _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
       _PencilMarks = value;
-      CellPencilMarksUpdated(this);
+      OnPencilMarksChanged?.Invoke(this);
       _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
     }
   }
 
-
-  public int GetGroupIndex()
+  /// <summary>
+  /// Removes provided value from Pencil Marks
+  /// </summary>
+  /// <param name="pencilMark"></param>
+  public void ClearPencilMark(int pencilMark)
   {
-    return GroupIndex;
-  }
-
-  public int GetRowIndex()
-  {
-    return RowIndex;
-  }
-
-  public int GetColumnIndex()
-  {
-    return ColumnIndex;
-  }
-
-  public IEnumerable<int> GetPencilMarks()
-  {
-    return PencilMarks;
-  }
-
-  public void ClearPencilMark(int cellValue)
-  {
-    var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int> { cellValue });
+    var newPencilMarks = PencilMarks.Select(x => x).Except(new List<int> { pencilMark });
     PencilMarks = newPencilMarks;
     CheckCell();
   }
 
+  /// <summary>
+  /// Removes provided values from Pencil Marks
+  /// </summary>
   public void ClearPencilMarks()
   {
     PencilMarks = new List<int>();
     CheckCell();
   }
 
-  public event CellValueUpdated CellValueUpdated;
-  public event CellPencilMarksUpdated CellPencilMarksUpdated;
-
-  public override string ToString()
-  {
-    var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
-    var returnValue = valueAsString.Length == 0 ? _EmptyValueAsString : valueAsString;
-    return returnValue;
-  }
-
+  /// <summary>
+  /// Adds provided values to Pencil Marks
+  /// </summary>
+  /// <param name="pencilMarks"></param>
   public void AddPencilMarks(int[] pencilMarks)
   {
     foreach (var pencilMark in pencilMarks)
@@ -206,6 +178,10 @@ public class GameCell : IGameCell
     }
   }
 
+  /// <summary>
+  /// Adds provided value to Pencil Marks
+  /// </summary>
+  /// <param name="pencilMark"></param>
   public void AddPencilMark(int pencilMark)
   {
     var doNotAddPencilMarksToSolvedCells = _Value.HasValue;
@@ -222,9 +198,11 @@ public class GameCell : IGameCell
     }
   }
 
-  private static void NoOpGameCellUpdateMethod(IGameCell cell)
+  public override string ToString()
   {
-    //intentional no-op method
+    var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
+    var returnValue = valueAsString.Length == 0 ? _EmptyValueAsString : valueAsString;
+    return returnValue;
   }
 
   private void ValidateInput()
@@ -255,5 +233,16 @@ public class GameCell : IGameCell
   private static bool PencilMarksAreNotDifferent(IEnumerable<int> existingPencilMarks, IEnumerable<int> newPencilMarks)
   {
     return existingPencilMarks.OrderBy(x => x).SequenceEqual(newPencilMarks.OrderBy(x => x));
+  }
+
+  private string DebuggerDisplay
+  {
+    get
+    {
+      var cellValue = Value.HasValue ? Value.Value.ToString() : _EmptyValueAsString;
+      var debuggerString =
+        $"<{Index}>[{cellValue}]: {string.Join(",", PencilMarks)} / group: {GroupIndex} / row: {RowIndex} / column: {ColumnIndex} /";
+      return debuggerString;
+    }
   }
 }
