@@ -11,13 +11,13 @@ namespace Sudoku.GameBoard;
 
 // ReSharper disable InconsistentNaming
 public delegate void CellValueUpdated(IGameCell cell);
-public delegate void CellPencilMarksUpdated(IGameCell cell);
+public delegate void CellPencilMarksChanged(IGameCell cell);
 
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GameCell : IGameCell
 {
   public event CellValueUpdated OnChanged;
-  public event CellPencilMarksUpdated OnPencilMarksUpdated;
+  public event CellPencilMarksChanged OnPencilMarksChanged;
 
   private const string _EmptyValueAsString = " ";
   private IEnumerable<int> _PencilMarks = new List<int>();
@@ -153,11 +153,10 @@ public class GameCell : IGameCell
       }
       _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
       _PencilMarks = value;
-      OnPencilMarksUpdated?.Invoke(this);
+      OnPencilMarksChanged?.Invoke(this);
       _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
     }
   }
-
 
   public int GetGroupIndex()
   {

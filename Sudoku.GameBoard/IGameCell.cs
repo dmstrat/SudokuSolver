@@ -3,7 +3,7 @@
 public interface IGameCell
 {
   public event CellValueUpdated OnChanged;
-  public event CellPencilMarksUpdated OnPencilMarksUpdated;
+  public event CellPencilMarksChanged OnPencilMarksChanged;
 
   public bool IsPuzzleValue { get; }
   public int? Value { get; set; }

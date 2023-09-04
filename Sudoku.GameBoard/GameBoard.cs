@@ -235,7 +235,7 @@ namespace Sudoku.GameBoard
       foreach (var cell in Cells)
       {
         cell.OnChanged += ClearPencilMarksFor;
-        cell.OnPencilMarksUpdated += PencilMarksUpdated;
+        cell.OnPencilMarksChanged += PencilMarksChanged;
       }
     }
 
@@ -244,7 +244,7 @@ namespace Sudoku.GameBoard
       OnChanged?.Invoke(this);
     }
 
-    private void PencilMarksUpdated(IGameCell cell)
+    private void PencilMarksChanged(IGameCell cell)
     {
       ReportBoardChanged();
     }
