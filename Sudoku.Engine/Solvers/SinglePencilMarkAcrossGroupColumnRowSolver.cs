@@ -20,7 +20,7 @@ namespace Sudoku.Engine.Solvers
     {
       //loop through each row, column, and group: see if there is a single pencil mark regardless of 
       // other pencil marks in that group, row, column
-      var groups = gameBoard.GetGroups();
+      var groups = gameBoard.Groups;
       foreach (var group in groups)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(group.Cells);
@@ -31,7 +31,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      var rows = gameBoard.GetRows();
+      var rows = gameBoard.Rows;
       foreach (var row in rows)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(row.Cells);
@@ -42,7 +42,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      var columns = gameBoard.GetColumns();
+      var columns = gameBoard.Columns;
       foreach (var column in columns)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(column.Cells);

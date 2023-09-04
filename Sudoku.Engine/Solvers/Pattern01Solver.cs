@@ -14,7 +14,7 @@ namespace Sudoku.Engine.Solvers
   {
     public IGameBoard Solve(IGameBoard gameBoard)
     {
-      foreach (var group in gameBoard.GetGroups())
+      foreach (var group in gameBoard.Groups)
       {
         SolveBy(gameBoard, group);
       }

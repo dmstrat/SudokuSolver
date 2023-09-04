@@ -138,11 +138,11 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 7, GameBoardOutputs.GameBoard01Group08)]
     [TestCase(GameBoardInputs.GameBoard01AllCellsFilled, 8, GameBoardOutputs.GameBoard01Group09)]
 
-    public void ValidateBoardGroups(string gameBoardAsString, int groupNumber, string groupValuesAsString)
+    public void ValidateBoardGroups(string gameBoardAsString, int groupIndex, string groupValuesAsString)
     {
       var gameBoard = GameBoardFactory.Create(gameBoardAsString, _Logger);
 
-      var actualGroup = gameBoard.GetGroupById(groupNumber);
+      var actualGroup = gameBoard.GetGroupBy(groupIndex);
       GameBoardGroupAsserts.AssertGameBoardGroup(groupValuesAsString, actualGroup);
     }
 

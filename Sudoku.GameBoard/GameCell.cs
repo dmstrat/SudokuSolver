@@ -3,6 +3,9 @@ using Sudoku.GameBoard.Exceptions;
 using Sudoku.GameBoard.Loggers;
 using System.ComponentModel.DataAnnotations;
 using System.Diagnostics;
+// ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+
+#pragma warning disable CS8618
 
 namespace Sudoku.GameBoard;
 
@@ -13,6 +16,9 @@ public delegate void CellPencilMarksUpdated(IGameCell cell);
 [DebuggerDisplay("{DebuggerDisplay,nq}")]
 public class GameCell : IGameCell
 {
+  public event CellValueUpdated OnChanged;
+  public event CellPencilMarksUpdated OnPencilMarksUpdated;
+
   private const string _EmptyValueAsString = " ";
   private IEnumerable<int> _PencilMarks = new List<int>();
   private int? _Value;
@@ -45,8 +51,6 @@ public class GameCell : IGameCell
     _Logger = logger;
 
     ValidateInput();
-    CellValueUpdated += NoOpGameCellUpdateMethod;
-    CellPencilMarksUpdated += NoOpGameCellUpdateMethod;
   }
 
   /// <summary>
@@ -54,7 +58,7 @@ public class GameCell : IGameCell
   ///   from left to right, top to bottom (0-80)
   /// </summary>
   [Required(ErrorMessage = "Cell's Index MUST be provided.")]
-  [Range(0,81, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
+  [Range(0, 80, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int Index { get; private set; }
 
   /// <summary>
@@ -84,7 +88,7 @@ public class GameCell : IGameCell
       }
 
       ClearPencilMarks();
-      CellValueUpdated(this);
+      OnChanged?.Invoke(this);
     }
   }
 
@@ -149,7 +153,7 @@ public class GameCell : IGameCell
       }
       _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
       _PencilMarks = value;
-      CellPencilMarksUpdated(this);
+      OnPencilMarksUpdated?.Invoke(this);
       _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
     }
   }
@@ -188,9 +192,6 @@ public class GameCell : IGameCell
     CheckCell();
   }
 
-  public event CellValueUpdated CellValueUpdated;
-  public event CellPencilMarksUpdated CellPencilMarksUpdated;
-
   public override string ToString()
   {
     var valueAsString = Convert.ToString(Value) ?? _EmptyValueAsString;
@@ -220,11 +221,6 @@ public class GameCell : IGameCell
     {
       _PencilMarks = PencilMarks.Concat(new List<int> { pencilMark });
     }
-  }
-
-  private static void NoOpGameCellUpdateMethod(IGameCell cell)
-  {
-    //intentional no-op method
   }
 
   private void ValidateInput()

@@ -6,7 +6,7 @@ namespace Sudoku.Engine.Solvers
   {
     public IGameBoard Solve(IGameBoard gameBoard)
     {
-      var cellsToSolve = gameBoard.GetCells().Where(x => !x.Value.HasValue);
+      var cellsToSolve = gameBoard.Cells.Where(x => !x.Value.HasValue);
       bool didWork;
       do
       {

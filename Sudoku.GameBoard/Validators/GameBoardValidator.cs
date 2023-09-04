@@ -18,7 +18,7 @@ namespace Sudoku.GameBoard.Validators
 
     internal static void ValidateGameCellCount(IGameBoard board)
     {
-      var incorrectCellCount = board.GetCells().Count() != GameGuides.ValidGameCellCount;
+      var incorrectCellCount = board.Cells.Count() != GameGuides.ValidGameCellCount;
       if (incorrectCellCount)
       {
         throw new IncorrectGameCellCountForBoard();
@@ -76,7 +76,7 @@ namespace Sudoku.GameBoard.Validators
 
     private static void ValidateGroups(IGameBoard board)
     {
-      foreach (var group in board.GetGroups())
+      foreach (var group in board.Groups)
       {
         ValidateGameBoardGroup(group);
       }
@@ -84,7 +84,7 @@ namespace Sudoku.GameBoard.Validators
 
     private static void ValidateColumns(IGameBoard board)
     {
-      foreach (var column in board.GetColumns())
+      foreach (var column in board.Columns)
       {
         ValidateGameBoardColumn(column);
       }
@@ -92,7 +92,7 @@ namespace Sudoku.GameBoard.Validators
 
     private static void ValidateRows(IGameBoard board)
     {
-      foreach (var row in board.GetRows())
+      foreach (var row in board.Rows)
       {
         ValidateGameBoardRow(row);
       }

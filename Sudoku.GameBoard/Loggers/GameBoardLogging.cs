@@ -2,7 +2,7 @@
 
 namespace Sudoku.GameBoard.Loggers
 {
-  internal static partial class Logger
+  internal static partial class GameBoardLogging
   {
     [LoggerMessage(
       EventId = 3,

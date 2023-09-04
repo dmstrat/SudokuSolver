@@ -83,13 +83,13 @@ namespace Sudoku.Engine
 
     private bool IsGameUnsolved()
     {
-      var atLeastOneCellNotSolved = _GameBoard.GetCells().Any(x => x.Value is null);
+      var atLeastOneCellNotSolved = _GameBoard.Cells.Any(x => x.Value is null);
       return atLeastOneCellNotSolved;
     }
 
     private void EnsureGameBoardProvided()
     {
-      var gameBoardNotProvided = !_GameBoard.GetCells().Any();
+      var gameBoardNotProvided = !_GameBoard.Cells.Any();
       if (gameBoardNotProvided)
       {
         throw new NoGameBoardProvided("GameBoard NOT provided");
@@ -99,7 +99,7 @@ namespace Sudoku.Engine
     private void LogPencilMarks()
     {
       _Logger.LogStep(0, "Pencil Marks:");
-      foreach (var cell in _GameBoard.GetCells())
+      foreach (var cell in _GameBoard.Cells)
       {
         if (cell.Value is null)
         {
