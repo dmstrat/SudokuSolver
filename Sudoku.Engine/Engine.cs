@@ -41,11 +41,21 @@ namespace Sudoku.Engine
       var pencilMarksGenerator = new PencilMarksGenerator(_Logger);
       _GameBoard = pencilMarksGenerator.GeneratePencilMarks(_GameBoard);
       var boardHadNoActivityCount = 0;
+
+      int returnCode;
+
       while (notSolved && (boardHadNoActivityCount <= BOARD_INACTIVITY_MAX_COUNT) && loopCount <= MAX_LOOP_COUNT)
       {
         foreach (var solver in _Solvers)
         {
-          _GameBoard = solver.Solve(_GameBoard);
+          returnCode = solver.Solve(_GameBoard);
+          _GameBoard = solver.GetGameBoard();
+
+          var somethingChanged = returnCode != SolverReturnCodes.NoChanges;
+          if (somethingChanged)
+          {
+            break;
+          }
         }
 
         LogPencilMarks();
@@ -77,7 +87,7 @@ namespace Sudoku.Engine
         new SinglePencilMarkAcrossGroupColumnRowSolver(),
         new StraightLineRemovesPencilMarksSolver(),
         new Pattern01Solver()
-      };
+      }.OrderBy(x=>x.GetExecutionOrder());
       return solverList;
     }
 

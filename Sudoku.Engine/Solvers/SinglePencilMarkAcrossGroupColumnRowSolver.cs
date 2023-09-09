@@ -4,6 +4,7 @@ using Sudoku.GameBoard;
 namespace Sudoku.Engine.Solvers
 {
   /// <summary>
+  /// NAME: Last Digit or Hidden Single
   /// This solver will determine if one value in the pencil marks for one cell in a:
   /// group
   /// row
@@ -15,12 +16,30 @@ namespace Sudoku.Engine.Solvers
   public class SinglePencilMarkAcrossGroupColumnRowSolver : ISolver
   {
     private Dictionary<int, int> _ValuesWithCount = new();
+    private IGameBoard _GameBoard;
 
-    public IGameBoard Solve(IGameBoard gameBoard)
+    public int GetExecutionOrder()
+    {
+      return 1;
+    }
+
+    public IGameBoard GetGameBoard()
+    {
+      return _GameBoard;
+    }
+
+    public int Solve(IGameBoard gameBoard)
+    {
+      _GameBoard = gameBoard;
+      Solve();
+      return 0;
+    }
+
+    public void Solve()
     {
       //loop through each row, column, and group: see if there is a single pencil mark regardless of 
       // other pencil marks in that group, row, column
-      var groups = gameBoard.Groups;
+      var groups = _GameBoard.Groups;
       foreach (var group in groups)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(group.Cells);
@@ -31,7 +50,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      var rows = gameBoard.Rows;
+      var rows = _GameBoard.Rows;
       foreach (var row in rows)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(row.Cells);
@@ -42,7 +61,7 @@ namespace Sudoku.Engine.Solvers
         }
       }
 
-      var columns = gameBoard.Columns;
+      var columns = _GameBoard.Columns;
       foreach (var column in columns)
       {
         var groupedByPencilMarksWithCount = BuildPencilMarksWithCount(column.Cells);
@@ -52,8 +71,6 @@ namespace Sudoku.Engine.Solvers
           SolveGroupingWithValue(column.Cells, kvp.Key);
         }
       }
-
-      return gameBoard;
     }
 
     private void SolveGroupingWithValue(IEnumerable<GameCell> gameCells, int valueToSolveInGroup)

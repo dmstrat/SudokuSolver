@@ -12,13 +12,33 @@ namespace Sudoku.Engine.Solvers
   /// </summary>
   public class Pattern01Solver : ISolver
   {
-    public IGameBoard Solve(IGameBoard gameBoard)
+    private IGameBoard _GameBoard;
+    private bool _StopProcessing;
+    private int _ReturnCode;
+
+    public int GetExecutionOrder()
     {
-      foreach (var group in gameBoard.Groups)
+      return 0;
+    }
+
+    public int Solve(IGameBoard gameBoard)
+    {
+      _GameBoard = gameBoard;
+      foreach (var group in _GameBoard.Groups)
       {
         SolveBy(gameBoard, group);
+
+        if (_StopProcessing)
+        {
+          return _ReturnCode;
+        }
       }
-      return gameBoard;
+      return _ReturnCode;
+    }
+
+    public IGameBoard GetGameBoard()
+    {
+      return _GameBoard;
     }
 
     private void SolveBy(IGameBoard gameBoard, IGameBoardGroup group)
@@ -112,5 +132,6 @@ namespace Sudoku.Engine.Solvers
       }
 
     }
+
   }
 }

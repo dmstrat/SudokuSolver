@@ -4,9 +4,28 @@ namespace Sudoku.Engine.Solvers
 {
   public class SinglePencilMarkLeftSolver : ISolver
   {
-    public IGameBoard Solve(IGameBoard gameBoard)
+    private IGameBoard _GameBoard;
+
+    public IGameBoard GetGameBoard()
     {
-      var cellsToSolve = gameBoard.Cells.Where(x => !x.Value.HasValue);
+      return _GameBoard;
+    }
+
+    public int Solve(IGameBoard gameBoard)
+    {
+      _GameBoard = gameBoard;
+      Solve();
+      return 0;
+    }
+
+    public int GetExecutionOrder()
+    {
+      return 2;
+    }
+
+    public void Solve()
+    {
+      var cellsToSolve = _GameBoard.Cells.Where(x => !x.Value.HasValue);
       bool didWork;
       do
       {
@@ -22,8 +41,6 @@ namespace Sudoku.Engine.Solvers
           }
         }
       } while (didWork);
-
-      return gameBoard;
     }
   }
 }
