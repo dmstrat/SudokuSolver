@@ -68,29 +68,29 @@ namespace Sudoku.Engine.Tests.Solvers
       //get pencil marks and check the values. 
 
       //group 1, top row should be 4, 5, 6
-      var actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 0).GetRowCells(RowPosition.Top).GetPencilMarks().ToList();
+      var actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 0).GetRowCells(GroupRowPosition.Top).GetPencilMarks().ToList();
       var expectedPencilMarks = new[] { 4, 5, 6 };
       Assert.That(actualPencilMarksForGroupRow, Is.EquivalentTo(expectedPencilMarks));
       //group 1, top row should be 7, 8 9
-      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 1).GetRowCells(RowPosition.Top).GetPencilMarks().ToList();
+      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 1).GetRowCells(GroupRowPosition.Top).GetPencilMarks().ToList();
       expectedPencilMarks = new[] { 7, 8, 9 };
       Assert.That(actualPencilMarksForGroupRow, Is.EquivalentTo(expectedPencilMarks));
 
       //group 2, top row should be 7, 8, 9
-      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 1).GetRowCells(RowPosition.Top).GetPencilMarks().ToList();
+      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 1).GetRowCells(GroupRowPosition.Top).GetPencilMarks().ToList();
       expectedPencilMarks = new[] { 7, 8, 9 };
       Assert.That(actualPencilMarksForGroupRow, Is.EquivalentTo(expectedPencilMarks));
       //group 2, bottom row should be 1, 2, 3
-      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 1).GetRowCells(RowPosition.Bottom).GetPencilMarks().ToList();
+      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 1).GetRowCells(GroupRowPosition.Bottom).GetPencilMarks().ToList();
       expectedPencilMarks = new[] { 1, 2, 3 };
       Assert.That(actualPencilMarksForGroupRow, Is.EquivalentTo(expectedPencilMarks));
 
       //group 3, middle row should be 7, 8, 9
-      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 2).GetRowCells(RowPosition.Middle).GetPencilMarks().ToList();
+      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 2).GetRowCells(GroupRowPosition.Middle).GetPencilMarks().ToList();
       expectedPencilMarks = new[] { 7, 8, 9 };
       Assert.That(actualPencilMarksForGroupRow, Is.EquivalentTo(expectedPencilMarks));
       //group 3, bottom row should be 4, 5, 6
-      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 2).GetRowCells(RowPosition.Bottom).GetPencilMarks().ToList();
+      actualPencilMarksForGroupRow = result.Groups.First(x => x.Index == 2).GetRowCells(GroupRowPosition.Bottom).GetPencilMarks().ToList();
       expectedPencilMarks = new[] { 4, 5, 6 };
       Assert.That(actualPencilMarksForGroupRow, Is.EquivalentTo(expectedPencilMarks));
     }

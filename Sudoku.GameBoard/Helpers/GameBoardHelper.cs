@@ -66,49 +66,49 @@ namespace Sudoku.GameBoard.Helpers
       return indexList;
     }
 
-    internal static ColumnPosition GetColumnPosition(int cellIndex)
+    internal static GroupColumnPosition GetColumnPosition(int cellIndex)
     {
       var modulus = cellIndex % 9;
       var columnPosition = modulus switch
       {
-        0 => ColumnPosition.Left,
-        1 => ColumnPosition.Middle,
-        2 => ColumnPosition.Right,
-        3 => ColumnPosition.Left,
-        4 => ColumnPosition.Middle,
-        5 => ColumnPosition.Right,
-        6 => ColumnPosition.Left,
-        7 => ColumnPosition.Middle,
-        8 => ColumnPosition.Right,
+        0 => GroupColumnPosition.Left,
+        1 => GroupColumnPosition.Middle,
+        2 => GroupColumnPosition.Right,
+        3 => GroupColumnPosition.Left,
+        4 => GroupColumnPosition.Middle,
+        5 => GroupColumnPosition.Right,
+        6 => GroupColumnPosition.Left,
+        7 => GroupColumnPosition.Middle,
+        8 => GroupColumnPosition.Right,
         _ => ThrowInvalidColumnIndexException()
       };
       return columnPosition;
     }
 
-    private static ColumnPosition ThrowInvalidColumnIndexException()
+    private static GroupColumnPosition ThrowInvalidColumnIndexException()
     {
       throw new InternalException("Invalid column index for some reason, this shouldn't get out in the wild.");
     }
 
-    internal static RowPosition GetRowPositionBy(int cellIndex)
+    internal static GroupRowPosition GetRowPositionBy(int cellIndex)
     {
       var isTopRow = GameBoardRowGroupPositionCellNumbers.Top.Contains(cellIndex);
 
       if (isTopRow)
       {
-        return RowPosition.Top;
+        return GroupRowPosition.Top;
       }
 
       var isMiddleRow = GameBoardRowGroupPositionCellNumbers.Middle.Contains(cellIndex);
       if (isMiddleRow)
       {
-        return RowPosition.Middle;
+        return GroupRowPosition.Middle;
       }
 
-      return RowPosition.Bottom;
+      return GroupRowPosition.Bottom;
     }
 
-    private static RowPosition ThrowInvalidRowIndexException()
+    private static GroupRowPosition ThrowInvalidRowIndexException()
     {
       throw new InternalException("Invalid row index for some reason, this shouldn't get out in the wild.");
     }

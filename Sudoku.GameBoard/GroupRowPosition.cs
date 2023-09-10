@@ -1,6 +1,6 @@
 ﻿namespace Sudoku.GameBoard;
 
-public enum RowPosition
+public enum GroupRowPosition
 {
     Top,
     Middle,

@@ -49,9 +49,9 @@ namespace Sudoku.Engine.Solvers
 
     private void SolveByRows(IGameBoard gameBoard, IGameBoardGroup group)
     {
-      var topRow = group.GetRowCells(RowPosition.Top);
-      var middleRow = group.GetRowCells(RowPosition.Middle);
-      var bottomRow = group.GetRowCells(RowPosition.Bottom);
+      var topRow = group.GetRowCells(GroupRowPosition.Top);
+      var middleRow = group.GetRowCells(GroupRowPosition.Middle);
+      var bottomRow = group.GetRowCells(GroupRowPosition.Bottom);
 
       var distinctNumbersInTopRow = topRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
       var distinctNumbersInMiddleRow = middleRow.Cells.SelectMany(x => x.PencilMarks).Distinct();
@@ -91,9 +91,9 @@ namespace Sudoku.Engine.Solvers
     {
       //get left, middle, right columns 
 
-      var leftColumn = group.GetColumnCells(ColumnPosition.Left);
-      var middleColumn = group.GetColumnCells(ColumnPosition.Middle);
-      var rightColumn = group.GetColumnCells(ColumnPosition.Right);
+      var leftColumn = group.GetColumnCells(GroupColumnPosition.Left);
+      var middleColumn = group.GetColumnCells(GroupColumnPosition.Middle);
+      var rightColumn = group.GetColumnCells(GroupColumnPosition.Right);
 
       var distinctNumbersInLeftColumn = leftColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();
       var distinctNumbersInMiddleColumn = middleColumn.Cells.SelectMany(x => x.PencilMarks).Distinct();

@@ -71,16 +71,16 @@ public class GameBoardGroup : IGameBoardGroup
 
   }
 
-  public GameBoardGroupColumn GetColumnCells(ColumnPosition columnPosition)
+  public GameBoardGroupColumn GetColumnCells(GroupColumnPosition columnPosition)
   {
-    var cells = Cells.Where(x => x.ColumnPosition == columnPosition);
+    var cells = Cells.Where(x => x.GroupColumnPosition == columnPosition);
     var groupColumn = new GameBoardGroupColumn(cells);
     return groupColumn;
   }
 
-  public GameBoardGroupRow GetRowCells(RowPosition rowPosition)
+  public GameBoardGroupRow GetRowCells(GroupRowPosition rowPosition)
   {
-    var cells = Cells.Where(x => x.RowPosition == rowPosition);
+    var cells = Cells.Where(x => x.GroupRowPosition == rowPosition);
     var groupRow = new GameBoardGroupRow(cells);
     return groupRow;
   }

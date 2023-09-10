@@ -22,6 +22,8 @@ public class GameCell : IGameCell
   private const string _EmptyValueAsString = " ";
   private readonly ILogger _Logger;
 
+  public GameCell() {}
+
   /// <summary>
   /// The individual cell that holds a single number for the game.
   /// </summary>
@@ -36,7 +38,7 @@ public class GameCell : IGameCell
   /// <param name="logger">logger to be used by this class</param>
   public GameCell(int? initialValue, bool isPuzzleValue, int index,
     int groupIndex, int rowIndex, int columnIndex,
-    ColumnPosition columnPosition, RowPosition rowPosition, ILogger logger)
+    GroupColumnPosition columnPosition, GroupRowPosition rowPosition, ILogger logger)
   {
     Value = initialValue;
     IsPuzzleValue = isPuzzleValue;
@@ -44,8 +46,8 @@ public class GameCell : IGameCell
     GroupIndex = groupIndex;
     RowIndex = rowIndex;
     ColumnIndex = columnIndex;
-    ColumnPosition = columnPosition;
-    RowPosition = rowPosition;
+    GroupColumnPosition = columnPosition;
+    GroupRowPosition = rowPosition;
     _Logger = logger;
     ValidateInput();
   }
@@ -91,16 +93,16 @@ public class GameCell : IGameCell
   public int Index { get; set; }
 
   /// <summary>
-  ///   This value indicates if this GameCell Value is part of the original puzzle values
-  ///   This will indicate that the value can NOT be changed.
-  /// </summary>
-  public bool IsPuzzleValue { get; set; }
-
-  /// <summary>
   ///   The solve or puzzle value of the cell
   /// </summary>
   [Range(1, 9, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
   public int? Value { get; set; }
+
+  /// <summary>
+  ///   This value indicates if this GameCell Value is part of the original puzzle values
+  ///   This will indicate that the value can NOT be changed.
+  /// </summary>
+  public bool IsPuzzleValue { get; set; }
 
   /// <summary>
   /// Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
@@ -128,14 +130,14 @@ public class GameCell : IGameCell
   ///   Possible Values: Left, Middle, Right
   /// </summary>
   [Required(ErrorMessage = "ColumnPosition MUST be supplied.")]
-  public ColumnPosition ColumnPosition { get; set; }
+  public GroupColumnPosition GroupColumnPosition { get; set; }
 
   /// <summary>
   /// Represents the row position in the group it resides.
   ///   Possible Values: Top, Middle, Bottom
   /// </summary>
   [Required(ErrorMessage = "RowPosition MUST be supplied.")]
-  public RowPosition RowPosition { get; set; }
+  public GroupRowPosition GroupRowPosition { get; set; }
 
   /// <summary>
   /// Represents the POSSIBLE values for this cell

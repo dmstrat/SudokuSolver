@@ -34,28 +34,28 @@ namespace Sudoku.GameBoard.Tests
     /// <param name="rowPosition">Column position relative to the group it is located.[Top, Middle, Bottom]</param>
     /// <param name="newValue">The new value attempting to change the GameCell</param>
     /// <param name="expectedException">This is InvalidOperationException for ALL cases</param>
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 4, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9, typeof(InvalidOperationException))]
-    [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(InvalidOperationException))]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 4, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9, typeof(InvalidOperationException))]
+    [TestCase(0, 1, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(InvalidOperationException))]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
     public void GameCellCtorWithValueAndIsPuzzleReturnsInvalidOperation(int index, int? ctorValue, bool isPuzzlePiece, 
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition,
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition,
       int? newValue, Type expectedException)
     {
       Assert.Throws(expectedException, () => GameCellCtorAndChangeValue(ctorValue, index, isPuzzlePiece, 
@@ -64,99 +64,99 @@ namespace Sudoku.GameBoard.Tests
         newValue, _Logger));
     }
 
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 4)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 4)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 5)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 6)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 4)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, null, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 4)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 1, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 2, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 3, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 4, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 5, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 6, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 7, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 8, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 1)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 2)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 3)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 5)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 6)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 7)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 8)]
+    [TestCase(0, 9, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, 9)]
     public void GameCellCtorWithValidValueAndNotPuzzleThenCellHasNewValue(int index, int? ctorValue, bool isPuzzlePiece,
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition,
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition,
       int? newValue)
     {
       Assert.DoesNotThrow(() => GameCellCtorAndChangeValue(ctorValue, index, isPuzzlePiece, 
@@ -177,15 +177,15 @@ namespace Sudoku.GameBoard.Tests
     /// <param name="columnPosition">Column position relative to the group it is located.[Left, Middle, Right]</param>
     /// <param name="rowPosition">Column position relative to the group it is located.[Top, Middle, Bottom]</param>
     /// <param name="expectedException">Expected Exception Based on provided values.</param>
-    [TestCase(0, null, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, typeof(InvalidOperationException))]
-    [TestCase(0, 10, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, typeof(InvalidOperationException))]
-    [TestCase(0, 10, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, typeof(InvalidOperationException))]
-    [TestCase(0, 0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, typeof(InvalidOperationException))]
-    [TestCase(0, 0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, typeof(InvalidOperationException))]
+    [TestCase(0, null, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, typeof(InvalidOperationException))]
+    [TestCase(0, 10, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, typeof(InvalidOperationException))]
+    [TestCase(0, 10, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, typeof(InvalidOperationException))]
+    [TestCase(0, 0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, typeof(InvalidOperationException))]
+    [TestCase(0, 0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top, typeof(InvalidOperationException))]
     // ReSharper disable once InconsistentNaming
     public void GameCellCtorWithInvalidCtorValueCombinationsReturnsInvalidOperationException(int index, int? ctorValue, bool isPuzzlePiece, 
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition,
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition,
       Type expectedException)
     {
       Assert.Throws(expectedException, () => GameCellCtor(ctorValue, index, isPuzzlePiece,
@@ -204,29 +204,29 @@ namespace Sudoku.GameBoard.Tests
     /// <param name="columnIndex"></param>
     /// <param name="columnPosition"></param>
     /// <param name="rowPosition"></param>
-    [TestCase( null,0, false, 0,0,0,ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 1,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 2,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 3,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 4,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 5,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 6,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 7,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 8,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 9,0, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 1,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 2,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 3,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 4,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 5,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 6,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 7,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 8,0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
-    [TestCase( 9, 0, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top)]
+    [TestCase( null,0, false, 0,0,0,GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 1,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 2,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 3,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 4,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 5,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 6,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 7,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 8,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 9,0, false, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 1,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 2,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 3,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 4,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 5,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 6,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 7,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 8,0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
+    [TestCase( 9, 0, true, 0, 0, 0, GroupColumnPosition.Left, GroupRowPosition.Top)]
     // ReSharper disable once InconsistentNaming
     public void GameCellCtorWithValidCtorValueCompletesWithoutError(int? ctorValue, int index, bool isPuzzlePiece,
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition)
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition)
     {
       Assert.DoesNotThrow(() => GameCellCtor(ctorValue, index, isPuzzlePiece,
         groupIndex, rowIndex, columnIndex,
@@ -254,7 +254,7 @@ namespace Sudoku.GameBoard.Tests
 
     private static GameCell GameCellCtorAndChangeValue(int? ctorValue, int index, bool isPuzzlePiece,
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition,
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition,
       int? newValue, ILogger logger)
     {
       var newCell = GameCellCtor(ctorValue, index, isPuzzlePiece, 
@@ -269,7 +269,7 @@ namespace Sudoku.GameBoard.Tests
 
     private static GameCell GameCellCtor(int? ctorValue, int index,  bool isPuzzlePiece,
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition, ILogger logger)
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition, ILogger logger)
     {
       var newCell = GameCellFactory.Create(ctorValue, isPuzzlePiece, index, logger);
       Assert.That(newCell, Is.Not.Null, $"Ctor failed on values: index={index} | ctorValue={ctorValue} | isPuzzlePiece={isPuzzlePiece}.");
@@ -279,7 +279,7 @@ namespace Sudoku.GameBoard.Tests
 
     private static void AssertProperties(IGameCell cell, int? expectedValue, bool isPuzzlePiece,
       int groupIndex, int rowIndex, int columnIndex,
-      ColumnPosition columnPosition, RowPosition rowPosition)
+      GroupColumnPosition columnPosition, GroupRowPosition rowPosition)
     {
       Assert.Multiple(() =>
       {
@@ -288,8 +288,8 @@ namespace Sudoku.GameBoard.Tests
         Assert.That(cell.GroupIndex, Is.EqualTo(groupIndex));
         Assert.That(cell.RowIndex, Is.EqualTo(rowIndex));
         Assert.That(cell.ColumnIndex, Is.EqualTo(columnIndex));
-        Assert.That(cell.ColumnPosition, Is.EqualTo(columnPosition));
-        Assert.That(cell.RowPosition, Is.EqualTo(rowPosition));
+        Assert.That(cell.GroupColumnPosition, Is.EqualTo(columnPosition));
+        Assert.That(cell.GroupRowPosition, Is.EqualTo(rowPosition));
       });
     }
   }

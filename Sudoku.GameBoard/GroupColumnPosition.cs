@@ -1,6 +1,6 @@
 ﻿namespace Sudoku.GameBoard;
 
-public enum ColumnPosition
+public enum GroupColumnPosition
 {
   Left,
   Middle,

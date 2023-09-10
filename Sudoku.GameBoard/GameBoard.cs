@@ -17,7 +17,7 @@ namespace Sudoku.GameBoard
   {
     public event GameBoardHadActivity OnChanged;
 
-    private readonly ILogger _Logger;
+    private readonly ILogger? _Logger;
 
     public IList<GameCell> Cells { get; set; }
 
@@ -66,7 +66,9 @@ namespace Sudoku.GameBoard
       }
     }
 
-    public GameBoard(IList<GameCell> gameCells, ILogger logger)
+    public GameBoard() { }
+
+    public GameBoard(IList<GameCell> gameCells, ILogger? logger = null)
     {
       _Logger = logger;
       Cells = gameCells;
@@ -238,7 +240,7 @@ namespace Sudoku.GameBoard
     {
       foreach (var cell in Cells)
       {
-        cell.OnChanged += ClearPencilMarksFor;
+        cell.OnChanged += ClearPencilMarksForSolvedCell;
         cell.OnPencilMarksChanged += PencilMarksChanged;
       }
     }
@@ -253,9 +255,9 @@ namespace Sudoku.GameBoard
       ReportBoardChanged();
     }
 
-    private void ClearPencilMarksFor(IGameCell cell)
+    private void ClearPencilMarksForSolvedCell(IGameCell cell)
     {
-      _Logger.LogAction("SOLVED CELL", $"Value:{cell.Value}/group:{cell.GroupIndex}/row:{cell.RowIndex}/column:{cell.ColumnIndex}/");
+      _Logger?.LogAction("CELL SOLVED", $"Value:{cell.Value}/group:{cell.GroupIndex}/row:{cell.RowIndex}/column:{cell.ColumnIndex}/");
       var group = GetGroupBy(cell.GroupIndex);
       var row = GetRowBy(cell.RowIndex);
       var column = GetColumnBy(cell.ColumnIndex);

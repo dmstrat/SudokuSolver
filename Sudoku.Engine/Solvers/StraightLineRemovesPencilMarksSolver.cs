@@ -43,9 +43,9 @@ namespace Sudoku.Engine.Solvers
 
     public void SolveByGroupColumns(IGameBoard gameBoard, IGameBoardGroup group)
     {
-      var leftColumnCells = group.GetColumnCells(ColumnPosition.Left);
-      var middleColumnCells = group.GetColumnCells(ColumnPosition.Middle);
-      var rightColumnCells = group.GetColumnCells(ColumnPosition.Right);
+      var leftColumnCells = group.GetColumnCells(GroupColumnPosition.Left);
+      var middleColumnCells = group.GetColumnCells(GroupColumnPosition.Middle);
+      var rightColumnCells = group.GetColumnCells(GroupColumnPosition.Right);
 
       var leftColumnPencilMarks = leftColumnCells.GetPencilMarks().ToArray();
       var middleColumnPencilMarks = middleColumnCells.GetPencilMarks().ToArray();
@@ -81,9 +81,9 @@ namespace Sudoku.Engine.Solvers
 
     public void SolveByGroupRows(IGameBoard gameBoard, IGameBoardGroup group)
     {
-      var topRowCells = group.GetRowCells(RowPosition.Top);
-      var middleRowCells = group.GetRowCells(RowPosition.Middle);
-      var bottomRowCells = group.GetRowCells(RowPosition.Bottom);
+      var topRowCells = group.GetRowCells(GroupRowPosition.Top);
+      var middleRowCells = group.GetRowCells(GroupRowPosition.Middle);
+      var bottomRowCells = group.GetRowCells(GroupRowPosition.Bottom);
 
       var topRowPencilMarks = topRowCells.GetPencilMarks().ToArray();
       var middleRowPencilMarks = middleRowCells.GetPencilMarks().ToArray();
