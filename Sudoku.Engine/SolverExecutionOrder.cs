@@ -43,7 +43,7 @@
     /// that only exist in those two cells for that group, row, column.
     /// REMOVE other pencil marks 
     /// </summary>
-    public static int HiddenPair = 3;
+    public static int HiddenPair = 5;
 
     /// <summary>
     /// There is a pair of cells in a group, row, or column
@@ -51,13 +51,13 @@
     /// that only exist in those two cells for that group, row, column.
     /// REMOVE other pencil marks in that row, column, or group.
     /// </summary>
-    public static int NakedPair = 4;
+    public static int NakedPair = 6;
 
     /// <summary>
     /// There is a GroupRow or GroupColumn in a group
     /// that has NO OTHER pencil marks in the overall Row or Column.
     /// REMOVE other pencil marks in the rest of the Row or Column.
     /// </summary>
-    public static int LockedCandidate = 5;
+    public static int LockedCandidate = 7;
   }
 }

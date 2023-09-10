@@ -88,7 +88,6 @@ namespace Sudoku.Engine
         new HiddenSingleGroupSolver(),
         new HiddenSingleRowSolver(),
         new HiddenSingleColumnSolver(),
-        new HiddenSingleRowSolver(),
         new StraightLineRemovesPencilMarksSolver(),
         new Pattern01Solver()
       }.OrderBy(x=>x.GetExecutionOrder());
