@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Sudoku.Engine.Tests.Loggers;
+using Sudoku.GameBoard.Exceptions;
 
 namespace Sudoku.GameBoard.Tests
 {
@@ -42,6 +43,16 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9, typeof(InvalidOperationException))]
     [TestCase(0, 1, true, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(InvalidOperationException))]
+    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
+    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null, typeof(GameInvalidValuesInBoard))]
     public void GameCellCtorWithValueAndIsPuzzleReturnsInvalidOperation(int index, int? ctorValue, bool isPuzzlePiece, 
       int groupIndex, int rowIndex, int columnIndex,
       ColumnPosition columnPosition, RowPosition rowPosition,
@@ -53,7 +64,6 @@ namespace Sudoku.GameBoard.Tests
         newValue, _Logger));
     }
 
-    [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -63,7 +73,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, null, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -73,7 +82,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 1, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -83,7 +91,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 2, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -93,7 +100,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 3, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -103,7 +109,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 4, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -113,7 +118,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 5, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -123,7 +127,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 6, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -133,7 +136,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 7, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -143,7 +145,6 @@ namespace Sudoku.GameBoard.Tests
     [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 7)]
     [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 8)]
     [TestCase(0, 8, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 9)]
-    [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, null)]
     [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 1)]
     [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 2)]
     [TestCase(0, 9, false, 0, 0, 0, ColumnPosition.Left, RowPosition.Top, 3)]
@@ -259,7 +260,7 @@ namespace Sudoku.GameBoard.Tests
       var newCell = GameCellCtor(ctorValue, index, isPuzzlePiece, 
         groupIndex, rowIndex, columnIndex, 
         columnPosition, rowPosition, logger);
-      newCell.Value = newValue;
+      newCell.SetValue(newValue);
       AssertProperties(newCell, newValue, isPuzzlePiece,
         groupIndex, rowIndex, columnIndex,
         columnPosition, rowPosition);

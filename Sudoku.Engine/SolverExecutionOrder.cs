@@ -59,5 +59,15 @@
     /// REMOVE other pencil marks in the rest of the Row or Column.
     /// </summary>
     public static int LockedCandidate = 7;
+
+    /// <summary>
+    /// Due to the alternating strong and weak links between the same candidates within a region
+    /// and the different candidates within the same cell, we know that either all of solve 1 or all of solve 2 are correct.
+    /// - find a naked pair(cross groups) - then solve both possible values and see
+    ///   if there is a common removed pencil mark(s) then remove those pencil marks
+    /// Example: Hell Board 01 -
+    /// https://sudoku.coach/en/solver/478215936396748251521369487930000600100600590600090700269000874814976325753482169
+    /// </summary>
+    public static int AlternationInferenceChain = 8;
   }
 }

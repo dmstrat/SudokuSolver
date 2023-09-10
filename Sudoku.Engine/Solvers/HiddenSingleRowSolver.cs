@@ -42,7 +42,7 @@ namespace Sudoku.Engine.Solvers
           var qualifyingPencilMarkForCell = IsHiddenSinglePencilMark(cell, cellPencilMark);
           if (qualifyingPencilMarkForCell)
           {
-            cell.Value = cellPencilMark;
+            cell.SetValue(cellPencilMark);
             return SolverReturnCodes.ValueFound;
           }
         }

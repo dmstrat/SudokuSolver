@@ -2,7 +2,7 @@
 
 namespace Sudoku.Engine.Solvers
 {
-  public class LastDigitSolver : ISolver
+  public class AicSolver : ISolver
   {
     private IGameBoard _GameBoard;
 
@@ -14,19 +14,6 @@ namespace Sudoku.Engine.Solvers
     public int Solve(IGameBoard gameBoard)
     {
       _GameBoard = gameBoard;
-      foreach (var cell in _GameBoard.Cells)
-      {
-        var cellDoesNotQualifyForSolver = cell.Value.HasValue || cell.PencilMarks.Count() > 1;
-
-        if (cellDoesNotQualifyForSolver)
-        {
-          continue;
-        }
-
-        cell.SetValue(cell.PencilMarks.First());
-        return SolverReturnCodes.ValueFound;
-      }
-
       return SolverReturnCodes.NoChanges;
     }
 

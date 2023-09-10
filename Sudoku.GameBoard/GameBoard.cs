@@ -3,6 +3,8 @@ using Sudoku.GameBoard.Helpers;
 using Sudoku.GameBoard.Loggers;
 using Sudoku.GameBoard.Validators;
 using System.Text;
+using System.Text.Json.Serialization;
+
 // ReSharper disable ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
 
 #pragma warning disable CS8618
@@ -17,8 +19,9 @@ namespace Sudoku.GameBoard
 
     private readonly ILogger _Logger;
 
-    public IList<GameCell> Cells { get; }
+    public IList<GameCell> Cells { get; set; }
 
+    [JsonIgnore]
     public IList<GameBoardGroup> Groups
     {
       get
@@ -33,6 +36,7 @@ namespace Sudoku.GameBoard
       }
     }
 
+    [JsonIgnore]
     public IList<GameBoardRow> Rows
     {
       get
@@ -47,6 +51,7 @@ namespace Sudoku.GameBoard
       }
     }
 
+    [JsonIgnore]
     public IList<GameBoardColumn> Columns
     {
       get

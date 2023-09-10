@@ -20,8 +20,6 @@ public class GameCell : IGameCell
   public event CellPencilMarksChanged OnPencilMarksChanged;
 
   private const string _EmptyValueAsString = " ";
-  private IEnumerable<int> _PencilMarks = new List<int>();
-  private int? _Value;
   private readonly ILogger _Logger;
 
   /// <summary>
@@ -40,7 +38,7 @@ public class GameCell : IGameCell
     int groupIndex, int rowIndex, int columnIndex,
     ColumnPosition columnPosition, RowPosition rowPosition, ILogger logger)
   {
-    _Value = initialValue;
+    Value = initialValue;
     IsPuzzleValue = isPuzzleValue;
     Index = index;
     GroupIndex = groupIndex;
@@ -52,99 +50,97 @@ public class GameCell : IGameCell
     ValidateInput();
   }
 
+  public void SetValue(int? value)
+  {
+    if (IsPuzzleValue)
+    {
+      throw new InvalidOperationException("Cannot change a puzzle value.");
+    }
+
+    Value = value;
+
+    ClearPencilMarks();
+    OnChanged?.Invoke(this);
+  }
+
+  public void SetPencilMarks(IEnumerable<int> pencilMarks)
+  {
+    if (pencilMarks == null)
+    {
+      return;
+    }
+
+    var nothingChanged = PencilMarksAreNotDifferent(PencilMarks, pencilMarks);
+    if (nothingChanged)
+    {
+      return;
+    }
+
+    _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
+    PencilMarks = pencilMarks;
+    OnPencilMarksChanged?.Invoke(this);
+    _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
+  }
+
   /// <summary>
   ///   Represents the cell's index in an array of all game cells in game board (zero-based)
   ///   from left to right, top to bottom (0-80)
   /// </summary>
   [Required(ErrorMessage = "Cell's Index MUST be provided.")]
   [Range(0, 80, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
-  public int Index { get; }
+  public int Index { get; set; }
 
   /// <summary>
   ///   This value indicates if this GameCell Value is part of the original puzzle values
   ///   This will indicate that the value can NOT be changed.
   /// </summary>
-  public bool IsPuzzleValue { get; }
+  public bool IsPuzzleValue { get; set; }
 
   /// <summary>
   ///   The solve or puzzle value of the cell
   /// </summary>
   [Range(1, 9, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
-  public int? Value
-  {
-    get => _Value;
-    set
-    {
-      if (IsPuzzleValue)
-      {
-        throw new InvalidOperationException("Cannot change a puzzle value.");
-      }
-
-      _Value = value;
-      if (value == null)
-      {
-        return;
-      }
-
-      ClearPencilMarks();
-      OnChanged?.Invoke(this);
-    }
-  }
+  public int? Value { get; set; }
 
   /// <summary>
   /// Represents the group the cell belongs index (zero-based) from left to right, top to bottom (0-8)
   /// </summary>
   [Required(ErrorMessage = "GroupIndex MUST be supplied.")]
   [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
-  public int GroupIndex { get; private set; }
+  public int GroupIndex { get; set; }
 
   /// <summary>
   ///   Represents the row index (zero-based) from top to bottom (0-8)
   /// </summary>
   [Required(ErrorMessage = "RowIndex MUST be supplied.")]
   [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
-  public int RowIndex { get; private set; }
+  public int RowIndex { get; set; }
 
   /// <summary>
   /// Represents the column index (zero-based) from left to right (0-8)
   /// </summary>
   [Required(ErrorMessage = "ColumnIndex MUST be supplied.")]
   [Range(0, 8, ErrorMessage = "Value for {0} MUST be between {1} and {2} inclusively.")]
-  public int ColumnIndex { get; private set; }
+  public int ColumnIndex { get; set; }
 
   /// <summary>
   /// Represents the column position in the group it resides.
   ///   Possible Values: Left, Middle, Right
   /// </summary>
   [Required(ErrorMessage = "ColumnPosition MUST be supplied.")]
-  public ColumnPosition ColumnPosition { get; private set; }
+  public ColumnPosition ColumnPosition { get; set; }
 
   /// <summary>
   /// Represents the row position in the group it resides.
   ///   Possible Values: Top, Middle, Bottom
   /// </summary>
   [Required(ErrorMessage = "RowPosition MUST be supplied.")]
-  public RowPosition RowPosition { get; private set; }
+  public RowPosition RowPosition { get; set; }
 
   /// <summary>
   /// Represents the POSSIBLE values for this cell
   /// </summary>
-  public IEnumerable<int> PencilMarks
-  {
-    get => _PencilMarks;
-    set
-    {
-      var noWork = PencilMarksAreNotDifferent(_PencilMarks, value);
-      if (noWork)
-      {
-        return;
-      }
-      _Logger.LogAction("CELL Pencil Marks - BEFORE", DebuggerDisplay);
-      _PencilMarks = value;
-      OnPencilMarksChanged?.Invoke(this);
-      _Logger.LogAction("CELL Pencil Marks - AFTER", DebuggerDisplay);
-    }
-  }
+  public IEnumerable<int> PencilMarks { get; set; } = new List<int>();
 
   /// <summary>
   /// Removes provided value from Pencil Marks
@@ -184,7 +180,7 @@ public class GameCell : IGameCell
   /// <param name="pencilMark"></param>
   public void AddPencilMark(int pencilMark)
   {
-    var doNotAddPencilMarksToSolvedCells = _Value.HasValue;
+    var doNotAddPencilMarksToSolvedCells = Value.HasValue;
 
     if (doNotAddPencilMarksToSolvedCells)
     {
@@ -194,7 +190,7 @@ public class GameCell : IGameCell
     var needToAddPencilMark = !PencilMarks.Contains(pencilMark);
     if (needToAddPencilMark)
     {
-      _PencilMarks = PencilMarks.Concat(new List<int> { pencilMark });
+      PencilMarks = PencilMarks.Concat(new List<int> { pencilMark });
     }
   }
 
@@ -207,13 +203,13 @@ public class GameCell : IGameCell
 
   private void ValidateInput()
   {
-    var cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece = IsPuzzleValue && _Value == null;
+    var cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece = IsPuzzleValue && Value == null;
     if (cannotInitializeNullOrEmptyValueAndBeAPuzzlePiece)
     {
       throw new InvalidOperationException("Can NOT construct GameCell as PuzzlePiece and a null/empty value.");
     }
 
-    var invalidValuesAreNotAllowed = _Value is < 1 or > 9;
+    var invalidValuesAreNotAllowed = Value is < 1 or > 9;
     if (invalidValuesAreNotAllowed)
     {
       throw new InvalidOperationException(
