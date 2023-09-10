@@ -3,6 +3,7 @@
 namespace Sudoku.Engine.Solvers
 {
   /// <summary>
+  /// NAME: TBD
   /// This pattern is for removing a group's other pencil marks when a row or column
   ///   contains the same number of values as there are empty cells
   /// Example 1: Group 3's top row is completely empty and
@@ -16,9 +17,19 @@ namespace Sudoku.Engine.Solvers
   /// </summary>
   public class Pattern02Solver : ISolver
   {
-    public IGameBoard Solve(IGameBoard gameBoard)
+    public IGameBoard GetGameBoard()
     {
-      return gameBoard;
+      throw new NotImplementedException();
+    }
+
+    public int Solve(IGameBoard gameBoard)
+    {
+      throw new NotImplementedException();
+    }
+
+    public int GetExecutionOrder()
+    {
+      throw new NotImplementedException();
     }
   }
 }

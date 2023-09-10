@@ -8,13 +8,31 @@ namespace Sudoku.Engine.Solvers
   /// </summary>
   public class StraightLineRemovesPencilMarksSolver : ISolver
   {
-    public IGameBoard Solve(IGameBoard gameBoard)
+    private IGameBoard _GameBoard;
+
+    public IGameBoard GetGameBoard()
     {
-      foreach (var group in gameBoard.Groups)
+      return _GameBoard;
+    }
+
+    public int Solve(IGameBoard gameBoard)
+    {
+      _GameBoard = gameBoard;
+      Solve();
+      return 0;
+    }
+
+    public int GetExecutionOrder()
+    {
+      return 3;
+    }
+
+    public void Solve()
+    {
+      foreach (var group in _GameBoard.Groups)
       {
-        SolveBy(gameBoard, group);
+        SolveBy(_GameBoard, group);
       }
-      return gameBoard;
     }
 
     public void SolveBy(IGameBoard gameBoard, GameBoardGroup group)

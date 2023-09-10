@@ -7,13 +7,13 @@ using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
-  internal class SinglePencilMarkLeftSolverTests
+  internal class LastDigitSolverTests
   {
     private ConsoleTraceListener _Listener;
     private readonly ILoggerFactory _LoggerFactory;
     private ILogger _Logger;
 
-    public SinglePencilMarkLeftSolverTests()
+    public LastDigitSolverTests()
     {
       _LoggerFactory = new LoggerFactory();
     }
@@ -21,7 +21,7 @@ namespace Sudoku.Engine.Tests.Solvers
     [SetUp]
     public void Setup()
     {
-      _Logger = _LoggerFactory.CreateLogger<SinglePencilMarkLeftSolverTests>();
+      _Logger = _LoggerFactory.CreateLogger<LastDigitSolverTests>();
       _Listener = new ConsoleTraceListener();
       Trace.Listeners.Add(_Listener);
     }
@@ -34,14 +34,14 @@ namespace Sudoku.Engine.Tests.Solvers
 
     [TestCase(GameBoard01.MissingOneNumberPerRowAndColumn_Input, GameBoard01.Solved_Output)]
     [TestCase(GameBoardMedium01.Game_Input_Phase_2, GameBoardMedium01.Game_Output)]
-    public void GivenBoard01SolveResultsCorrectUsingSoloValueInGroupColumnRowSolver(string gameBoardInput, string solvedGameOutput)
+    public void GivenBoard01SolveResultsCorrectUsingSoloPencilMarkInACell(string gameBoardInput, string solvedGameOutput)
     {
       _Logger.LogBoardValues(gameBoardInput);
       //Build Game Board
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
       var engine = new Engine(gameBoard, _LoggerFactory);
-      var solvers = new List<ISolver> { new SinglePencilMarkLeftSolver() };
+      var solvers = new List<ISolver> { new LastDigitSolver() };
       engine.RegisterSolvers(solvers);
       //Solve 
       var result = engine.Solve();
@@ -50,5 +50,4 @@ namespace Sudoku.Engine.Tests.Solvers
       Assert.That(actualResults, Is.EqualTo(solvedGameOutput));
     }
   }
-
 }
