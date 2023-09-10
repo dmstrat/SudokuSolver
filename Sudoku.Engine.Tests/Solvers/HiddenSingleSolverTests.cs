@@ -8,13 +8,13 @@ using System.Diagnostics;
 
 namespace Sudoku.Engine.Tests.Solvers
 {
-  internal class SinglePencilMarkAcrossGroupColumnRowSolverTests
+  internal class HiddenSingleSolverTests
   {
     private ConsoleTraceListener _Listener;
     private readonly ILoggerFactory _LoggerFactory;
     private ILogger _Logger;
 
-    public SinglePencilMarkAcrossGroupColumnRowSolverTests()
+    public HiddenSingleSolverTests()
     {
       _LoggerFactory = new NullLoggerFactory();
     }
@@ -22,7 +22,7 @@ namespace Sudoku.Engine.Tests.Solvers
     [SetUp]
     public void Setup()
     {
-      _Logger = _LoggerFactory.CreateLogger<SinglePencilMarkAcrossGroupColumnRowSolverTests>();
+      _Logger = _LoggerFactory.CreateLogger<HiddenSingleSolverTests>();
       _Listener = new ConsoleTraceListener();
       Trace.Listeners.Add(_Listener);
     }
@@ -42,7 +42,12 @@ namespace Sudoku.Engine.Tests.Solvers
       //Instance Engine 
       var gameBoard = GameBoardFactory.Create(gameBoardInput, _Logger);
       var engine = new Engine(gameBoard, _LoggerFactory);
-      var solvers = new List<ISolver> { new SinglePencilMarkAcrossGroupColumnRowSolver() };
+      var solvers = new List<ISolver>
+      {
+        new HiddenSingleGroupSolver(),
+        new HiddenSingleRowSolver(), 
+        new HiddenSingleColumnSolver() 
+      };
       engine.RegisterSolvers(solvers);
       //Solve 
       var result = engine.Solve();

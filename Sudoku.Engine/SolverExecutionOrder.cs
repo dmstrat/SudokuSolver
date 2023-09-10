@@ -18,10 +18,24 @@
 
     /// <summary>
     /// The cell being examined has a pencil mark that does not exist
-    /// in any other cell for that group, row, or column.
+    /// in any other cell for that group.
     /// SOLVE that cell to that pencil mark.
     /// </summary>
-    public static int HiddenSingle = 2;
+    public static int HiddenSingleGroup = 2;
+
+    /// <summary>
+    /// The cell being examined has a pencil mark that does not exist
+    /// in any other cell for that row.
+    /// SOLVE that cell to that pencil mark.
+    /// </summary>
+    public static int HiddenSingleRow = 3;
+
+    /// <summary>
+    /// The cell being examined has a pencil mark that does not exist
+    /// in any other cell for that column.
+    /// SOLVE that cell to that pencil mark.
+    /// </summary>
+    public static int HiddenSingleColumn = 4;
 
     /// <summary>
     /// There is a pair of cells in a group, row, or column

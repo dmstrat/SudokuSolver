@@ -54,6 +54,7 @@ namespace Sudoku.Engine
           var somethingChanged = returnCode != SolverReturnCodes.NoChanges;
           if (somethingChanged)
           {
+            _Logger.LogStep(1,_GameBoard.BuildZeroBasedString());
             break;
           }
         }
@@ -83,8 +84,11 @@ namespace Sudoku.Engine
     {
       var solverList = new List<ISolver>
       {
-        new SinglePencilMarkLeftSolver(),
-        new SinglePencilMarkAcrossGroupColumnRowSolver(),
+        new LastDigitSolver(),
+        new HiddenSingleGroupSolver(),
+        new HiddenSingleRowSolver(),
+        new HiddenSingleColumnSolver(),
+        new HiddenSingleRowSolver(),
         new StraightLineRemovesPencilMarksSolver(),
         new Pattern01Solver()
       }.OrderBy(x=>x.GetExecutionOrder());

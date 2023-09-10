@@ -21,7 +21,7 @@ namespace Sudoku.Engine.Tests.Solvers
     [SetUp]
     public void Setup()
     {
-      _Logger = _LoggerFactory.CreateLogger<SinglePencilMarkLeftSolverTests>();
+      _Logger = _LoggerFactory.CreateLogger<LastDigitSolverTests>();
       _Listener = new ConsoleTraceListener();
       Trace.Listeners.Add(_Listener);
     }
